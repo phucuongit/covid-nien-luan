@@ -1,0 +1,10 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "admin:dev": "php artisan serve"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}
