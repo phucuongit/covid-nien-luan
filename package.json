@@ -2,8 +2,11 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "admin:dev": "php artisan serve"
+    "start": "lerna run start --parallel",
+    "admin:dev": "yarn workspace @mono/admin-api",
+    "template:dev": "yarn workspace @mono/template-ui"
   },
+  "workspaces": ["apps/*"],
   "devDependencies": {
     "lerna": "^3.22.1"
   }
