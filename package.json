@@ -4,9 +4,11 @@
   "scripts": {
     "start": "lerna run start --parallel",
     "admin:dev": "yarn workspace @mono/admin-api",
-    "template:dev": "yarn workspace @mono/template-ui"
+    "template:dev": "yarn workspace @mono/admin-ui"
   },
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "devDependencies": {
     "lerna": "^3.22.1"
   }

@@ -1,0 +1,14 @@
+{
+  "exclude": ["node_modules", "dist"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "sourceMap": true,
+    "composite": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "paths": {
+      "@mono/template-ui/*": ["apps/template-ui/*"],
+      "@/*": ["apps/template-ui/src/*"]
+    }
+  }
+}
