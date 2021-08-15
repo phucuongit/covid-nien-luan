@@ -41,4 +41,5 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           format: markdown
           message: |
-            ${{github.event_name}} \n **A new code** was built by ${{github.actor}}. ref ${{github.head_ref}} - headRef ${{github.head_ref}}
+            [${{github.event_name}}]
+            **A new code** was built by ${{github.actor}}. ref ${{github.head_ref}} - headRef ${{github.head_ref}}
