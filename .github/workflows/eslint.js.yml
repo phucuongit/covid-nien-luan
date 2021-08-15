@@ -39,7 +39,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
+          format: html
           message: |
             [${{github.event_name}}]
-            **A new code** was built by ${{github.actor}}. ref ${{github.head_ref}} - headRef ${{github.head_ref}}
+            ${{ github.event.pull_request.title }}. State  ${{ github.event.action }} .<a href="google.com">A new code</a> was built by ${{github.actor}}. ref ${{github.head_ref}} - headRef ${{github.head_ref}}
