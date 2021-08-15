@@ -2,7 +2,7 @@
 
 ```
 git clone https://github.com/phucuongit/covid-nien-luan.git
-yarn add -g lerna
+yarn add global lerna
 lerna bootstrap
 ```
 
@@ -43,3 +43,5 @@ You can now access the server at http://localhost:8000
 ```
 yarn run template:dev start
 ```
+
+You can now access the server at http://localhost:8080

@@ -4,12 +4,14 @@
   "scripts": {
     "start": "lerna run start --parallel",
     "admin:dev": "yarn workspace @mono/admin-api",
-    "template:dev": "yarn workspace @mono/admin-ui"
+    "template:dev": "yarn workspace @mono/admin-ui",
+    "prepare": "husky install"
   },
   "workspaces": [
     "apps/*"
   ],
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "lerna": "^3.22.1",
+    "husky": "^7.0.0"
   }
 }
