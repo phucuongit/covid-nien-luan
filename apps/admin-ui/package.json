@@ -6,7 +6,8 @@
     "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "eslint --ext .vue,.js,.ts src --fix",
+    "lint:scss": "stylelint src/**/*.scss --fix"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -44,6 +45,8 @@
     "node-sass": "^4.12.0",
     "prettier": "^2.2.1",
     "sass-loader": "^8.0.2",
+    "stylelint": "^13.13.1",
+    "stylelint-config-standard": "^22.0.0",
     "typescript": "~4.1.5",
     "vue-jest": "^5.0.0-0",
     "vue-svg-inline-loader": "^2.1.2"
