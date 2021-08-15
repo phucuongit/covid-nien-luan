@@ -1,0 +1,43 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Eslint code
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install Package
+        run: yarn install
+      - name: Check your code
+        run: yarn run lint && yarn run lint:scss
+  # notify_discord:
+  #   needs: [eslint]
+  #   if: always()
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Notify Discord
+  #       uses: sarisia/actions-status-discord@v1
+  #       with:
+  #         webhook: https://discord.com/api/webhooks/863261434922139649/nEGEW3wJ6z4IO3OnJrl4xw0QUt5WtHHS-f2Lmqv4PReCMQdiZ2PLx1Y0A3hmDYUj5cWL
+  #         title: ${{github.event_name}}
+  #         description: "Build and deploy to GitHub"
+  #         avatar_url: https://octodex.github.com/images/dodgetocat_v2.png
+  #         color: 0x0000ff
+  #         username: Notify VM web

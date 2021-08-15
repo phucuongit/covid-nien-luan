@@ -15,5 +15,5 @@ yarn run admin:dev start
 ## Start project template-ui
 
 ```
-yarn run template:dev serve
+yarn run template:dev start
 ```
