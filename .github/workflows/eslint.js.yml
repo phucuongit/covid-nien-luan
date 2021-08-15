@@ -10,7 +10,7 @@ on:
     branches: [main]
 env:
   TELEGRAM_TOKEN: 1941080147:AAGAYili3LFimpw2t3ZyFgdEjzPondmNemE
-  TELEGRAM_TO: 897818175
+  TELEGRAM_TO: -579973777
 jobs:
   eslint:
     runs-on: ubuntu-latest
@@ -39,3 +39,4 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: A new code to publish ${{github.event.name}} ${{	repo.namespace}}
