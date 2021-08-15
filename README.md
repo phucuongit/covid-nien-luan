@@ -2,7 +2,7 @@
 
 ```
 git clone https://github.com/phucuongit/covid-nien-luan.git
-yarn add global lerna
+npm install -g lerna
 lerna bootstrap
 ```
 
