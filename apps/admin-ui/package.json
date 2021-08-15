@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --ext .vue,.js,.ts src --fix",
-    "pre-commit": "yarn run lint"
+    "lint:scss": "stylelint src/**/*.scss --fix",
+    "pre-commit": "yarn run lint && yarn run lint:scss"
   },
   "dependencies": {
     "core-js": "^3.6.5",
