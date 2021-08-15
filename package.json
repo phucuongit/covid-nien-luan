@@ -13,5 +13,10 @@
   "devDependencies": {
     "lerna": "^3.22.1",
     "husky": "^7.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test"
+    }
   }
 }
