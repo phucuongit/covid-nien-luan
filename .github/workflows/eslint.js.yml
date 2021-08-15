@@ -8,7 +8,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-
+env:
+  TELEGRAM_TOKEN: 1941080147:AAGAYili3LFimpw2t3ZyFgdEjzPondmNemE
+  TELEGRAM_TO: -579973777
 jobs:
   eslint:
     runs-on: ubuntu-latest
@@ -27,17 +29,21 @@ jobs:
         run: yarn install
       - name: Check your code
         run: lerna run pre-commit
-  # notify_discord:
-  #   needs: [eslint]
-  #   if: always()
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Notify Discord
-  #       uses: sarisia/actions-status-discord@v1
-  #       with:
-  #         webhook: https://discord.com/api/webhooks/863261434922139649/nEGEW3wJ6z4IO3OnJrl4xw0QUt5WtHHS-f2Lmqv4PReCMQdiZ2PLx1Y0A3hmDYUj5cWL
-  #         title: ${{github.event_name}}
-  #         description: "Build and deploy to GitHub"
-  #         avatar_url: https://octodex.github.com/images/dodgetocat_v2.png
-  #         color: 0x0000ff
-  #         username: Notify VM web
+  notify_telegram:
+    needs: [eslint]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: send default message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: html
+          message: |
+            A new code has just built in github
+            Type: <b>${{github.event_name}}</b>
+            Title PR: ${{ github.event.pull_request.title }}
+            By: ${{github.actor}}. 
+            Ref: ${{github.head_ref}} 
+            HeadRef: ${{github.head_ref}}
