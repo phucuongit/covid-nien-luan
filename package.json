@@ -2,7 +2,6 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start": "lerna run start --parallel",
     "admin:dev": "yarn workspace @mono/admin-api",
     "template:dev": "yarn workspace @mono/admin-ui",
     "prepare": "husky install"

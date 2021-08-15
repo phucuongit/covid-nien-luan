@@ -26,7 +26,7 @@ jobs:
       - name: Install Package
         run: yarn install
       - name: Check your code
-        run: yarn run lint && yarn run lint:scss
+        run: lerna run pre-commit
   # notify_discord:
   #   needs: [eslint]
   #   if: always()
