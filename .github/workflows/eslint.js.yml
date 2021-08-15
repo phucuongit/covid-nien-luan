@@ -39,4 +39,4 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: A new code to publish ${{github.event.name}} ${{	repo.namespace}}
+          message: A new code to publish ${{github.event.name}} ${{repo.namespace}} ${{github.workspace}}
