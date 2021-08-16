@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
   
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\LoginController;
+use App\Http\Controllers\API\Data\RecordController;
   
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,6 @@ Route::namespace('API')->prefix('v1')->group(function () {
     Route::post('/auth/login', [LoginController::class, 'login']);
 });
      
+Route::resource('records', RecordController::class);
 Route::middleware('auth:api')->group( function () {
-    // Route::resource('products', ProductController::class);
 });
