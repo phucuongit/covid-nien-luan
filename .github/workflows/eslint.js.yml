@@ -9,8 +9,7 @@ on:
   pull_request:
     branches: [main]
 env:
-  TELEGRAM_TOKEN: 1941080147:AAGAYili3LFimpw2t3ZyFgdEjzPondmNemE
-  TELEGRAM_TO: -579973777
+  TEST: production
 jobs:
   eslint:
     runs-on: ubuntu-latest
@@ -47,8 +46,8 @@ jobs:
           format: html
           message: |
             A new code has just built in github
-            Type: <b>${{github.event_name}}</b> | Link: <a href="https://github.com/${{github.repository}}">Repository</a>
-            Title: <b>Release main</b>
+            Type: <b>${{github.event_name}}</b>
+            Title: <a href="https://github.com/${{github.repository}}"><b>Release main</b></a>
             By: ${{github.actor}}. 
             Branch: ${{steps.extract_branch.outputs.branch}}
             Commit: ${{ github.event.head_commit.message }}
@@ -62,7 +61,7 @@ jobs:
           message: |
             A new code has just built in github
             Type: <b>${{github.event_name}}</b> 
-            Title PR: <b>${{ github.event.pull_request.title }}</b> | Link: <a href="https://github.com/${{github.repository}}/pull/${{github.event.number}}">PR</a>
+            Title PR: <a href="https://github.com/${{github.repository}}/pull/${{github.event.number}}"><b>${{ github.event.pull_request.title }}</b></a>
             By: ${{github.actor}}. 
             Ref: ${{github.head_ref}}
             Branch: ${{steps.extract_branch.outputs.branch}}
