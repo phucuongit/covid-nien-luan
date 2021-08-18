@@ -39,6 +39,7 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
       - name: send default message
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
@@ -46,8 +47,22 @@ jobs:
           format: html
           message: |
             A new code has just built in github
-            Type: <b>${{github.event_name}}</b>
-            Title PR: ${{ github.event.pull_request.title }}
+            Type: <b>${{github.event_name}}</b> | Link: <a href="https://github.com/${{github.repository}}">Repository</a>
+            Title: <b>Release main</b>
+            By: ${{github.actor}}. 
+            Branch: ${{steps.extract_branch.outputs.branch}}
+            Commit: ${{ github.event.head_commit.message }}
+      - name: send default message
+        if: ${{ github.ref != 'refs/heads/main' }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: html
+          message: |
+            A new code has just built in github
+            Type: <b>${{github.event_name}}</b> 
+            Title PR: <b>${{ github.event.pull_request.title }}</b> | Link: <a href="https://github.com/${{github.repository}}/pull/${{github.event.number}}">PR</a>
             By: ${{github.actor}}. 
             Ref: ${{github.head_ref}}
             Branch: ${{steps.extract_branch.outputs.branch}}
