@@ -62,7 +62,6 @@ jobs:
             A new code has just built in github
             Type: <b>${{github.event_name}}</b> 
             Title PR: <a href="https://github.com/${{github.repository}}/pull/${{github.event.number}}"><b>${{ github.event.pull_request.title }}</b></a>
-            By: ${{github.actor}}. 
-            Ref: ${{github.head_ref}}
-            Branch: ${{steps.extract_branch.outputs.branch}}
-            Commit: ${{ github.event.head_commit.message }}
+            By: ${{github.actor}}.
+            Branch: ${{github.head_ref}}
+            Commit: ${{ github.event.commit[0].message }}
