@@ -64,4 +64,3 @@ jobs:
             Title PR: <a href="https://github.com/${{github.repository}}/pull/${{github.event.number}}"><b>${{ github.event.pull_request.title }}</b></a>
             By: ${{github.actor}}.
             Branch: ${{github.head_ref}}
-            Commit: ${{ github.event.commit[0].message }}
