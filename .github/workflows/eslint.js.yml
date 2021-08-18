@@ -50,4 +50,5 @@ jobs:
             Title PR: ${{ github.event.pull_request.title }}
             By: ${{github.actor}}. 
             Ref: ${{github.head_ref}}
-            Branch: ${steps.extract_branch.outputs.branch}
+            Branch: ${{steps.extract_branch.outputs.branch}}
+            Commit: ${{ github.event.head_commit.message }}
