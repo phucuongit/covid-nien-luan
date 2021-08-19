@@ -15,7 +15,7 @@ pipeline {
         }
         stage("Install dependency") {
             steps {
-                dir(${workspace}){
+                dir(workspace){
                     script {
                         sh 'yarn && yarn run pre_setup'
                     }
