@@ -46,7 +46,10 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'yarn run admin:dev'
+              
+                nodejs('Node_14'){
+                    sh 'yarn run admin:dev'
+                }
             }
         }
     }
