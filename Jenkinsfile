@@ -13,9 +13,12 @@ pipeline {
         }
         stage("Install dependency") {
             steps {
-                script {
-                    sh 'yarn && yarn run pre_setup'
+                dir('./'){
+                    script {
+                        sh 'yarn && yarn run pre_setup'
+                    }
                 }
+               
                 dir('apps/admin-api'){
                     script {
                         sh 'composer install'
