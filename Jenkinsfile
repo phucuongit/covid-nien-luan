@@ -24,8 +24,7 @@ pipeline {
                 dir(workspace){
     s               script {
                         sh 'echo $(pwd)'
-                        sh(script: '../../deploy.sh',
-                                returnStdout: true)
+                        sh 'deploy.sh'
                     }
                 }
                
