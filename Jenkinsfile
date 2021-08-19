@@ -22,7 +22,7 @@ pipeline {
                 // }
                 
                 dir(workspace){
-    s              cript {
+    s               script {
                         sh 'echo $(pwd)'
                         sh(script: './deploy.sh',
                                 returnStdout: true)
