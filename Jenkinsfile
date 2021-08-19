@@ -17,9 +17,9 @@ pipeline {
         stage("Install dependency") {
             steps {
               
-                nodejs('Node_14'){
-                    sh 'yarn && yarn run pre_setup'
-                }
+                // nodejs('Node_14'){
+                //     sh 'yarn && yarn run pre_setup'
+                // }
                 
                 
                 script {
