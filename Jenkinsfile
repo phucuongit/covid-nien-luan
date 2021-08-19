@@ -10,8 +10,7 @@ pipeline {
                     GIT_CHANGES = sh(script: 'git log --pretty=format:" - %s (@%an #%h)" HEAD..origin/main',
                                 returnStdout: true)
                     sh 'git merge origin/main'
-                    workspace = sh(script: 'pwd', returnStdout: true) 
-                    echo 'workspace test' + workspace
+                    workspace = sh(script: 'pwd', returnStdout: true)
                 }
             }
         }
@@ -19,6 +18,7 @@ pipeline {
             steps {
                 dir(workspace){
                     script {
+                        sh "npm install -g yarn"
                         sh 'yarn && yarn run pre_setup'
                     }
                 }
