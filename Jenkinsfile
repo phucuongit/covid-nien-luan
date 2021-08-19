@@ -21,12 +21,14 @@ pipeline {
                 //     sh 'yarn && yarn run pre_setup'
                 // }
                 
-                
-                script {
-                    sh 'echo pwd'
-                    sh(script: './deploy.sh',
-                            returnStdout: true)
+                dir(workspace){
+    s              cript {
+                        sh 'echo $(pwd)'
+                        sh(script: './deploy.sh',
+                                returnStdout: true)
+                    }
                 }
+               
                 dir('apps/admin-api'){
                     script {
                         sh 'composer install'
