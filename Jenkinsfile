@@ -17,15 +17,15 @@ pipeline {
         stage("Install dependency") {
             steps {
               
-                // nodejs('Node_14'){
-                //     sh 'yarn && yarn run pre_setup'
-                // }
-                
-                dir(workspace){
-    s               script {
-                        sh 'cd $(pwd) && ./deploy.sh'
-                    }
+                nodejs('Node_14'){
+                    sh 'yarn'
                 }
+                
+    //             dir(workspace){
+    // s               script {
+    //                     sh 'cd $(pwd) && ./deploy.sh'
+    //                 }
+    //             }
                
                 dir('apps/admin-api'){
                     script {
