@@ -17,9 +17,7 @@ pipeline {
         stage("Install dependency") {
             steps {
                 dir(workspace){
-                    nodejs('Node_14'){
-                        sh 'yarn && yarn run pre_setup'
-                    }
+                    sh 'yarn && yarn run pre_setup'   
                 }
             
                
