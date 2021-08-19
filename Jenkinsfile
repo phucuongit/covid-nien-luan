@@ -23,8 +23,7 @@ pipeline {
                 
                 dir(workspace){
     s               script {
-                        sh 'echo $(pwd)'
-                        sh 'deploy.sh'
+                        sh 'cd $(pwd) && ./deploy.sh'
                     }
                 }
                
