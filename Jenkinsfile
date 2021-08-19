@@ -6,7 +6,7 @@ pipeline {
         stage('Update code') {
             steps {
                 script {
-                    sh 'git checkout dev && git reset --hard && git fetch'
+                    sh 'git checkout dev && git reset --hard && git pull'
                     GIT_CHANGES = sh(script: 'git log --pretty=format:" - %s (@%an #%h)" HEAD..origin/main',
                                 returnStdout: true)
                     sh 'git merge origin/main'
