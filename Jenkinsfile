@@ -18,8 +18,8 @@ pipeline {
             steps {
                 dir(workspace){
                     script {
-                        sh "npm install -g yarn"
-                        sh 'yarn && yarn run pre_setup'
+                        yarn command 'install' 
+                        yarn command 'pre_setup'
                     }
                 }
                
