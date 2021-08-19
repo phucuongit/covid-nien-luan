@@ -10,7 +10,7 @@ pipeline {
                     GIT_CHANGES = sh(script: 'git log --pretty=format:" - %s (@%an #%h)" HEAD..origin/main',
                                 returnStdout: true)
                     sh 'git merge origin/main'
-                    workspace = sh 'pwd'
+                    workspace = sh(script: 'pwd', returnStdout: true) 
                     echo 'workspace test' + workspace
                 }
             }
