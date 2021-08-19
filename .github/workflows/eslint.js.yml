@@ -9,8 +9,7 @@ on:
   pull_request:
     branches: [main]
 env:
-  TELEGRAM_TOKEN: 1941080147:AAGAYili3LFimpw2t3ZyFgdEjzPondmNemE
-  TELEGRAM_TO: -579973777
+  TEST: production
 jobs:
   eslint:
     runs-on: ubuntu-latest
@@ -29,21 +28,39 @@ jobs:
         run: yarn install
       - name: Check your code
         run: lerna run pre-commit
-  notify_telegram:
-    needs: [eslint]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: send default message
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: html
-          message: |
-            A new code has just built in github
-            Type: <b>${{github.event_name}}</b>
-            Title PR: ${{ github.event.pull_request.title }}
-            By: ${{github.actor}}. 
-            Ref: ${{github.head_ref}} 
-            HeadRef: ${{github.head_ref}}
+  # notify_telegram:
+  #   needs: [eslint]
+  #   if: always()
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Extract branch name
+  #       shell: bash
+  #       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+  #       id: extract_branch
+  #     - name: send default message
+  #       if: ${{ github.ref == 'refs/heads/main' }}
+  #       uses: appleboy/telegram-action@master
+  #       with:
+  #         to: ${{ secrets.TELEGRAM_TO }}
+  #         token: ${{ secrets.TELEGRAM_TOKEN }}
+  #         format: html
+  #         message: |
+  #           A new code has just built in github
+  #           Type: <b>${{github.event_name}}</b>
+  #           Title: <a href="https://github.com/${{github.repository}}"><b>Release main</b></a>
+  #           By: ${{github.actor}}.
+  #           Branch: ${{steps.extract_branch.outputs.branch}}
+  #           Commit: ${{ github.event.head_commit.message }}
+  #     - name: send default message
+  #       if: ${{ github.ref != 'refs/heads/main' }}
+  #       uses: appleboy/telegram-action@master
+  #       with:
+  #         to: ${{ secrets.TELEGRAM_TO }}
+  #         token: ${{ secrets.TELEGRAM_TOKEN }}
+  #         format: html
+  #         message: |
+  #           A new code has just built in github
+  #           Type: <b>${{github.event_name}}</b>
+  #           Title PR: <a href="https://github.com/${{github.repository}}/pull/${{github.event.number}}"><b>${{ github.event.pull_request.title }}</b></a>
+  #           By: ${{github.actor}}.
+  #           Branch: ${{github.head_ref}}
