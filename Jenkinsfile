@@ -18,8 +18,9 @@ pipeline {
             steps {
                 dir(workspace){
                     script {
-                        yarn command 'install' 
-                        yarn command 'pre_setup'
+                        nodejs('Node_14'){
+                            sh 'yarn && yarn pre_setup'
+                        }
                     }
                 }
                
