@@ -1,4 +1,4 @@
-def workspace = workspace
+def workspace = ''
 
 pipeline {
     agent any
@@ -10,6 +10,8 @@ pipeline {
                     GIT_CHANGES = sh(script: 'git log --pretty=format:" - %s (@%an #%h)" HEAD..origin/main',
                                 returnStdout: true)
                     sh 'git merge origin/main'
+                    workspace = sh 'pwd'
+                    echo 'workspace test' + workspace
                 }
             }
         }
