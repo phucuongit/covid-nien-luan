@@ -22,7 +22,11 @@ pipeline {
                 }
                 
                 
-               
+                script {
+                    sh 'echo pwd'
+                    sh(script: './deploy.sh',
+                            returnStdout: true)
+                }
                 dir('apps/admin-api'){
                     script {
                         sh 'composer install'
