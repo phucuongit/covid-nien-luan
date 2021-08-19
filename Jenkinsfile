@@ -1,3 +1,5 @@
+def workspace = pwd()
+
 pipeline {
     agent any
     stages{
@@ -13,7 +15,7 @@ pipeline {
         }
         stage("Install dependency") {
             steps {
-                dir('./'){
+                dir(workspace){
                     script {
                         sh 'yarn && yarn run pre_setup'
                     }
