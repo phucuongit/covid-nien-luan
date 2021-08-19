@@ -3,13 +3,12 @@ pipeline {
     stages{
         stage('Update code') {
             steps {
-                dir('/home/lpcuong2106/covid-nien-luan') {
-                    script {
-                        sh 'git checkout main && git reset --hard && git fetch'
-                        GIT_CHANGES = sh(script: 'git log --pretty=format:" - %s (@%an #%h)" HEAD..origin/main',
-                                    returnStdout: true)
-                        sh 'git merge origin/main'
-                    } 
+                script {
+                    sh 'git checkout main && git reset --hard && git fetch'
+                    GIT_CHANGES = sh(script: 'git log --pretty=format:" - %s (@%an #%h)" HEAD..origin/main',
+                                returnStdout: true)
+                    sh 'git merge origin/main'
+                } 
                 }
             }
         }
