@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVaccinationsTable extends Migration
+class CreateResultTestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateVaccinationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('vaccinations', function (Blueprint $table) {
+        Schema::create('result_tests', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('create_at');
+            $table->enum('status', ['Dương tính', 'Âm tính']);
             
-            $table->foreignId('user_id')->constrained();
+            $table->timestamp('create_at',  $precision = 0);
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('create_by')->constrained('users');
-            $table->foreignId('vaccine_type_id')->constrained();
         });
     }
 
@@ -30,6 +30,6 @@ class CreateVaccinationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vaccinations');
+        Schema::dropIfExists('result_tests');
     }
 }
