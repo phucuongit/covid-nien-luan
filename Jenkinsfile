@@ -31,9 +31,9 @@ pipeline {
                 }
             }
         }
-        stage("Noti"){
+        stage("Notification"){
             steps {
-                telegramSend(message: 'Deploy successfully', chatId: -579973777)
+                telegramSend (message: 'Deploy successfully: \nGit change: ' + GIT_CHANGES, chatId: -579973777)
             }
         }
     }
