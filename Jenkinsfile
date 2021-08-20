@@ -33,7 +33,7 @@ pipeline {
         }
         stage("Notification"){
             steps {
-                telegramSend (message: 'Deploy successfully: \nGit change: ' + GIT_CHANGES, chatId: -579973777)
+                telegramSend (message: 'Covid NienLuan Web CI \nCode has been shipped successfully \nCHANGES:\n' + GIT_CHANGES, chatId: -579973777)
             }
         }
     }
