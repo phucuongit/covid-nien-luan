@@ -31,6 +31,11 @@ pipeline {
                 }
             }
         }
+        stage("Noti"){
+            steps {
+                telegramSend(message: 'Deploy successfully', chatId: -579973777)
+            }
+        }
     }
     
 }
