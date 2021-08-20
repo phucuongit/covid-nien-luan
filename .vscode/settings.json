@@ -15,5 +15,8 @@
   "vetur.format.options.tabSize": 2,
   "vetur.format.options.useTabs": false,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "jenkins.pipeline.linter.connector.url": "https://jenkins.sharenows.com/pipeline-model-converter/validate",
+  "jenkins.pipeline.linter.connector.user": "lpcuong2106",
+  "jenkins.pipeline.linter.connector.pass": "Cuongmlny2106"
 }
