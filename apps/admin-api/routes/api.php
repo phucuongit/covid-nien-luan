@@ -23,6 +23,6 @@ Route::namespace('API')->prefix('v1')->group(function () {
     Route::post('/auth/login', [LoginController::class, 'login']);
 });
      
-Route::resource('records', RecordController::class);
 Route::middleware('auth:api')->group( function () {
+    Route::resource('records', RecordController::class);
 });
