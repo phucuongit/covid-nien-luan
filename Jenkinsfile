@@ -31,6 +31,11 @@ pipeline {
                 }
             }
         }
+        stage("Notification"){
+            steps {
+                telegramSend (message: 'Covid NienLuan Web CI \nCode has been shipped successfully \nCHANGES:\n' + GIT_CHANGES, chatId: -579973777)
+            }
+        }
     }
     
 }
