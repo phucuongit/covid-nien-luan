@@ -1,4 +1,4 @@
-def workspace = ''
+def workspace = '/var/lib/jenkins/workspace/covid-nien-luan'
 
 pipeline {
     agent any
@@ -10,31 +10,24 @@ pipeline {
                     GIT_CHANGES = sh(script: 'git log --pretty=format:" - %s (@%an #%h)" HEAD..origin/main',
                                 returnStdout: true)
                     sh 'git merge origin/main'
-                    workspace = sh(script: 'pwd', returnStdout: true)
+                    // workspace = sh(script: 'pwd', returnStdout: true)
                 }
             }
         }
         stage("Install dependency") {
             steps {
                 dir(workspace){
-                    echo pwd
-                    sh 'yarn && yarn run pre_setup'   
+                    withEnv(['PATH_NODE=/usr/local/bin/yarn']) {
+                        sh "$PATH_NODE install"
+                        sh "$PATH_NODE run pre_setup"
+                    } 
                 }
-            
+                
                
-                dir('apps/admin-api'){
+                dir(workspace + '/apps/admin-api'){
                     script {
                         sh 'composer install'
                     }
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-              
-                nodejs('Node_14'){
-                    sh 'yarn run admin:dev'
                 }
             }
         }

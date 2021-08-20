@@ -5,7 +5,7 @@
     "admin:dev": "yarn workspace @mono/admin-api",
     "template:dev": "yarn workspace @mono/admin-ui",
     "prepare": "husky install",
-    "pre_setup": "lerna bootstrap"
+    "pre_setup": "lerna clean -y && lerna bootstrap"
   },
   "workspaces": [
     "apps/*"
