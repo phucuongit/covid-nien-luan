@@ -30,6 +30,9 @@ class LoginController extends BaseController
     }
 
     public function test(){
-        return $this->sendResponse('OK this is response for test', 'User login successfully');
+        return response()->json([
+            'name' => 'Abigail',
+            'state' => 'CA',
+        ]);
     }
 }
