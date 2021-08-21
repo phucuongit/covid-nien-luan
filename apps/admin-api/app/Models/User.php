@@ -34,4 +34,10 @@ class User extends Authenticatable
     // protected $casts = [
     //     'email_verified_at' => 'datetime',
     // ];
+    public function test_models_can_be_instantiated()
+    {
+        $user = User::factory()->make();
+
+        // Use model in tests...
+    }
 }
