@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
-use Buihuycuong\Vnfaker\VNFaker;
+// use Buihuycuong\Vnfaker\VNFaker;
 
 class UserFactory extends Factory
 {
@@ -23,7 +23,7 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    function stripVN($str) {
+    public function stripVN($str) {
         $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", 'a', $str);
         $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", 'e', $str);
         $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", 'i', $str);
@@ -47,13 +47,13 @@ class UserFactory extends Factory
         $idCard = '0'
             + str_pad(strval(rand(1,64)), 3, "0", STR_PAD_LEFT) //Provinces type: 0xx
             + strval(rand(1,9)) //Gender
-            + strval(strval(rand(0,99)), 2, "0", STR_PAD_LEFT) //Birthday code
-            + strval(strval(rand(0,999999)), 6, "0", STR_PAD_LEFT);
+            + str_pad(strval(rand(0,99)), 2, "0", STR_PAD_LEFT) //Birthday code
+            + str_pad(strval(rand(0,999999)), 6, "0", STR_PAD_LEFT); // Random
     
         $fullname = vnfaker()->fullname($word = 3);
         $birthday = $this->faker->dateTime();
-        $username = substr($name, strrpos($name, ' ') + 1);
-        $username = stripVN($username) + $faker->unique()->randomDigit(10, false);
+        $username = substr($fullname, strrpos($fullname, ' ') + 1);
+        $username = $this->stripVN($username).'-'.$this->faker->unique()->regexify('[a-z]{5}');
         $gender = rand(0,1);
         $password = Hash::make('123123');
         $address = vnfaker()->address();
@@ -61,7 +61,7 @@ class UserFactory extends Factory
         $role_id = 2;
         return [
             'identify_card' => $idCard,
-            'fullname' => $name,
+            'fullname' => $fullname,
             'birthday' => $birthday,
             'gender' => $gender,
             'avatar' => 'none',
