@@ -15,17 +15,19 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('identify_card')->unique();
+            $table->string('identify_card')->nullable();
             $table->string('fullname');
-            $table->date('birthday');
+            $table->date('birthday')->nullable();
             $table->tinyInteger('gender');
-            $table->string('avatar');
-            $table->string('username');
+            $table->string('avatar')->nullable();
+            $table->string('username')->unique();
             $table->string('password');
-            $table->string('address');
-            $table->string('phone');
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
 
             $table->foreignId('role_id')->constrained();
+            //Default famework columns
+            $table->timestamps();
         });
     }
 
