@@ -19,7 +19,7 @@ class LoginController extends BaseController
         if(Auth::attempt(['username' => $request->username, 'password' => $request->password])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('Access token')-> accessToken;
-            $success['name'] =  $user->name;
+            $success['name'] =  $user->username;
 
             return $this->sendResponse($success, 'User login successfully.');
         }
