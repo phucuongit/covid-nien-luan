@@ -19,6 +19,8 @@ class CreateResultTestsTable extends Migration
             $table->timestamp('create_at',  $precision = 0);
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('create_by')->constrained('users');
+            //Default famework columns
+            $table->timestamps();
         });
     }
 

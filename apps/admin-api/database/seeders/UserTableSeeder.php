@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserTableSeeder extends Seeder
 {
@@ -12,8 +13,19 @@ class UserTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(int $count = 10)
     {
-        User::factory()->count(5)->create();
+        //User admin
+        $data = [
+            [
+                'fullname' => 'Nien luan Manager',
+                'gender' => '1',
+                'username' => 'nienluan',
+                'password' => Hash::make('123123'),
+                'role_id' => '1',
+            ],
+        ];
+        User::insert($data);
+        User::factory()->count($count)->create();
     }
 }

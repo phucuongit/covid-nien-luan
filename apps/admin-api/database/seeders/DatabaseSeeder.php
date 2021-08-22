@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Vaccine_type;
+use App\Models\Vaccination;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,5 +18,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        
+        $this->call([
+            RoleTableSeeder::class,
+            Vaccine_typeTableSeeder::class,
+        ]);
+        // Order is important
+        $this->call(UserTableSeeder::class, false, ['count' => 100]);
+        $this->call(VaccinationTableSeeder::class, false, ['count' => 100]);
     }
 }
