@@ -19,6 +19,7 @@ class CreateImagesTable extends Migration
             $table->string('type');
             $table->string('name');
             $table->string('url');
+            //Default famework columns
             $table->timestamps();
         });
     }

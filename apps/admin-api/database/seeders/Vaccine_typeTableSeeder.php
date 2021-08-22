@@ -14,25 +14,27 @@ class Vaccine_typeTableSeeder extends Seeder
      */
     public function run()
     {
-        Vaccine_type::create([
-            'name' => 'AstraZeneca',
-            'country' => 'England',
-        ],[
-            'name' => 'Moderna',
-            'country' => 'United States',
-        ],[
-            'name' => 'Sputnik V',
-            'country' => ' Russian',
-        ],[
-            'name' => 'Sinopharm',
-            'country' => 'China',
-        ],[
-            'name' => 'Covaxin',
-            'country' => 'Vietnam',
-        ],[
-            'name' => 'Janssen',
-            'country' => 'Netherlands',
-        ]
-        );
+        $data = [
+            [
+                'name' => 'AstraZeneca',
+                'country' => 'England',
+            ],[
+                'name' => 'Moderna',
+                'country' => 'United States',
+            ],[
+                'name' => 'Sputnik V',
+                'country' => 'Russian',
+            ],[
+                'name' => 'Sinopharm',
+                'country' => 'China',
+            ],[
+                'name' => 'Covaxin',
+                'country' => 'Vietnam',
+            ],[
+                'name' => 'Janssen',
+                'country' => 'Netherlands',
+            ],
+        ];
+        Vaccine_type::insert($data);
     }
 }

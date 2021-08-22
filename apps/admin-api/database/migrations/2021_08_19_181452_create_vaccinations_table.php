@@ -15,11 +15,12 @@ class CreateVaccinationsTable extends Migration
     {
         Schema::create('vaccinations', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('create_at');
             
             $table->foreignId('user_id')->constrained();
             $table->foreignId('create_by')->constrained('users');
             $table->foreignId('vaccine_type_id')->constrained();
+            //Default famework columns
+            $table->timestamps();
         });
     }
 
