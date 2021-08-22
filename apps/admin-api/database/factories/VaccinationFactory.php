@@ -6,6 +6,7 @@ use App\Models\Vaccination;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
+use App\Models\Vaccine_type;
 
 class VaccinationFactory extends Factory
 {
@@ -23,14 +24,20 @@ class VaccinationFactory extends Factory
      */
     public function definition()
     {
-        // Schema::disableForeignKeyConstraints();
-        // return [
-        //     'user_id' => function (array $attributes) {
-        //         return User::find($attributes['id'])->id;
-        //     }
-        //     'create_by' =>  function (array $attributes) {
-        //         return User::find($attributes['id'])->id;
-        //     }
-        // ];
+        Schema::disableForeignKeyConstraints();
+        //Get id from user
+        $userIds = 
+            User::inRandomOrder()->first()->id;
+        $userCreateIds = 
+            User::where('role_id', 1)->inRandomOrder()->first()->id;
+        // 40% vaccine is Astra
+        $vaccineTypeIds = rand(1, 100) > 60 ?
+            Vaccine_type::where('name', 'AstraZeneca')->first()->id :
+            Vaccine_type::inRandomOrder()->first()->id;
+        return [
+            'user_id' => $userIds,
+            'create_by' => $userCreateIds,
+            'vaccine_type_id' => $vaccineTypeIds,
+        ];
     }
 }
