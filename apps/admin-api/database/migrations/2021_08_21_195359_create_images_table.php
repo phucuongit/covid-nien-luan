@@ -15,6 +15,11 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('relation_id');
+            $table->string('type');
+            $table->string('name');
+            $table->string('url');
+            //Default famework columns
             $table->timestamps();
         });
     }
