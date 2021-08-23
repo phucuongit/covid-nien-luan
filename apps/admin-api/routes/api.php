@@ -7,6 +7,9 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Data\RecordController;
   
+use App\Http\Controllers;
+use App\Http\Controllers\API\Auth\InfoUserController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,3 +34,11 @@ Route::middleware('auth:api')->group( function () {
 Route::middleware('auth:api')->group( function () {
     Route::resource('records', RecordController::class);
 });
+
+Route::apiResource('InfoUser','App\Http\Controllers\API\Auth\InfoUserController');
+
+Route::get('UserTestResult/{iduser}','App\Http\Controllers\API\Auth\InfoUserController@UserTestResult');
+
+Route::get('UserVaccina/{iduser}','App\Http\Controllers\API\Auth\InfoUserController@UserVaccina');
+
+Route::get('ViewProfile/{username}','App\Http\Controllers\API\Auth\InfoUserController@ViewProfile');
