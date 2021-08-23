@@ -14,6 +14,7 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
+        Role::truncate();
         $data = [
             [
                 'name' => 'admin',

@@ -16,7 +16,6 @@ class CreateResultTestsTable extends Migration
         Schema::create('result_tests', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['positive', 'negative']);
-            $table->timestamp('create_at',  $precision = 0);
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('create_by')->constrained('users');
             //Default famework columns

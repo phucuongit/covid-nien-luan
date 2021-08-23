@@ -15,6 +15,7 @@ class UserTableSeeder extends Seeder
      */
     public function run(int $count = 10)
     {
+        User::truncate();
         //User admin
         $data = [
             [
