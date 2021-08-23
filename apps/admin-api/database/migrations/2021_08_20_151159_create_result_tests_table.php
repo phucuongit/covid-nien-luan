@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestResultsTable extends Migration
+class CreateResultTestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class CreateTestResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_results', function (Blueprint $table) {
+        Schema::create('result_tests', function (Blueprint $table) {
             $table->id();
+            $table->enum('status', ['positive', 'negative']);
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('create_by')->constrained('users');
+            //Default famework columns
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ class CreateTestResultsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_results');
+        Schema::dropIfExists('result_tests');
     }
 }
