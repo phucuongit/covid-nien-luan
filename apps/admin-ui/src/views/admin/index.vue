@@ -5,22 +5,22 @@
 </template>
 
 <script>
-import { useStore } from 'vuex';
-import { defineComponent } from 'vue'
-import router from '@/router';
+import { useStore } from "vuex"
+import { defineComponent } from "vue"
+import router from "@/router"
 
 export default defineComponent({
   setup() {
-    const token = localStorage.getItem('token');
-    const store = useStore ();
+    const token = localStorage.getItem("token")
+    const store = useStore()
     if (token) {
-      store.dispatch('setToken', token);
+      store.dispatch("setToken", token)
     } else {
-      router.push({name: 'Login'});
-      store.dispatch('setToken', '');
+      router.push({ name: "Login" })
+      store.dispatch("setToken", "")
     }
 
-    return {token}
-  },
+    return { token }
+  }
 })
 </script>

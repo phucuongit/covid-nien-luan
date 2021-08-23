@@ -4,10 +4,8 @@
       <el-header>Header</el-header>
       <el-main>Main</el-main>
       <el-footer>Footer</el-footer>
-  </el-container>
+    </el-container>
   </div>
 </template>
 
-<script lang="ts">
-
-</script>
+<script lang="ts"></script>
