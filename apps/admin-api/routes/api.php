@@ -25,6 +25,7 @@ Route::namespace('API')->prefix('v1')->group(function () {
     Route::post('/auth/register', [RegisterController::class, 'register']);
     Route::post('/auth/login', [LoginController::class, 'login']);
     Route::get('/test',  [LoginController::class, 'test']);
+
 });
 
 Route::middleware('auth:api')->group( function () {
@@ -42,3 +43,4 @@ Route::get('UserTestResult/{iduser}','App\Http\Controllers\API\Auth\InfoUserCont
 Route::get('UserVaccina/{iduser}','App\Http\Controllers\API\Auth\InfoUserController@UserVaccina');
 
 Route::get('ViewProfile/{username}','App\Http\Controllers\API\Auth\InfoUserController@ViewProfile');
+
