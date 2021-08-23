@@ -14,6 +14,7 @@ class Vaccine_typeTableSeeder extends Seeder
      */
     public function run()
     {
+        Vaccine_type::truncate();
         $data = [
             [
                 'name' => 'Pfizer',

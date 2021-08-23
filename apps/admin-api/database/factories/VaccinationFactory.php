@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Vaccination;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 use App\Models\Vaccine_type;
 
@@ -24,7 +23,6 @@ class VaccinationFactory extends Factory
      */
     public function definition()
     {
-        Schema::disableForeignKeyConstraints();
         //Get id from user
         $userIds = 
             User::inRandomOrder()->first()->id;

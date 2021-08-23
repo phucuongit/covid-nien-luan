@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 
 // use Buihuycuong\Vnfaker\VNFaker;
 
@@ -26,7 +25,6 @@ class UserFactory extends Factory
      */  
     public function definition()
     {
-        Schema::disableForeignKeyConstraints();
         //Create fake id card 
         $idCard = Str::padLeft(strval(rand(1,63)), 3, "0") //Provinces type: 0xx
                 .strval(rand(1,9)) //Gender
