@@ -12,7 +12,7 @@ export default defineComponent({
   setup() {
     const token = localStorage.getItem("token")
     if (!token) {
-      console.log('fail')
+      console.log("fail")
       router.push({ name: "Login" })
     }
 

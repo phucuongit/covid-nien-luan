@@ -3,7 +3,7 @@ import { computed, defineComponent, ref } from "vue"
 import useLogin from "./useLogin.ts"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
-import uselogin from './useLogin.ts'
+import uselogin from "./useLogin.ts"
 
 export default defineComponent({
   setup() {
@@ -16,12 +16,12 @@ export default defineComponent({
       validationSchema: loginSchema
     })
     const onSubmit = handleSubmit((values) => {
-      login(values);
+      login(values)
     })
 
     const { value: username } = useField("username")
     const { value: password } = useField("password")
-    
+
     return {
       username,
       password,
@@ -39,8 +39,16 @@ export default defineComponent({
     <el-row class="row-bg">
       <el-col :xs="24" :sm="24" :md="12">
         <div class="grid-content">
-          <img src="@/assets/images/login-img-left.jpg" alt="not found " class="hidden-sm-and-down" />
-          <img src="@/assets/images/login-img-left-mobile.jpg" alt="not found " class="hidden-md-and-up" />
+          <img
+            src="@/assets/images/login-img-left.jpg"
+            alt="not found "
+            class="hidden-sm-and-down"
+          />
+          <img
+            src="@/assets/images/login-img-left-mobile.jpg"
+            alt="not found "
+            class="hidden-md-and-up"
+          />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :md="12">
@@ -55,13 +63,17 @@ export default defineComponent({
                 class="demo-ruleForm"
               >
                 <el-form-item label="Tên đăng nhập">
-                  <el-input v-model="username" :disabled="isLoading" ></el-input>
+                  <el-input v-model="username" :disabled="isLoading"></el-input>
                   <div class="login-error">
                     {{ errors.username }}
                   </div>
                 </el-form-item>
                 <el-form-item label="Mật khẩu" lable="Quên mật khẩu?">
-                  <el-input show-password v-model="password" :disabled="isLoading" ></el-input>
+                  <el-input
+                    show-password
+                    v-model="password"
+                    :disabled="isLoading"
+                  ></el-input>
                   <div class="login-error">
                     {{ errors.password }}
                   </div>
