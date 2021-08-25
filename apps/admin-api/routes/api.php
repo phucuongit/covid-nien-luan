@@ -7,6 +7,9 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Vaccination\VaccinationController;
   
+use App\Http\Controllers;
+use App\Http\Controllers\API\Auth\InfoUserController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,3 +30,13 @@ Route::prefix('v1')->group(function () {
         Route::resource('vaccination', VaccinationController::class);
     });
 });
+
+
+Route::apiResource('InfoUser','App\Http\Controllers\API\Auth\InfoUserController');
+
+Route::get('UserTestResult/{iduser}','App\Http\Controllers\API\Auth\InfoUserController@UserTestResult');
+
+Route::get('UserVaccina/{iduser}','App\Http\Controllers\API\Auth\InfoUserController@UserVaccina');
+
+Route::get('ViewProfile/{username}','App\Http\Controllers\API\Auth\InfoUserController@ViewProfile');
+
