@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Vaccination;
+namespace App\Http\Controllers\API\Vaccination;
 
+use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Vaccination;
+use Validator;
 
-class VaccinationController extends Controller
+class VaccinationController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -14,17 +17,9 @@ class VaccinationController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $data = Vaccination::all();
+        $msg = 'successfully';
+        return $this->sendResponse($data, $msg);
     }
 
     /**
@@ -35,7 +30,7 @@ class VaccinationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Vaccination::create($request->all());
     }
 
     /**
@@ -45,17 +40,6 @@ class VaccinationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
