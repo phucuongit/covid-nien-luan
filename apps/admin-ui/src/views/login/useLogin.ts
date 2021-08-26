@@ -9,7 +9,7 @@ function useLogin() {
     try {
       isLoading.value = true
 
-      const response = await instance.post("login", params)
+      const response = await instance.post("login", ...params)
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.data.token)
