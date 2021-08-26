@@ -1,9 +1,8 @@
-<script>
-import { computed, defineComponent, ref } from "vue"
-import useLogin from "./useLogin.ts"
+<script lang="ts">
+import { defineComponent } from "vue"
+import useLogin from "./useLogin"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
-import uselogin from "./useLogin.ts"
 
 export default defineComponent({
   setup() {
