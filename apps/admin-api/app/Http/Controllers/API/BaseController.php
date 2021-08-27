@@ -36,7 +36,7 @@ class BaseController extends Controller
     	$response = [
             'success' => false,
             'message' => $errorMsg,
-            'data' => $errorLog
+            'errors' => $errorLog
         ];
         return response()->json($response, $code);
     }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Vaccination\VaccinationController;
+use App\Http\Controllers\API\Result_test\Result_testController;
   
 use App\Http\Controllers;
 use App\Http\Controllers\API\Auth\InfoUserController;
@@ -28,6 +29,7 @@ Route::prefix('v1')->group(function () {
     //api resource
     Route::middleware('auth:api')->group(function () {
         Route::resource('vaccination', VaccinationController::class);
+        Route::resource('result_test', Result_testController::class);
     });
 });
 
