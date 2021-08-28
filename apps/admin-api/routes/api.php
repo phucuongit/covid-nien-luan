@@ -27,21 +27,9 @@ Route::namespace('API')->prefix('v1')->group(function () {
     Route::get('/test',  [LoginController::class, 'test']);
 
 });
-
-Route::middleware('auth:api')->group( function () {
-    // Route::resource('products', ProductController::class);
-});
      
 Route::middleware('auth:api')->group( function () {
     Route::resource('records', RecordController::class);
-    Route::resource('InfoUser', InfoUserController::class);
+    Route::resource('infouser', InfoUserController::class);
 });
-
-/*Route::apiResource('InfoUser','App\Http\Controllers\API\UserController\InfoUserController');
-
-Route::get('UserTestResult/{iduser}','App\Http\Controllers\API\UserController\InfoUserController@UserTestResult');
-
-Route::get('UserVaccina/{iduser}','App\Http\Controllers\API\UserController\InfoUserController@UserVaccina');
-
-Route::get('ViewProfile/{username}','App\Http\Controllers\API\UserController\InfoUserController@ViewProfile');*/
 
