@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Vaccination\VaccinationController;
 use App\Http\Controllers\API\Result_test\Result_testController;
+use App\Http\Controllers\API\Vaccine_type\Vaccine_typeController;
   
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +28,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::resource('vaccination', VaccinationController::class);
         Route::resource('result_test', Result_testController::class);
+        Route::resource('vaccine_type', Vaccine_typeController::class);
     });
 });
