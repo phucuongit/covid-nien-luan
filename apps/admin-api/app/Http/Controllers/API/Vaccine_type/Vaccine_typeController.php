@@ -43,7 +43,7 @@ class Vaccine_typeController extends BaseController
      */
     public function show(Vaccine_type $vaccine_type)
     {
-        $Vaccine_typeResult = new VaccinationResources($vaccination);
+        $Vaccine_typeResult = new Vaccine_typeResources($vaccine_type);
         return $this->sendResponse($Vaccine_typeResult);
     }
 
@@ -54,10 +54,10 @@ class Vaccine_typeController extends BaseController
      * @param  \App\Models\Vaccine_type  $vaccine_type
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vaccine_type $vaccine_type)
+    public function update(Vaccine_typeRequest $request, Vaccine_type $vaccine_type)
     {
         $validatedData = $request->validated();
-        $Vaccine_typeResult = tap($vaccination)
+        $Vaccine_typeResult = tap($vaccine_type)
                         ->update($validatedData);
         return $this->sendResponse($Vaccine_typeResult);
     }
@@ -70,8 +70,8 @@ class Vaccine_typeController extends BaseController
      */
     public function destroy(Vaccine_type $vaccine_type)
     {
-        $Vaccine_typeResult = $vaccination
+        $Vaccine_typeResult = $vaccine_type
                         ->delete();
-        return $this->sendResponse($vaccination);
+        return $this->sendResponse($vaccine_type);
     }
 }
