@@ -1,7 +1,7 @@
 import { ref } from "vue"
 import { ElMessage } from "element-plus"
 import router from "@/router"
-import instance from "@/services"
+import API from "@/services"
 function useLogin() {
   const isLoading = ref(false)
 
@@ -9,7 +9,7 @@ function useLogin() {
     try {
       isLoading.value = true
 
-      const response = await instance.post("login", params)
+      const response = await API.post("login", params)
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.data.token)

@@ -4,13 +4,21 @@ body {
   margin: 0;
 }
 
-.login img {
-  width: 100%;
+a { text-decoration: none; }
 
-  object-fit: cover;
-}
+
+.bg-11385e { background: #11385e; }
+.pd-10 { padding: 10px}
+.pd-25 { padding: 25px}
+.text-right { text-align: right; }
+.bg-fafafa { background: #fafafa; }
 
 /* Login */
+
+.login img {
+  width: 100%;
+  object-fit: cover;
+}
 
 .login-right-wrap {
   display: table;
@@ -18,12 +26,12 @@ body {
   margin: 0 auto;
 }
 
-.login__right__login {
+.login-right-info {
   display: table-cell;
   vertical-align: middle;
 }
 
-.login__right__login h1{
+.login-right-info h1{
   margin-bottom: 30px;
 }
 
@@ -31,20 +39,65 @@ body {
   margin-left: 0px !important;
 }
 
-.login-error { color: red;
-text-align: left; }
-
-.state-login { 
+.login-error { 
   color: red;
-  margin-bottom: 20px;
-  padding: 10px 5px;
-  background: #f2e4e4;
-  border: 1px solid rgb(199, 140, 140);
-  border-radius: 5px;
+  text-align: left; 
 }
+
+.login__right__login .el-form-item__label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+
+
 
 /* HOME */
 .home .el-container {
   width: 110px;
   margin: 0 auto;
+}
+
+/* ADMIN */
+  /* SIDE BAR */
+.aside-menu {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 101;
+  overflow: hidden;
+  border-right: 1px solid #ddd;
+  color: #fff;
+}
+
+.aside .el-menu-item-group__title {
+  padding: 0px;
+}
+
+.aside-menu>li span,
+.aside-menu>li i {
+  color: #fff;
+}
+
+.el-menu-item-group>ul>li {
+  background: #11385e;
+}
+
+.el-menu-item:hover,
+.el-submenu__title:hover,
+.el-menu-item.is-active {
+  background-color: #14283d;
+}
+
+.el-menu-item.is-active i { color: #fff}
+
+.el-menu--collapse .aside-menu-icon .el-icon-d-arrow-right {
+  transform: rotateZ(180deg);
+}
+
+.admin .header {
+  border-bottom: 1px solid #11385e;
+  height: 50px;
+  padding: 15px;
 }

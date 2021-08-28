@@ -50,9 +50,9 @@ export default defineComponent({
           />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12">
+      <el-col :xs="24" :sm="24" :md="12" class="bg-fafafa">
         <div class="grid-content text-left login-right-wrap">
-          <div class="login__right__login">
+          <div class="login-right-info">
             <h1>Welcome to my web</h1>
             <div class="login-form">
               <el-form
@@ -67,7 +67,7 @@ export default defineComponent({
                     {{ errors.username }}
                   </div>
                 </el-form-item>
-                <el-form-item label="Mật khẩu" lable="Quên mật khẩu?">
+                <el-form-item label="Mật khẩu">
                   <el-input
                     show-password
                     v-model="password"

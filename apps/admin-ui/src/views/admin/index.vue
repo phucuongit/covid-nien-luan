@@ -1,22 +1,26 @@
-<template>
-  <div class="admin" v-if="token">
-    <h1>This is admin page</h1>
-  </div>
-</template>
-
 <script>
 import { defineComponent } from "vue"
-import router from "@/router"
-
+import SideBar from "./sidebar"
 export default defineComponent({
-  setup() {
-    const token = localStorage.getItem("token")
-    if (!token) {
-      console.log("fail")
-      router.push({ name: "Login" })
-    }
-
-    return { token }
+  components: {
+    SideBar
   }
 })
 </script>
+
+<template>
+  <div class="admin">
+    <el-container>
+      <el-aside width="200px">
+        <SideBar />
+      </el-aside>
+      <el-container>
+        <el-header class="header text-right">Header</el-header>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
+        <el-footer>Footer</el-footer>
+      </el-container>
+    </el-container>
+  </div>
+</template>
