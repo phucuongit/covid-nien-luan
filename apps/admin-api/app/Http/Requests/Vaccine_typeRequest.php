@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VaccinationRequest extends FormRequest
+class Vaccine_typeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,8 @@ class VaccinationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric|min:0', 
-            'create_by' => 'required|numeric|min:0', 
-            'vaccine_type_id' => 'required|numeric|min:0',
+            'name' => 'required|string',
+            'country' => 'required|string',
         ];
     }
-    // public function messages()
-    // {
-    //     return [
-    //         'success.attribute' => 'false',
-    //     ];
-    // }
 }
