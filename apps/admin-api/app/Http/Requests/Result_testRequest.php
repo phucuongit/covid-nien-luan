@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class VaccinationRequest extends FormRequest
+class Result_testRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +25,12 @@ class VaccinationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric|min:0', 
-            'create_by' => 'required|numeric|min:0', 
-            'vaccine_type_id' => 'required|numeric|min:0',
+            'status' => 
+                ['required', Rule::in(['positive', 'negative'])],
+            'user_id' => 
+                'required|numeric|min:0',
+            'create_by' => 
+                'required|numeric|min:0',
         ];
     }
-    // public function messages()
-    // {
-    //     return [
-    //         'success.attribute' => 'false',
-    //     ];
-    // }
 }

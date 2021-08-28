@@ -18,8 +18,8 @@ class VaccinationController extends BaseController
      */
     public function index()
     {
-        $vaccinations = VaccinationResources::collection(Vaccination::all());
-        return $this->sendResponse($vaccinations);
+        $vaccinationResults = VaccinationResources::collection(Vaccination::all());
+        return $this->sendResponse($vaccinationResults);
     }
 
     /**
@@ -31,8 +31,8 @@ class VaccinationController extends BaseController
     public function store(VaccinationRequest $request)
     {
         $validatedData = $request->validated();
-        $vaccination = new VaccinationResources(Vaccination::create($request->all()));
-        return $this->sendResponse($vaccination);
+        $vaccinationResult = new VaccinationResources(Vaccination::create($request->all()));
+        return $this->sendResponse($vaccinationResult);
     }
 
     /**
@@ -41,10 +41,10 @@ class VaccinationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Vaccination $vaccination)
     {
-        $vaccination = new VaccinationResources(Vaccination::findOrFail($id));
-        return $this->sendResponse($vaccination);
+        $vaccinationResult = new VaccinationResources($vaccination);
+        return $this->sendResponse($vaccinationResult);
     }
 
     /**
@@ -54,12 +54,12 @@ class VaccinationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(VaccinationRequest $request, $id)
+    public function update(VaccinationRequest $request, Vaccination $vaccination)
     {
         $validatedData = $request->validated();
-        $vaccination = tap(Vaccination::find($id))
-                    ->update($request->all());
-        return $this->sendResponse($vaccination);
+        $vaccinationResult = tap($vaccination)
+                        ->update($request->all());
+        return $this->sendResponse($vaccinationResult);
     }
 
     /**
@@ -68,9 +68,9 @@ class VaccinationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Vaccination $vaccination)
     {
-        $vaccination = tap(Vaccination::find($id))
+        $vaccinationResult = $vaccination
                         ->delete();
         return $this->sendResponse($vaccination);
     }

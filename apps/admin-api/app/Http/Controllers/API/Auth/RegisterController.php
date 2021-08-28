@@ -28,15 +28,11 @@ class RegisterController extends BaseController
         ]);
    
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors(), 400);       
         }
         $input = $request->all();
         //Hash password
         $input['password'] = bcrypt($input['password']);
-        //Select role
-        // $input['role'] = Role::select('id')
-        //                 ->where('name', $input['role'])
-        //                 ->first();
         $user = User::create($input);
         //Token for access
         $success['token'] =  $user->createToken('Acess token')->accessToken;
