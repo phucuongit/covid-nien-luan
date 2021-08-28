@@ -34,13 +34,14 @@ Route::middleware('auth:api')->group( function () {
      
 Route::middleware('auth:api')->group( function () {
     Route::resource('records', RecordController::class);
+    Route::resource('InfoUser', InfoUserController::class);
 });
 
-Route::apiResource('InfoUser','App\Http\Controllers\API\Auth\InfoUserController');
+/*Route::apiResource('InfoUser','App\Http\Controllers\API\UserController\InfoUserController');
 
-Route::get('UserTestResult/{iduser}','App\Http\Controllers\API\Auth\InfoUserController@UserTestResult');
+Route::get('UserTestResult/{iduser}','App\Http\Controllers\API\UserController\InfoUserController@UserTestResult');
 
-Route::get('UserVaccina/{iduser}','App\Http\Controllers\API\Auth\InfoUserController@UserVaccina');
+Route::get('UserVaccina/{iduser}','App\Http\Controllers\API\UserController\InfoUserController@UserVaccina');
 
-Route::get('ViewProfile/{username}','App\Http\Controllers\API\Auth\InfoUserController@ViewProfile');
+Route::get('ViewProfile/{username}','App\Http\Controllers\API\UserController\InfoUserController@ViewProfile');*/
 
