@@ -23,7 +23,11 @@ pipeline {
                     } 
                 }
                 
-               
+                dir(workspace + '/apps/admin-ui'){
+                    script {
+                        sh 'npm run build'
+                    }
+                }
                 dir(workspace + '/apps/admin-api'){
                     script {
                         sh 'composer install'
