@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
   
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\LoginController;
-use App\Http\Controllers\API\Data\RecordController;
+use App\Http\Controllers\API\Vaccination\VaccinationController;
   
 use App\Http\Controllers;
 use App\Http\Controllers\API\Auth\InfoUserController;
@@ -20,11 +20,11 @@ use App\Http\Controllers\API\Auth\InfoUserController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::namespace('API')->prefix('v1')->group(function () {
+Route::prefix('v1')->group(function () {
     Route::post('/auth/register', [RegisterController::class, 'register']);
     Route::post('/auth/login', [LoginController::class, 'login']);
     Route::get('/test',  [LoginController::class, 'test']);
+
 
 });
 
@@ -44,4 +44,11 @@ Route::get('UserTestResult/{iduser}','App\Http\Controllers\API\UserController\In
 Route::get('UserVaccina/{iduser}','App\Http\Controllers\API\UserController\InfoUserController@UserVaccina');
 
 Route::get('ViewProfile/{username}','App\Http\Controllers\API\UserController\InfoUserController@ViewProfile');*/
+
+=======
+    //api resource
+    Route::middleware('auth:api')->group(function () {
+        Route::resource('vaccination', VaccinationController::class);
+    });
+});
 

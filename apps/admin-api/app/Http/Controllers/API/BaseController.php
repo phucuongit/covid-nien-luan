@@ -15,14 +15,14 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendResponse($result, $message)
+    public function sendResponse($result, $message = '',  $code = 200)
     {
     	$response = [
             'success' => true,
-            'data'    => $result,
             'message' => $message,
+            'data'    => $result,
         ];
-        return response()->json($response, 200);
+        return response()->json($response, $code);
     }
 
 
@@ -31,15 +31,23 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendError($error, $errorMessages = [], $code = 404)
+    public function sendError($errorMsg, $errorLog = [], $code = 404)
     {
     	$response = [
             'success' => false,
-            'message' => $error,
+            'message' => $errorMsg,
+            'data' => $errorLog
         ];
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
-        }
         return response()->json($response, $code);
     }
 }
+// 200: Ok. Mã cơ bản có ý nghĩa là thành công trong hoạt động.
+// 201: Đối tượng được tạo, được dùng trong hàm store.
+// 204: Không có nội dung trả về. Hoàn thành hoạt động nhưng sẽ không trả về nội dung gì.
+// 206: Trả lại một phần nội dung, dùng khi sử dụng phân trang.
+// 400: Lỗi. Đây là lỗi cơ bản khi không vượt qua được xác nhận yêu cầu từ server.
+// 401: Unauthorized. Lỗi do yêu cầu authen.
+// 403: Forbidden. Lỗi này người dùng vượt qua authen, nhưng không có quyền truy cập.
+// 404: Not found. Không tìm thấy yêu cầu tương tứng.
+// 500: Internal server error.
+// 503: Service unavailable.
