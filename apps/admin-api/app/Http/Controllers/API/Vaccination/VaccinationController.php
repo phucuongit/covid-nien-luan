@@ -31,7 +31,7 @@ class VaccinationController extends BaseController
     public function store(VaccinationRequest $request)
     {
         $validatedData = $request->validated();
-        $vaccinationResult = new VaccinationResources(Vaccination::create($request->all()));
+        $vaccinationResult = new VaccinationResources(Vaccination::create($validatedData));
         return $this->sendResponse($vaccinationResult);
     }
 
@@ -58,7 +58,7 @@ class VaccinationController extends BaseController
     {
         $validatedData = $request->validated();
         $vaccinationResult = tap($vaccination)
-                        ->update($request->all());
+                        ->update($validatedData);
         return $this->sendResponse($vaccinationResult);
     }
 

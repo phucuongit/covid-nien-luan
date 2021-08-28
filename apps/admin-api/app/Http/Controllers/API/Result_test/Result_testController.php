@@ -31,7 +31,7 @@ class Result_testController extends BaseController
     public function store(Result_testRequest $request)
     {
         $validatedData = $request->validated();
-        $result_testResult = new Result_testResources(Result_test::create($request->all()));
+        $result_testResult = new Result_testResources(Result_test::create($validatedData));
         return $this->sendResponse($result_testResult);
     }
 
@@ -58,7 +58,7 @@ class Result_testController extends BaseController
     {
         $validatedData = $request->validated();
         $result_testResult = tap($result_test)
-                        ->update($request->all());
+                        ->update($validatedData);
         return $this->sendResponse($result_testResult);
     }
 
