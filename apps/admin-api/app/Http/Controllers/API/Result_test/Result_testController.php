@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Result_testRequest;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\Result_test as Result_testResources;
+use Exception;
 
 class Result_testController extends BaseController
 {
@@ -30,9 +31,14 @@ class Result_testController extends BaseController
      */
     public function store(Result_testRequest $request)
     {
-        $validatedData = $request->validated();
-        $result_testResult = new Result_testResources(Result_test::create($validatedData));
-        return $this->sendResponse($result_testResult);
+        try{
+            $validatedData = $request->validated();
+            $result_testResult = new Result_testResources(Result_test::create($validatedData));
+            return $this->sendResponse($result_testResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -43,8 +49,13 @@ class Result_testController extends BaseController
      */
     public function show(Result_test $result_test)
     {
-        $result_testResult = new Result_testResources($result_test);
-        return $this->sendResponse($result_testResult);
+        try{
+            $result_testResult = new Result_testResources($result_test);
+            return $this->sendResponse($result_testResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -56,10 +67,15 @@ class Result_testController extends BaseController
      */
     public function update(Result_testRequest $request, Result_test $result_test)
     {
-        $validatedData = $request->validated();
-        $result_testResult = tap($result_test)
-                        ->update($validatedData);
-        return $this->sendResponse($result_testResult);
+        try{
+            $validatedData = $request->validated();
+            $result_testResult = tap($result_test)
+                            ->update($validatedData);
+            return $this->sendResponse($result_testResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -70,8 +86,13 @@ class Result_testController extends BaseController
      */
     public function destroy(Result_test $result_test)
     {
-        $result_testResult = $result_test
-                        ->delete();
-        return $this->sendResponse($result_test);
+        try{
+            $result_testResult = $result_test
+                            ->delete();
+            return $this->sendResponse($result_test);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 }

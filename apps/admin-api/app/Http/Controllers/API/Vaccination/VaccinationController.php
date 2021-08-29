@@ -8,6 +8,7 @@ use App\Models\Vaccination;
 use App\Http\Resources\Vaccination as VaccinationResources;
 use App\Http\Requests\VaccinationRequest;
 use Illuminate\Http\Request;
+Use Exception;
 
 class VaccinationController extends BaseController
 {
@@ -30,9 +31,13 @@ class VaccinationController extends BaseController
      */
     public function store(VaccinationRequest $request)
     {
-        $validatedData = $request->validated();
-        $vaccinationResult = new VaccinationResources(Vaccination::create($validatedData));
-        return $this->sendResponse($vaccinationResult);
+        try {
+            $validatedData = $request->validated();
+            $vaccinationResult = new VaccinationResources(Vaccination::create($validatedData));
+            return $this->sendResponse($vaccinationResult);
+        } catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -43,8 +48,12 @@ class VaccinationController extends BaseController
      */
     public function show(Vaccination $vaccination)
     {
-        $vaccinationResult = new VaccinationResources($vaccination);
-        return $this->sendResponse($vaccinationResult);
+        try {
+            $vaccinationResult = new VaccinationResources($vaccination);
+            return $this->sendResponse($vaccinationResult);
+        } catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -56,10 +65,15 @@ class VaccinationController extends BaseController
      */
     public function update(VaccinationRequest $request, Vaccination $vaccination)
     {
-        $validatedData = $request->validated();
-        $vaccinationResult = tap($vaccination)
-                        ->update($validatedData);
-        return $this->sendResponse($vaccinationResult);
+        try {
+            $validatedData = $request->validated();
+            $vaccinationResult = tap($vaccination)
+                            ->update($validatedData);
+            return $this->sendResponse($vaccinationResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -70,8 +84,13 @@ class VaccinationController extends BaseController
      */
     public function destroy(Vaccination $vaccination)
     {
-        $vaccinationResult = $vaccination
-                        ->delete();
-        return $this->sendResponse($vaccination);
+        try {
+            $vaccinationResult = $vaccination
+                            ->delete();
+            return $this->sendResponse($vaccination);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 }

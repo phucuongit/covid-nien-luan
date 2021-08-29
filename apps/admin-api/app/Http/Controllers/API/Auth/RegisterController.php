@@ -8,7 +8,8 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-   
+use Exception;
+
 class RegisterController extends BaseController
 {
     /**
@@ -33,10 +34,15 @@ class RegisterController extends BaseController
         $input = $request->all();
         //Hash password
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        //Token for access
-        $success['token'] =  $user->createToken('Acess token')->accessToken;
-        $success['name'] =  $user->username;
+        try{
+            $user = User::create($input);
+            //Token for access
+            $success['token'] =  $user->createToken('Acess token')->accessToken;
+            $success['name'] =  $user->username;
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
    
         return $this->sendResponse($success, 'User register successfully.');
     }

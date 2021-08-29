@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\User as UserResources;
 use App\Http\Requests\UserRequest;
+use Exception;
 
 class UserController extends BaseController
 {
@@ -33,9 +34,14 @@ class UserController extends BaseController
      */
     public function store(UserRequest $request)
     {
-        $validatedData = $request->validated();
-        $userResult = new UserResources(User::create($validatedData));
-        return $this->sendResponse($userResult);
+        try{
+            $validatedData = $request->validated();
+            $userResult = new UserResources(User::create($validatedData));
+            return $this->sendResponse($userResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -46,8 +52,13 @@ class UserController extends BaseController
      */
     public function show(User $user)
     {
-        $userResult = new UserResources($user);
-        return $this->sendResponse($userResult);
+        try{
+            $userResult = new UserResources($user);
+            return $this->sendResponse($userResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -72,10 +83,15 @@ class UserController extends BaseController
         // $user->role_id = $request->get('role_id');
         // $user->save();
         // return $user;
-        $validatedData = $request->validated();
-        $userResult = tap($user)
-                        ->update($validatedData);
-        return $this->sendResponse($userResult);
+        try{
+            $validatedData = $request->validated();
+            $userResult = tap($user)
+                            ->update($validatedData);
+            return $this->sendResponse($userResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -86,9 +102,14 @@ class UserController extends BaseController
      */
     public function destroy(User $user)
     {
-        $userResult = $user
-                        ->delete();
-        return $this->sendResponse($user);
+        try{
+           $userResult = $user
+                            ->delete();
+            return $this->sendResponse($user);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     public function ViewProfile($username){
