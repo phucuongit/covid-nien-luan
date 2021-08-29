@@ -26,12 +26,12 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/register', [RegisterController::class, 'register']);
     Route::post('/auth/login', [LoginController::class, 'login']);
     Route::get('/test',  [LoginController::class, 'test']);
-});
-Route::middleware('auth:api')->group( function () {
-    Route::resource('records', RecordController::class);
-    Route::resource('user', UserController::class);
-    //api resource
-    Route::resource('vaccination', VaccinationController::class);
-    Route::resource('result_test', Result_testController::class);
-    Route::resource('vaccine_type', Vaccine_typeController::class);
+    Route::middleware('auth:api')->group( function () {
+        Route::resource('records', RecordController::class);
+        Route::resource('user', UserController::class);
+        //api resource
+        Route::resource('vaccination', VaccinationController::class);
+        Route::resource('result_test', Result_testController::class);
+        Route::resource('vaccine_type', Vaccine_typeController::class);
+    });
 });
