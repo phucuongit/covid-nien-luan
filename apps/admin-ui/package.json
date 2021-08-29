@@ -11,6 +11,7 @@
     "pre-commit": "yarn run lint && yarn run lint:scss"
   },
   "dependencies": {
+    "@iconify/vue": "^3.0.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.70",
     "moment": "^2.29.1",

@@ -2,10 +2,16 @@ import { ref } from "vue"
 import { ElMessage } from "element-plus"
 import router from "@/router"
 import API from "@/services"
+import { RequiredStringSchema } from "yup/lib/string"
+
+type Prop = {
+  username: string | undefined
+  password: string | undefined
+}
+
 function useLogin() {
   const isLoading = ref(false)
-
-  const login = async (params: any) => {
+  const login = async (params: Prop) => {
     try {
       isLoading.value = true
 

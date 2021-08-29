@@ -15,7 +15,10 @@ export default defineComponent({
       validationSchema: loginSchema
     })
     const onSubmit = handleSubmit((values) => {
-      login(values)
+      if (values) {
+        console.log(values)
+        login(values)
+      }
     })
 
     const { value: username } = useField("username")

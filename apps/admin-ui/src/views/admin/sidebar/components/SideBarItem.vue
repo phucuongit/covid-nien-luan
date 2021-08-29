@@ -1,8 +1,11 @@
 <script>
 import { defineComponent, computed } from "vue"
-
+import { Icon } from "@iconify/vue"
 const SideBarItem = defineComponent({
   name: "SideBarItem",
+  components: {
+    Icon
+  },
   props: {
     item: {
       type: Object,
@@ -32,7 +35,7 @@ export default SideBarItem
         class="text-white aside-a"
         :to="{ name: item.link ? item.link : '' }"
       >
-        <i :class="item.icon"></i>
+        <Icon :icon="item.icon" color="#369" />
         <span>{{ item.label }} </span>
       </router-link>
     </el-menu-item>
@@ -41,7 +44,7 @@ export default SideBarItem
   <template v-else>
     <el-submenu class="text-white" :index="item.key">
       <template #title>
-        <i :class="item.icon"></i>
+        <Icon :icon="item.icon" color="#369" />
         <span class="text-white">
           <router-link
             class="text-white aside-a"
@@ -63,7 +66,7 @@ export default SideBarItem
             class="text-white aside-a"
             :to="{ name: submenu.link ? submenu.link : '' }"
           >
-            <i :class="submenu.icon"></i>
+            <Icon :icon="submenu.icon" color="#369" />
             <span>{{ submenu.label }} </span>
           </router-link>
         </el-menu-item>

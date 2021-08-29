@@ -11,9 +11,9 @@ export default defineComponent({
 <template>
   <div class="admin">
     <el-container>
-      <el-aside width="200px">
-        <SideBar />
-      </el-aside>
+      <!-- <el-aside width="200px"> -->
+      <SideBar />
+      <!-- </el-aside> -->
       <el-container>
         <el-header class="header text-right">Header</el-header>
         <el-main>

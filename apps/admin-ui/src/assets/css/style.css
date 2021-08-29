@@ -60,7 +60,7 @@ a { text-decoration: none; }
 
 /* ADMIN */
   /* SIDE BAR */
-.aside-menu {
+/* .aside-menu {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -68,7 +68,7 @@ a { text-decoration: none; }
   z-index: 101;
   overflow: hidden;
   border-right: 1px solid #ddd;
-}
+} */
 
 .aside .el-menu-item-group__title {
   padding: 0px;
@@ -87,6 +87,8 @@ a { text-decoration: none; }
 .el-menu--collapse .aside-menu-icon .el-icon-d-arrow-right {
   transform: rotateZ(180deg);
 }
+
+/* .el-menu-item * { vertical-align: auto;} */
 
 
   /* ADMIN - HEADER */

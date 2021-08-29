@@ -10,8 +10,12 @@ export default defineComponent({
   setup() {
     const isOpenSidebar = ref(false)
     const { sidebar } = useConfigSideBar()
+    const handleChangeOpenSideBar = () => {
+      isOpenSidebar.value = !isOpenSidebar.value
+    }
     return {
       isOpenSidebar,
+      handleChangeOpenSideBar,
       sidebar
     }
   }
@@ -20,6 +24,7 @@ export default defineComponent({
 
 <template>
   <div class="aside">
+    <i class="el-icon-notebook-2" @click="handleChangeOpenSideBar"></i>
     <el-menu
       default-active="1"
       class="aside-menu bg-11385e el-menu-vertical-demo"

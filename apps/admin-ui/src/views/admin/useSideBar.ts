@@ -1,58 +1,62 @@
 import { reactive } from "vue"
 
+interface SideBarType {
+  key: number
+  link: string
+  icon: string
+  label: string
+  children: SideBarType[]
+}
+
 export default function useConfigSideBar() {
-  const sidebar = reactive([
+  const sidebar = reactive<SideBarType[]>([
     {
       key: 1,
-      link: "AdminHome",
-      icon: "el-icon-s-home",
-      label: "Trang chủ",
+      link: "PopulateManager",
+      icon: "bx:bx-search",
+      label: "Thống kê",
       children: []
     },
     {
       key: 2,
       link: "PopulateManager",
-      icon: "el-icon-s-management",
+      icon: "bx:bx-search",
       label: "Quản lý dân cư",
       children: []
     },
     {
       key: 3,
       link: "PopulateManager",
-      icon: "el-icon-document-add",
+      icon: "bx:bx-search",
       label: "Thêm lịch sử tiêm",
-      children: []
-    },
-    {
-      key: 4,
-      link: "PopulateManager",
-      icon: "el-icon-tickets",
-      label: "Thống kê",
       children: []
     },
     {
       key: 5,
       link: "Vaccine",
-      icon: "el-icon-s-order",
+      icon: "bx:bx-search",
       label: "Vắc-xin",
       children: []
     },
     {
-      key: 6,
-      icon: "el-icon-s-tools",
+      key: 5,
+      icon: "bx:bx-search",
+      link: "",
       label: "Cài đặt",
       children: [
         {
           key: 1,
           link: "PopulateManager",
-          icon: "el-icon-s-custom",
-          label: "Tài khoản"
+          icon: "bx:bx-search",
+          label: "Tài khoản",
+          children: []
         },
         {
           key: 2,
           link: "PopulateManager",
-          icon: "el-icon-s-custom",
-          label: "Người dùng"
+          icon: "bx:bx-search",
+          label: "Người dùng",
+          children: []
         }
       ]
     }
