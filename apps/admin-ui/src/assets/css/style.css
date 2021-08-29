@@ -10,10 +10,15 @@ a { text-decoration: none; }
 .bg-11385e { background-color: #11385e; }
 .pd-10 { padding: 10px}
 .pd-25 { padding: 25px}
+.pr-20 { padding-right: 20px; }
+.mr-5 { margin-right: 5px }
+.mb-30 { margin-bottom: 30px; }
 .text-right { text-align: right; }
 .bg-fafafa { background: #fafafa; }
 .text-white { color: white }
-/* Login */
+
+
+/* Login ----------------------------------------------------------------------------- */
 
 .login img {
   width: 100%;
@@ -31,10 +36,6 @@ a { text-decoration: none; }
   vertical-align: middle;
 }
 
-.login-right-info h1{
-  margin-bottom: 30px;
-}
-
 .login-button .el-form-item__content {
   margin-left: 0px !important;
 }
@@ -50,32 +51,22 @@ a { text-decoration: none; }
 }
 
 
-
-
-/* HOME */
-.home .el-container {
-  width: 110px;
-  margin: 0 auto;
+/* ADMIN ----------------------------------------------------------------------------- */
+  /* SIDE BAR */
+.aside {
+  height: 100vh;
+  background: #11385e;
 }
 
-/* ADMIN */
-  /* SIDE BAR */
-/* .aside-menu {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 101;
-  overflow: hidden;
-  border-right: 1px solid #ddd;
-} */
-
-.aside .el-menu-item-group__title {
+.el-menu-item-group__title {
   padding: 0px;
 }
+.el-menu--popup { padding: 0 }
+
 .aside-a {
   display: inline-block;
   width: 100%;
+  height: 95%;
 }
 
 .el-menu-item:hover,
@@ -84,12 +75,7 @@ a { text-decoration: none; }
   background-color: #14283d;
 }
 
-.el-menu--collapse .aside-menu-icon .el-icon-d-arrow-right {
-  transform: rotateZ(180deg);
-}
-
-/* .el-menu-item * { vertical-align: auto;} */
-
+.aside-menu { border-right: 1px solid #11385e }
 
   /* ADMIN - HEADER */
 .admin .header {

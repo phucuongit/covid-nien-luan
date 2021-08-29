@@ -2,7 +2,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import Home from "../views/Home.vue"
 import Admin from "../views/admin/index.vue"
 import Login from "../views/login/index.vue"
-import AdminHome from "../views/admin_home/index.vue"
 import PopulateManager from "../views/populate_manager/index.vue"
 import Vaccine from "../views/vaccine/index.vue"
 
@@ -17,11 +16,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "Admin",
     component: Admin,
     children: [
-      {
-        path: "",
-        name: "AdminHome",
-        component: AdminHome
-      },
       {
         path: "populate-manager",
         name: "PopulateManager",
