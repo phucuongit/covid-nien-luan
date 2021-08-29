@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Auth;
+namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vaccination;
@@ -8,8 +8,11 @@ use App\Models\Test_result;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Resources\User as UserResources;
+use App\Http\Requests\UserRequest;
 
-class InfoUserController extends Controller
+class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +21,8 @@ class InfoUserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $userResults = UserResources::collection(User::all());
+        return $this->sendResponse($userResults);
     }
 
     /**
@@ -27,9 +31,11 @@ class InfoUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        return User::create($request->all());
+        $validatedData = $request->validated();
+        $userResult = new UserResources(User::create($validatedData));
+        return $this->sendResponse($userResult);
     }
 
     /**
@@ -38,10 +44,10 @@ class InfoUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        return User::find($id);
-        //return DB::select("select * from covid_nienluan.users where covid_nienluan.users.username like concat(?)",[$username]);
+        $userResult = new UserResources($user);
+        return $this->sendResponse($userResult);
     }
 
     /**
@@ -51,21 +57,25 @@ class InfoUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, User $user)
     {
-        $user = User::find($id);
-        $user->fullname = $request->get('fullname');
-        $user->username = $request->get('username');
-        $user->password = $request->get('password');
-        $user->identify_card = $request->get('identify_card');
-        $user->birthday = $request->get('birthday');
-        $user->gender = $request->get('gender');
-        $user->avatar = $request->get('avatar');
-        $user->address = $request->get('address');
-        $user->phone = $request->get('phone');
-        $user->role_id = $request->get('role_id');
-        $user->save();
-        return $user;
+        // $user = User::find($id);
+        // $user->fullname = $request->get('fullname');
+        // $user->username = $request->get('username');
+        // $user->password = $request->get('password');
+        // $user->identify_card = $request->get('identify_card');
+        // $user->birthday = $request->get('birthday');
+        // $user->gender = $request->get('gender');
+        // $user->avatar = $request->get('avatar');
+        // $user->address = $request->get('address');
+        // $user->phone = $request->get('phone');
+        // $user->role_id = $request->get('role_id');
+        // $user->save();
+        // return $user;
+        $validatedData = $request->validated();
+        $userResult = tap($user)
+                        ->update($validatedData);
+        return $this->sendResponse($userResult);
     }
 
     /**
@@ -74,10 +84,11 @@ class InfoUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::find($id)->delete();
-        return $user;
+        $userResult = $user
+                        ->delete();
+        return $this->sendResponse($user);
     }
 
     public function ViewProfile($username){

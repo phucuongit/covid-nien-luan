@@ -10,7 +10,7 @@ use App\Http\Controllers\API\Result_test\Result_testController;
 use App\Http\Controllers\API\Vaccine_type\Vaccine_typeController;
   
 use App\Http\Controllers;
-use App\Http\Controllers\API\Auth\InfoUserController;
+use App\Http\Controllers\API\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ Route::prefix('v1')->group(function () {
 });
 Route::middleware('auth:api')->group( function () {
     Route::resource('records', RecordController::class);
-    Route::resource('infouser', InfoUserController::class);
+    Route::resource('user', UserController::class);
     //api resource
     Route::resource('vaccination', VaccinationController::class);
     Route::resource('result_test', Result_testController::class);
