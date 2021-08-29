@@ -13,48 +13,48 @@ export default function useConfigSideBar() {
     {
       key: 1,
       link: "PopulateManager",
-      icon: "bx:bx-search",
+      icon: "carbon:dashboard",
       label: "Thống kê",
       children: []
     },
     {
       key: 2,
       link: "PopulateManager",
-      icon: "bx:bx-search",
+      icon: "carbon:id-management",
       label: "Quản lý dân cư",
       children: []
     },
     {
       key: 3,
       link: "PopulateManager",
-      icon: "bx:bx-search",
+      icon: "lucide:history",
       label: "Thêm lịch sử tiêm",
       children: []
     },
     {
       key: 5,
       link: "Vaccine",
-      icon: "bx:bx-search",
+      icon: "ic:twotone-vaccines",
       label: "Vắc-xin",
       children: []
     },
     {
       key: 5,
-      icon: "bx:bx-search",
+      icon: "ant-design:setting-twotone",
       link: "",
       label: "Cài đặt",
       children: [
         {
           key: 1,
           link: "PopulateManager",
-          icon: "bx:bx-search",
+          icon: "carbon:user-avatar-filled-alt",
           label: "Tài khoản",
           children: []
         },
         {
           key: 2,
           link: "PopulateManager",
-          icon: "bx:bx-search",
+          icon: "fa-solid:users",
           label: "Người dùng",
           children: []
         }

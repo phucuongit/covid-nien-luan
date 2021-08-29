@@ -2,10 +2,11 @@
 import { defineComponent, ref } from "vue"
 import useConfigSideBar from "../useSideBar.ts"
 import SideBarItem from "./components/SideBarItem.vue"
-
+import { Icon } from "@iconify/vue"
 export default defineComponent({
   components: {
-    SideBarItem
+    SideBarItem,
+    Icon
   },
   setup() {
     const isOpenSidebar = ref(false)
@@ -24,7 +25,14 @@ export default defineComponent({
 
 <template>
   <div class="aside">
-    <i class="el-icon-notebook-2" @click="handleChangeOpenSideBar"></i>
+    <div class="icon-change-open-sidebar text-right pr-20">
+      <Icon
+        icon="bx:bx-chevrons-right"
+        color="white"
+        width="30"
+        @click="handleChangeOpenSideBar"
+      />
+    </div>
     <el-menu
       default-active="1"
       class="aside-menu bg-11385e el-menu-vertical-demo"
