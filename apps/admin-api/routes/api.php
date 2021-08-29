@@ -27,7 +27,6 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [LoginController::class, 'login']);
     Route::get('/test',  [LoginController::class, 'test']);
     Route::middleware('auth:api')->group( function () {
-        Route::resource('records', RecordController::class);
         Route::resource('user', UserController::class);
         //api resource
         Route::resource('vaccination', VaccinationController::class);
