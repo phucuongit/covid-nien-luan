@@ -10,7 +10,7 @@ use App\Http\Controllers\API\Result_test\Result_testController;
 use App\Http\Controllers\API\Vaccine_type\Vaccine_typeController;
   
 use App\Http\Controllers;
-use App\Http\Controllers\API\Auth\InfoUserController;
+use App\Http\Controllers\API\UserController\InfoUserController;
 
 /*
 |--------------------------------------------------------------------------
