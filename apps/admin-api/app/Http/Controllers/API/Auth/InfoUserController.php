@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Vaccination;
 use App\Models\Test_result;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +18,7 @@ class InfoUserController extends Controller
      */
     public function index()
     {
-        return Vaccination::all();
+        return User::all();
     }
 
     /**
@@ -28,7 +29,7 @@ class InfoUserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return User::create($request->all());
     }
 
     /**
@@ -39,7 +40,8 @@ class InfoUserController extends Controller
      */
     public function show($id)
     {
-        //
+        return User::find($id);
+        //return DB::select("select * from covid_nienluan.users where covid_nienluan.users.username like concat(?)",[$username]);
     }
 
     /**
@@ -51,7 +53,19 @@ class InfoUserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        $user->fullname = $request->get('fullname');
+        $user->username = $request->get('username');
+        $user->password = $request->get('password');
+        $user->identify_card = $request->get('identify_card');
+        $user->birthday = $request->get('birthday');
+        $user->gender = $request->get('gender');
+        $user->avatar = $request->get('avatar');
+        $user->address = $request->get('address');
+        $user->phone = $request->get('phone');
+        $user->role_id = $request->get('role_id');
+        $user->save();
+        return $user;
     }
 
     /**
@@ -62,7 +76,8 @@ class InfoUserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id)->delete();
+        return $user;
     }
 
     public function ViewProfile($username){
