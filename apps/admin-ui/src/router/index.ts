@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
       }
     ],
     meta: {
-      isAuth: true
+      requireAuth: true
     }
   },
   {
@@ -51,7 +51,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const token = localStorage.getItem("token")
-  if (to.meta.isAuth && !token) {
+  if (to.meta.requireAuth && !token) {
     return { name: "Login" }
   }
 })
