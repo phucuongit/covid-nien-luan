@@ -17,6 +17,9 @@ class CreateVaccineTypesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('country');
+
+            //Default famework columns
+            $table->timestamps();
         });
     }
 

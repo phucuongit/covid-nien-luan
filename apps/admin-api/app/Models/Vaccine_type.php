@@ -8,5 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Vaccine_type extends Model
 {
     use HasFactory;
-    public $timestamps = false;
+    // public $timestamps = false;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'country',
+    ];
 }
