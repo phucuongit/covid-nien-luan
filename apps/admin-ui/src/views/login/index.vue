@@ -1,9 +1,8 @@
-<script>
-import { computed, defineComponent, ref } from "vue"
-import useLogin from "./useLogin.ts"
+<script lang="ts">
+import { defineComponent } from "vue"
+import useLogin from "./useLogin"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
-import uselogin from "./useLogin.ts"
 
 export default defineComponent({
   setup() {
@@ -16,7 +15,10 @@ export default defineComponent({
       validationSchema: loginSchema
     })
     const onSubmit = handleSubmit((values) => {
-      login(values)
+      if (values) {
+        console.log(values)
+        login(values)
+      }
     })
 
     const { value: username } = useField("username")
@@ -51,9 +53,9 @@ export default defineComponent({
           />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12">
+      <el-col :xs="24" :sm="24" :md="12" class="bg-fafafa">
         <div class="grid-content text-left login-right-wrap">
-          <div class="login__right__login">
+          <div class="login-right-info">
             <h1>Welcome to my web</h1>
             <div class="login-form">
               <el-form
@@ -68,7 +70,7 @@ export default defineComponent({
                     {{ errors.username }}
                   </div>
                 </el-form-item>
-                <el-form-item label="Mật khẩu" lable="Quên mật khẩu?">
+                <el-form-item label="Mật khẩu">
                   <el-input
                     show-password
                     v-model="password"
