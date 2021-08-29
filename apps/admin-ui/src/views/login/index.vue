@@ -56,7 +56,7 @@ export default defineComponent({
       <el-col :xs="24" :sm="24" :md="12" class="bg-fafafa">
         <div class="grid-content text-left login-right-wrap">
           <div class="login-right-info">
-            <h1>Welcome to my web</h1>
+            <h1 class="mb-30">Welcome to my web</h1>
             <div class="login-form">
               <el-form
                 @submit="onSubmit"

@@ -35,7 +35,7 @@ export default SideBarItem
         class="text-white aside-a"
         :to="{ name: item.link ? item.link : '' }"
       >
-        <Icon :icon="item.icon" color="#369" />
+        <Icon :icon="item.icon" color="white" width="18" class="mr-5" />
         <span>{{ item.label }} </span>
       </router-link>
     </el-menu-item>
@@ -44,7 +44,7 @@ export default SideBarItem
   <template v-else>
     <el-submenu class="text-white" :index="item.key">
       <template #title>
-        <Icon :icon="item.icon" color="#369" />
+        <Icon :icon="item.icon" color="white" width="18" class="mr-5" />
         <span class="text-white">
           <router-link
             class="text-white aside-a"
@@ -66,7 +66,7 @@ export default SideBarItem
             class="text-white aside-a"
             :to="{ name: submenu.link ? submenu.link : '' }"
           >
-            <Icon :icon="submenu.icon" color="#369" />
+            <Icon :icon="submenu.icon" color="white" width="18" class="mr-5" />
             <span>{{ submenu.label }} </span>
           </router-link>
         </el-menu-item>
