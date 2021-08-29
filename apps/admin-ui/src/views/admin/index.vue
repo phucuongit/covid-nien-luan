@@ -5,19 +5,15 @@
 </template>
 
 <script>
-import { useStore } from "vuex"
 import { defineComponent } from "vue"
 import router from "@/router"
 
 export default defineComponent({
   setup() {
     const token = localStorage.getItem("token")
-    const store = useStore()
-    if (token) {
-      store.dispatch("setToken", token)
-    } else {
+    if (!token) {
+      console.log("fail")
       router.push({ name: "Login" })
-      store.dispatch("setToken", "")
     }
 
     return { token }

@@ -1,35 +1,79 @@
+<script>
+import { computed, defineComponent, ref } from "vue"
+import useLogin from "./useLogin.ts"
+import * as yup from "yup"
+import { useForm, useField } from "vee-validate"
+import uselogin from "./useLogin.ts"
+
+export default defineComponent({
+  setup() {
+    const { login, isLoading } = useLogin()
+    const loginSchema = yup.object({
+      username: yup.string().required("Tên đăng nhập là bắt buộc"),
+      password: yup.string().required("Mật khẩu là bắt buộc")
+    })
+    const { handleSubmit, errors, resetForm } = useForm({
+      validationSchema: loginSchema
+    })
+    const onSubmit = handleSubmit((values) => {
+      login(values)
+    })
+
+    const { value: username } = useField("username")
+    const { value: password } = useField("password")
+
+    return {
+      username,
+      password,
+      errors,
+      resetForm,
+      onSubmit,
+      isLoading
+    }
+  }
+})
+</script>
+
 <template>
   <div class="login">
     <el-row class="row-bg">
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12">
         <div class="grid-content">
-          <img src="@/assets/images/login-img-left.jpg" alt="not found " />
+          <img
+            src="@/assets/images/login-img-left.jpg"
+            alt="not found "
+            class="hidden-sm-and-down"
+          />
+          <img
+            src="@/assets/images/login-img-left-mobile.jpg"
+            alt="not found "
+            class="hidden-md-and-up"
+          />
         </div>
       </el-col>
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12">
         <div class="grid-content text-left login-right-wrap">
           <div class="login__right__login">
             <h1>Welcome to my web</h1>
-            <div class="state-login" v-if="stateLogin">
-              <i class="el-icon-warning"></i>
-              Tên đăng nhập hoặc mật khẩu không đúng
-            </div>
-
             <div class="login-form">
               <el-form
-                @submit.prevent="onSubmit"
+                @submit="onSubmit"
                 label-width="120px"
                 label-position="left"
                 class="demo-ruleForm"
               >
                 <el-form-item label="Tên đăng nhập">
-                  <el-input type="tel" v-model="username"></el-input>
+                  <el-input v-model="username" :disabled="isLoading"></el-input>
                   <div class="login-error">
                     {{ errors.username }}
                   </div>
                 </el-form-item>
                 <el-form-item label="Mật khẩu" lable="Quên mật khẩu?">
-                  <el-input show-password v-model="password"></el-input>
+                  <el-input
+                    show-password
+                    v-model="password"
+                    :disabled="isLoading"
+                  ></el-input>
                   <div class="login-error">
                     {{ errors.password }}
                   </div>
@@ -38,8 +82,8 @@
                   <el-button
                     type="primary"
                     @click="onSubmit"
-                    :loading="loading"
-                    :disabled="loading"
+                    :loading="isLoading"
+                    :disabled="isLoading"
                   >
                     Đăng nhập
                   </el-button>
@@ -53,36 +97,3 @@
     </el-row>
   </div>
 </template>
-
-<script>
-import { computed, defineComponent } from "vue"
-import { useStore } from "vuex"
-import useLogin from "./useLogin.ts"
-
-export default defineComponent({
-  setup() {
-    const { username, password, errors, resetForm, isLoading, onSubmit } =
-      useLogin()
-    const store = useStore()
-    const stateLogin = computed(() => store.state.stateLogin)
-
-    const loading = computed(() => {
-      if (store.state.stateLogin === true) {
-        return false
-      } else {
-        return isLoading.value
-      }
-    })
-
-    return {
-      username,
-      password,
-      errors,
-      resetForm,
-      loading,
-      onSubmit,
-      stateLogin
-    }
-  }
-})
-</script>
