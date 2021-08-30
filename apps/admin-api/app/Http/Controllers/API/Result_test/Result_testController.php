@@ -17,10 +17,17 @@ class Result_testController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $result_testResults = Result_testResources::collection(Result_test::all());
-        return $this->sendResponse($result_testResults);
+        try{
+            $params = $request->all();
+            $result_testQuery = Result_test::filter($params);
+            $result_tests = Result_testResources::collection($result_testQuery->get());
+            return $this->sendResponse($result_tests);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
