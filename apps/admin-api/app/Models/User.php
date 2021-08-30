@@ -43,8 +43,9 @@ class User extends Authenticatable
     //     'email_verified_at' => 'datetime',
     // ];
 
-    /*
-        For the trait filters
+   /**
+    *   Atrr for the trait filters
+    *   @var array
     */
     protected $filterable = [
         'fullname',

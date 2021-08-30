@@ -20,8 +20,9 @@ class Vaccination extends Model
         'create_by',
         'vaccine_type_id',
     ];
-    /*
-    For the trait filters
+    /**
+    *   Atrr for the trait filters
+    *   @var array
     */
     protected $filterable = [
         'user_id',

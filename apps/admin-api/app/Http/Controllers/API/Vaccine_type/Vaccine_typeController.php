@@ -17,10 +17,17 @@ class Vaccine_typeController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vaccine_typeResults = Vaccine_typeResources::collection(Vaccine_type::all());
-        return $this->sendResponse($vaccine_typeResults);
+        try{
+            $params = $request->all();
+            $vaccine_typeQuery = Vaccine_type::filter($params);
+            $vaccine_types = Vaccine_typeResources::collection($vaccine_typeQuery->get());
+            return $this->sendResponse($vaccine_types);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
