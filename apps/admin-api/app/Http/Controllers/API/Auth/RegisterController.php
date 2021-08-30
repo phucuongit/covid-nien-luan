@@ -29,7 +29,7 @@ class RegisterController extends BaseController
         ]);
    
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors(), 400);       
+            return $this->sendError('Validation Error.', $validator->errors(), 404);       
         }
         $input = $request->all();
         //Hash password

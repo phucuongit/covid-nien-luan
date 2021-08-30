@@ -20,10 +20,17 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $userResults = UserResources::collection(User::all());
-        return $this->sendResponse($userResults);
+        try{
+            $params = $request->all();
+            $userQuery = User::filter($params);
+            $users = UserResources::collection($userQuery->get());
+            return $this->sendResponse($users);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
