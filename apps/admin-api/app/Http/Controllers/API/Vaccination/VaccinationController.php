@@ -17,10 +17,17 @@ class VaccinationController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vaccinationResults = VaccinationResources::collection(Vaccination::all());
-        return $this->sendResponse($vaccinationResults);
+        try{
+            $params = $request->all();
+            $vaccinationQuery = Vaccination::filter($params);
+            $vaccinations = VaccinationResources::collection($vaccinationQuery->get());
+            return $this->sendResponse($vaccinations);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**

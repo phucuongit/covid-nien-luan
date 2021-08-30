@@ -44,7 +44,7 @@ class User extends Authenticatable
     // ];
 
     /*
-        For the filters
+        For the trait filters
     */
     protected $filterable = [
         'fullname',

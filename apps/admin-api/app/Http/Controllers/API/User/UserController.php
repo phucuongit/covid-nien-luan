@@ -22,9 +22,15 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
-        $params = $request->all();
-        $userQuery = User::filter($params);
-        return $userQuery->get();
+        try{
+            $params = $request->all();
+            $userQuery = User::filter($params);
+            $users = UserResources::collection($userQuery->get());
+            return $this->sendResponse($users);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
