@@ -1,5 +1,5 @@
 <script>
-import { defineComponent, ref, provide, watch } from "vue"
+import { defineComponent, ref, provide } from "vue"
 import useVaccineType from "./useVaccineType"
 import DeleteVaccineType from "./deleteVaccineType/index.vue"
 import AddUpdateVaccineType from "./addUpdateVaccineType"

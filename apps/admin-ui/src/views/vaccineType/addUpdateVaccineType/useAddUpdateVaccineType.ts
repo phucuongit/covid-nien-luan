@@ -1,7 +1,6 @@
 import API from "@/services"
 import { ref } from "vue"
 import { ElMessage } from "element-plus"
-import { number } from "yup"
 
 type vaccineType = {
   name: string

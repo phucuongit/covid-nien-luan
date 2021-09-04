@@ -1,5 +1,5 @@
 <script>
-import { computed, defineComponent, inject, watch, ref } from "vue"
+import { defineComponent, inject, watch, ref } from "vue"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
 import useAddUpdateVaccineType from "./useAddUpdateVaccineType.ts"
@@ -114,6 +114,7 @@ export default AddVaccineType
           type="primary"
           @click="onSubmitUpdate"
           :loading="isLoadingAddUpdate"
+          class="bg-11385e"
         >
           {{ valueMode == "add" ? "Thêm" : "Cập nhật" }}
         </el-button>

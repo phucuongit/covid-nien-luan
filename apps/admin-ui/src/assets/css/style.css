@@ -6,8 +6,10 @@ body {
 
 a { text-decoration: none; }
 
-
+.bg-11385e:focus,
 .bg-11385e { background-color: #11385e; }
+.bg-11385e:hover { background-color: #14283d;}
+
 .pd-10 { padding: 10px}
 .pd-25 { padding: 25px}
 .pt-10 { padding-top: 10px }
