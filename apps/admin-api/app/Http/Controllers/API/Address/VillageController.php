@@ -5,17 +5,28 @@ namespace App\Http\Controllers\API\Address;
 use App\Http\Controllers\Controller;
 use App\Models\Village;
 use Illuminate\Http\Request;
+use App\Http\Resources\Village as VillageResources;
+use App\Http\Controllers\API\BaseController as BaseController;
+use Exception;
 
-class VillageController extends Controller
+class VillageController extends BaseController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try{
+            $params = $request->all();
+            $villageQuery = Village::filter($params);
+            $villages = VillageResources::collection($villageQuery->get());
+            return $this->sendResponse($villages);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
