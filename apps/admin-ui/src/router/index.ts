@@ -3,7 +3,7 @@ import Home from "../views/Home.vue"
 import Admin from "../views/admin/index.vue"
 import Login from "../views/login/index.vue"
 import PopulateManager from "../views/populate_manager/index.vue"
-import Vaccine from "../views/vaccine/index.vue"
+import Vaccine from "../views/vaccineType/index.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {

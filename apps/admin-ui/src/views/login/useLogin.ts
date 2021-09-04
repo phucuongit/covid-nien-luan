@@ -2,7 +2,6 @@ import { ref } from "vue"
 import { ElMessage } from "element-plus"
 import router from "@/router"
 import API from "@/services"
-import { RequiredStringSchema } from "yup/lib/string"
 
 type Prop = {
   username: string | undefined
@@ -15,7 +14,7 @@ function useLogin() {
     try {
       isLoading.value = true
 
-      const response = await API.post("login", params)
+      const response = await API.post("auth/login", params)
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.data.token)

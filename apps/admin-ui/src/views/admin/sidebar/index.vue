@@ -3,6 +3,7 @@ import { defineComponent, ref } from "vue"
 import useConfigSideBar from "../useSideBar.ts"
 import SideBarItem from "./components/SideBarItem.vue"
 import { Icon } from "@iconify/vue"
+
 export default defineComponent({
   components: {
     SideBarItem,
@@ -14,6 +15,7 @@ export default defineComponent({
     const handleChangeOpenSideBar = () => {
       isOpenSidebar.value = !isOpenSidebar.value
     }
+
     return {
       isOpenSidebar,
       handleChangeOpenSideBar,
