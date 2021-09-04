@@ -1,3 +1,0 @@
-<template>
-  <h1>Hello! This is home page</h1>
-</template>

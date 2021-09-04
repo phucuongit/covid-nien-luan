@@ -32,7 +32,7 @@ export default function useConfigSideBar() {
       children: []
     },
     {
-      key: 5,
+      key: 4,
       link: "Vaccine",
       icon: "ic:twotone-vaccines",
       label: "Vắc-xin",
