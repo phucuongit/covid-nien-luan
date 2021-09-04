@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Village;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -40,18 +41,18 @@ class UserFactory extends Factory
             .substr($idCard, -6);
         $gender = rand(0,1);
         $password = Hash::make('123123');
-        $address = vnfaker()->city();
+        $village_id = Village::inRandomOrder()->first()->id;
+        $address = 'Đường số '.rand(0,999);
         $phone = vnfaker()->mobilephone($numbers = 10);
-        $avatar = 'none';
         $role_id = 2;
         return [
             'identify_card' => $idCard,
             'fullname' => $fullname,
             'birthday' => $birthday,
             'gender' => $gender,
-            'avatar' => $avatar,
             'username' => $username,
             'password' => $password,
+            'village_id' => $village_id,
             'address' => $address,
             'phone' => $phone,
             'role_id' => $role_id,

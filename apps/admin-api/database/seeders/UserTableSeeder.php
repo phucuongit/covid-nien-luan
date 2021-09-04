@@ -23,6 +23,7 @@ class UserTableSeeder extends Seeder
                 'gender' => '1',
                 'username' => 'nienluan',
                 'password' => Hash::make('123123'),
+                'village_id' => '1',
                 'role_id' => '1',
             ],
         ];
