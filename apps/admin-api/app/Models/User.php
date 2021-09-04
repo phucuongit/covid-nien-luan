@@ -44,7 +44,7 @@ class User extends Authenticatable
     //     'email_verified_at' => 'datetime',
     // ];
 
-   /**
+    /**
     *   Atrr for the trait filters
     *   @var array
     */
