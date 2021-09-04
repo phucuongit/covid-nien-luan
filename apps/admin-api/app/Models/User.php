@@ -49,6 +49,7 @@ class User extends Authenticatable
     *   @var array
     */
     protected $filterable = [
+        'id',
         'fullname',
         'username',
         'password',

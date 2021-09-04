@@ -25,6 +25,7 @@ class Vaccination extends Model
     *   @var array
     */
     protected $filterable = [
+        'id',
         'user_id',
         'create_by',
         'vaccine_type_id',

@@ -24,6 +24,7 @@ class Result_test extends Model
      *   @var array
      */
     protected $filterable = [
+        'id',
         'status',
         'user_id',
         'create_by',
