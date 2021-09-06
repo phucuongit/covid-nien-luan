@@ -11,7 +11,7 @@ class VaccinationCollection extends ResourceCollection
      *
      * @var string
      */
-    public static $wrap = "vaccination";
+    public static $wrap = "vaccinations";
     /**
      * Transform the resource collection into an array.
      *

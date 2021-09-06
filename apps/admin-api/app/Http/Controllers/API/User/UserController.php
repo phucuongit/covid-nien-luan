@@ -9,7 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Http\Resources\User as UserResources;
+use App\Http\Resources\UserResource as UserResource;
+use App\Http\Resources\UserCollection as UserCollection;
 use App\Http\Requests\UserRequest;
 use Exception;
 
@@ -25,8 +26,8 @@ class UserController extends BaseController
         try{
             $params = $request->all();
             $userQuery = User::filter($params);
-            $users = UserResources::collection($userQuery->get());
-            return $this->sendResponse($users);
+            $users = new UserCollection($userQuery->paginate(5));
+            return $this->sendResponse($users->response()->getData(true));
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
@@ -43,7 +44,7 @@ class UserController extends BaseController
     {
         try{
             $validatedData = $request->validated();
-            $userResult = new UserResources(User::create($validatedData));
+            $userResult = new UserResource(User::create($validatedData));
             return $this->sendResponse($userResult);
         }
         catch (Exception $e) {
@@ -60,7 +61,7 @@ class UserController extends BaseController
     public function show(User $user)
     {
         try{
-            $userResult = new UserResources($user);
+            $userResult = new UserResource($user);
             return $this->sendResponse($userResult);
         }
         catch (Exception $e) {
