@@ -7,7 +7,8 @@ use App\Models\Result_test;
 use Illuminate\Http\Request;
 use App\Http\Requests\Result_testRequest;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Http\Resources\Result_test as Result_testResources;
+use App\Http\Resources\Result_testResource as Result_testResource;
+use App\Http\Resources\Result_testCollection as Result_testCollection;
 use Exception;
 
 class Result_testController extends BaseController
@@ -22,8 +23,10 @@ class Result_testController extends BaseController
         try{
             $params = $request->all();
             $result_testQuery = Result_test::filter($params);
-            $result_tests = Result_testResources::collection($result_testQuery->get());
-            return $this->sendResponse($result_tests);
+            $result_tests = 
+                new Result_testCollection($result_testQuery->paginate(5));
+            return $this->sendResponse($result_tests
+                                    ->response()->getData(true));
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
@@ -40,7 +43,7 @@ class Result_testController extends BaseController
     {
         try{
             $validatedData = $request->validated();
-            $result_testResult = new Result_testResources(Result_test::create($validatedData));
+            $result_testResult = new Result_testResource(Result_test::create($validatedData));
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
@@ -57,7 +60,7 @@ class Result_testController extends BaseController
     public function show(Result_test $result_test)
     {
         try{
-            $result_testResult = new Result_testResources($result_test);
+            $result_testResult = new Result_testResource($result_test);
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
