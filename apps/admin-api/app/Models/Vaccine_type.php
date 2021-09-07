@@ -23,6 +23,7 @@ class Vaccine_type extends Model
     *   @var array
     */
     protected $filterable = [
+        'id',
         'name',
         'country',
     ];
