@@ -45,6 +45,7 @@ class UserFactory extends Factory
         $address = 'Đường số '.rand(0,999);
         $phone = vnfaker()->mobilephone($numbers = 10);
         $role_id = 2;
+        $social_insurance = rand(1000000, 9999999);
         return [
             'identify_card' => $idCard,
             'fullname' => $fullname,
@@ -56,6 +57,7 @@ class UserFactory extends Factory
             'address' => $address,
             'phone' => $phone,
             'role_id' => $role_id,
+            'social_insurance' => $social_insurance,
         ];
     }
 
