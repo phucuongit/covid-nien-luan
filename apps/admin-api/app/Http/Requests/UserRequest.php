@@ -25,18 +25,17 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'identify_card' => 'required|numeric',
+            'identity_card' => 'required|numeric',
+            'social_insurance' => 'required',
+            // 'username' => 'required|min:6',
+            // 'password' => 'required|min:6',
             'fullname' => 'required|string',
             'birthday' => 'required|date',
             'gender' => ['required', Rule::in([0,1])],
-            // 'avatar' => 'required',
-            // 'username' => 'required|min:6',
-            // 'password' => 'required|min:6',
             'address' => 'required',
             'phone' => 'required',
             'role_id' => 'required|numeric',
             'village_id' => 'required|numeric',
-            'social_insurance' => 'required',
         ];
     }
 }

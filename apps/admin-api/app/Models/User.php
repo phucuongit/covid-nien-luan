@@ -15,18 +15,17 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'fullname',
+        'identity_card',
+        'social_insurance',
         'username',
         'password',
-        'identify_card',
+        'fullname',
         'birthday',
         'gender',
-        'avatar',
-        'village_id',
         'address',
         'phone',
+        'village_id',
         'role_id',
-        'social_insurance',
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -51,16 +50,16 @@ class User extends Authenticatable
     */
     protected $filterable = [
         'id',
-        'fullname',
+        'identity_card',
+        'social_insurance',
         'username',
         'password',
-        'identify_card',
+        'fullname',
         'birthday',
         'gender',
-        'avatar',
         'address',
         'phone',
+        'village_id',
         'role_id',
-        'social_insurance',
     ];
 }
