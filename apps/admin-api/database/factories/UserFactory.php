@@ -27,7 +27,8 @@ class UserFactory extends Factory
     public function definition()
     {
         //Create fake id card 
-        $idCard = Str::padLeft(strval(rand(1,63)), 3, "0") //Provinces type: 0xx
+        $identity_card = 
+                Str::padLeft(strval(rand(1,63)), 3, "0") //Provinces type: 0xx
                 .strval(rand(1,9)) //Gender
                 .$this->faker->randomNumber(2, true) //Birthday code
                 .$this->faker->unique()->randomNumber(6, true); // Random
@@ -35,29 +36,40 @@ class UserFactory extends Factory
         $fullname = 
             rand(0,1) == 1 ? vnfaker()->fullname($word = 3) : vnfaker()->fullname($word = 4);
         $birthday = 
-            $this->faker->dateTime('-10 years'); // -10 year from now
-        $username =
+            $this->faker->dateTime('-5 years'); // -10 year from now
+        //username = name + last 6 numbers indetity card
+        $username = 
             vnfaker()->vnToString(substr($fullname, strrpos($fullname, ' ') + 1))
-            .substr($idCard, -6);
-        $gender = rand(0,1);
-        $password = Hash::make('123123');
-        $village_id = Village::inRandomOrder()->first()->id;
-        $address = 'Đường số '.rand(0,999);
-        $phone = vnfaker()->mobilephone($numbers = 10);
+            .substr($identity_card, -6);
+        $gender = 
+            rand(0,1);
+        $password = 
+            Hash::make('123123');
+        $village_id = 
+            Village::inRandomOrder()->first()->id;
+        $address = 
+            'Đường '
+            .rand(0,999)
+            .chr(rand(65,90)); //A-Z
+        $phone = 
+            vnfaker()->mobilephone($numbers = 10);
         $role_id = 2;
-        $social_insurance = rand(1000000, 9999999);
+        $social_insurance = 
+            chr(rand(65,90))
+            .chr(rand(65,90))
+            .$this->faker->randomNumber(9, true);
         return [
-            'identify_card' => $idCard,
+            'identity_card' => $identity_card,
+            'social_insurance' => $social_insurance,
+            'username' => $username,
+            'password' => $password,
             'fullname' => $fullname,
             'birthday' => $birthday,
             'gender' => $gender,
-            'username' => $username,
-            'password' => $password,
-            'village_id' => $village_id,
             'address' => $address,
             'phone' => $phone,
+            'village_id' => $village_id,
             'role_id' => $role_id,
-            'social_insurance' => $social_insurance,
         ];
     }
 

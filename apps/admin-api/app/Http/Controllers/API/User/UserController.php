@@ -78,19 +78,6 @@ class UserController extends BaseController
      */
     public function update(UserRequest $request, User $user)
     {
-        // $user = User::find($id);
-        // $user->fullname = $request->get('fullname');
-        // $user->username = $request->get('username');
-        // $user->password = $request->get('password');
-        // $user->identify_card = $request->get('identify_card');
-        // $user->birthday = $request->get('birthday');
-        // $user->gender = $request->get('gender');
-        // $user->avatar = $request->get('avatar');
-        // $user->address = $request->get('address');
-        // $user->phone = $request->get('phone');
-        // $user->role_id = $request->get('role_id');
-        // $user->save();
-        // return $user;
         try{
             $validatedData = $request->validated();
             $userResult = tap($user)

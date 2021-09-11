@@ -15,18 +15,20 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('identify_card')->nullable();
+            $table->string('identity_card');
             $table->string('social_insurance')->nullable();
+            $table->string('username')->unique()->nullable();
+            $table->string('password')->nullable();
             $table->string('fullname');
             $table->timestamp('birthday');
             $table->tinyInteger('gender');
-            $table->string('username')->unique()->nullable();
-            $table->string('password')->nullable();
-            $table->string('address')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('address');
+            $table->string('phone')->unique()->nullable();
 
-            $table->foreignId('village_id')->constrained();
-            $table->foreignId('role_id')->constrained();
+            $table->foreignId('village_id')
+                ->constrained();
+            $table->foreignId('role_id')
+                ->constrained();
             //Default famework columns
             $table->timestamps();
         });
