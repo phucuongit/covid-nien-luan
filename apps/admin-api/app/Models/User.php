@@ -26,6 +26,7 @@ class User extends Authenticatable
         'address',
         'phone',
         'role_id',
+        'social_insurance',
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -60,5 +61,6 @@ class User extends Authenticatable
         'address',
         'phone',
         'role_id',
+        'social_insurance',
     ];
 }

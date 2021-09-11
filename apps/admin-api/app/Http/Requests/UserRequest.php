@@ -35,6 +35,8 @@ class UserRequest extends FormRequest
             'address' => 'required',
             'phone' => 'required',
             'role_id' => 'required|numeric',
+            'village_id' => 'required|numeric',
+            'social_insurance' => 'required',
         ];
     }
 }
