@@ -8,6 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'type',
+        'url',
+        'imageable_id',
+        'imageable_type',
+    ];
     /**
      * Get the parent imageable model (user or post).
      */
