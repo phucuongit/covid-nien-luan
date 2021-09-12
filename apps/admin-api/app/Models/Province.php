@@ -8,8 +8,9 @@ use App\Models\District;
 class Province extends Model
 {
     use HasFactory;
-    // public function districts()
-    // {
-    //     return $this->hasMany(District::class);
-    // }
+    
+    public function districts()
+    {
+        return $this->hasMany(District::class);
+    }
 }

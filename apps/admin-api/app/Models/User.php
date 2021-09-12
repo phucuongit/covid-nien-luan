@@ -5,6 +5,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Traits\Filterable;
+use App\Models\Image;
+use App\Models\Village;
+use App\Models\District;
 
 class User extends Authenticatable
 {
@@ -62,4 +65,16 @@ class User extends Authenticatable
         'village_id',
         'role_id',
     ];
+
+    /**
+     * Get the user's image.
+     */
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function village(){
+        return $this->belongsTo(Village::class);
+    }
 }

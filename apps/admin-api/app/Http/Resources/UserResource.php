@@ -3,6 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Village as VillageResource;
+use App\Http\Resources\District as DistrictResource;
+use App\Http\Resources\Province as ProvinceResource;
 
 class UserResource extends JsonResource
 {
@@ -14,6 +17,23 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'identity_card' => $this->identity_card,
+            'social_insurance' => $this->social_insurance,
+            'fullname' => $this->fullname,
+            'birthday' => $this->birthday,
+            'gender' => $this->gender,
+            'address' => $this->address,
+            'address_full' => 
+            [
+                "village" => new VillageResource($this->village),
+                "district" => new DistrictResource($this->village->district),
+                "province" => new ProvinceResource($this->village->district->province),
+            ],
+            'phone' => $this->phone,
+            'village_id' => $this->village_id,
+            'role_id' => $this->role_id,
+        ];
     }
 }

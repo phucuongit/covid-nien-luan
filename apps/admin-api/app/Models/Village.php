@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
+use App\models\District;
 
 class Village extends Model
 {
@@ -19,4 +20,9 @@ class Village extends Model
         'gso_id',
         'district_id',
     ];
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, config('vietnam-maps.columns.district_id'), 'id');
+    }
 }
