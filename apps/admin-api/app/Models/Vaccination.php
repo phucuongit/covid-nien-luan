@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
+use App\Models\User;
 
 class Vaccination extends Model
 {
@@ -30,4 +31,15 @@ class Vaccination extends Model
         'create_by',
         'vaccine_type_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function user_create_by()
+    {
+        return $this->belongsTo(User::class, 'create_by', 'id');
+    }
+
 }
