@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\ImageResource as ImageResource;
 use Validator;
 use Exception;
 
@@ -38,24 +39,25 @@ class ImageController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors(), 404);       
         }
-        $url = '';
+        $imgResponse = [];
         foreach($request->file('images') as $image)
         {
             if ($image->isValid()) {
                 $name = $image->hashName();
-                $path = Storage::putFile('public/images', $image);
-                $url = Storage::url($name);
+                $path = 
+                    Storage::disk('public')->putFile('images', $image);
+                $url = Storage::url($path);
                 //Insert to DB
                 $image = [
                     'name' => $name,
-                    'url' => $path,
+                    'url' => $url,
                     'imageable_id' => $request->input('imageable_id'),
                     'imageable_type' => $request->input('imageable_type')
                 ];
-                Image::create($image);
+                $imgResponse[] = new ImageResource(Image::create($image));
             } 
         }
-        return $this->sendResponse($url);
+        return $this->sendResponse($imgResponse, 'Successfully. Your domain + url to access image');
     }
 
     /**
@@ -89,6 +91,13 @@ class ImageController extends BaseController
      */
     public function destroy(Image $image)
     {
-        //
+        try{
+            $imageResult = 
+                new ImageResource(tap($image)->delete());
+             return $this->sendResponse($imageResult);
+         }
+         catch (Exception $e) {
+             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+         }
     }
 }

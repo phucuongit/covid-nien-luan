@@ -22,7 +22,7 @@ class Image extends Model
         'imageable_type',
     ];
     /**
-     * Get the parent imageable model (user or post).
+     * Get the parent imageable model;
      */
     public function imageable()
     {

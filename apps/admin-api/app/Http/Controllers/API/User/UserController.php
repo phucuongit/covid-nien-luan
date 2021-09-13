@@ -80,8 +80,8 @@ class UserController extends BaseController
     {
         try{
             $validatedData = $request->validated();
-            $userResult = tap($user)
-                            ->update($validatedData);
+            $userResult = 
+                new UserResource(tap($user)->update($validatedData));
             return $this->sendResponse($userResult);
         }
         catch (Exception $e) {
@@ -98,8 +98,8 @@ class UserController extends BaseController
     public function destroy(User $user)
     {
         try{
-           $userResult = $user
-                            ->delete();
+           $userResult = 
+                new ImageResource(tap($user)->delete());
             return $this->sendResponse($user);
         }
         catch (Exception $e) {

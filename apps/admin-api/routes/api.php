@@ -38,6 +38,6 @@ Route::prefix('v1')->group(function () {
         Route::resource('address/province', ProvinceController::class)->only('index');
         Route::resource('address/district', DistrictController::class)->only('index');
         Route::resource('address/village', VillageController::class)->only('index');
-        Route::resource('upload/image', ImageController::class)->only('store');
+        Route::resource('file/image', ImageController::class)->only(['store','destroy']);
     });
 });
