@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
 
 class VaccinationResource extends JsonResource
 {
@@ -14,6 +15,9 @@ class VaccinationResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $data = parent::toArray($request);
+        $data['user'] = $this->user;
+        $data['user_create_by'] = $this->user_create_by;
+        return $data;
     }
 }

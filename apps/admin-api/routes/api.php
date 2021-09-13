@@ -12,6 +12,7 @@ use App\Http\Controllers\API\Vaccine_type\Vaccine_typeController;
 use App\Http\Controllers\API\Address\ProvinceController;
 use App\Http\Controllers\API\Address\DistrictController;
 use App\Http\Controllers\API\Address\VillageController;
+use App\Http\Controllers\API\Upload\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +38,6 @@ Route::prefix('v1')->group(function () {
         Route::resource('address/province', ProvinceController::class)->only('index');
         Route::resource('address/district', DistrictController::class)->only('index');
         Route::resource('address/village', VillageController::class)->only('index');
+        Route::resource('file/image', ImageController::class)->only(['store','destroy']);
     });
 });

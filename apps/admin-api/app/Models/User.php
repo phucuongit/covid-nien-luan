@@ -8,6 +8,7 @@ use App\Traits\Filterable;
 use App\Models\Image;
 use App\Models\Village;
 use App\Models\District;
+use App\Models\Role;
 
 class User extends Authenticatable
 {
@@ -76,5 +77,10 @@ class User extends Authenticatable
 
     public function village(){
         return $this->belongsTo(Village::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }

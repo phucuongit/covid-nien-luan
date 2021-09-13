@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\UserResource;
 
-class Result_testResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +14,9 @@ class Result_testResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data = parent::toArray($request);
-        $data['user'] = $this->user;
-        $data['user_create_by'] = $this->user_create_by;
-        return $data;
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+        ];
     }
 }

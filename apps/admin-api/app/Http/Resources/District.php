@@ -18,8 +18,8 @@ class District extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'gso_id' => $this->gso_id,
             'province_id' => $this->province_id,
+            // 'gso_id' => $this->gso_id,
         ];
     }
 }
