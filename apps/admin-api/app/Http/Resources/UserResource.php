@@ -6,7 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Village as VillageResource;
 use App\Http\Resources\District as DistrictResource;
 use App\Http\Resources\Province as ProvinceResource;
-use App\Http\Resources\RoleResource as RoleResource;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\ImageResource;
 
 class UserResource extends JsonResource
 {
@@ -36,6 +37,7 @@ class UserResource extends JsonResource
             // 'village_id' => $this->village_id,
             // 'role_id' => $this->role_id,
             'role' => new RoleResource($this->role),
+            'images' => ImageResource::collection($this->images)
         ];
     }
 }

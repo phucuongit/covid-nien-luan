@@ -31,11 +31,23 @@ class Result_test extends Model
         'create_by',
     ];
 
+    /**
+     * Get all of the result_test's image.
+     */
+    public function image()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+    /**
+     * Get result_test's user.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
+     /**
+     * Get result_test's user create by.
+     */
     public function user_create_by()
     {
         return $this->belongsTo(User::class, 'create_by', 'id');

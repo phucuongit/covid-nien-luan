@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Vaccine_type extends JsonResource
+class Vaccine_typeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

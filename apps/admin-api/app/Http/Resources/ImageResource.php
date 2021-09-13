@@ -17,9 +17,10 @@ class ImageResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
+            "type" => $this->type,
             "url" => $this->url,
-            "imageable_id" => $this->imageable_id,
-            "imageable_type" => $this->imageable_type,
+            // "imageable_id" => $this->imageable_id,
+            // "imageable_type" => $this->imageable_type,
         ];
     }
 }

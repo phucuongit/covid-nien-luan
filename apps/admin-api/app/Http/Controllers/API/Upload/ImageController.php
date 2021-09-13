@@ -32,7 +32,7 @@ class ImageController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             "images" => "required|array|max:10",
-            "images.*" => "required|image|mimes:jpeg,jpg,png,gif|max:10000",
+            "images.*" => "image|mimes:jpeg,jpg,png,gif|max:10000",
             "imageable_id" => "required|numeric|min:0",
             "imageable_type" => "required|string",
         ]);
