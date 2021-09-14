@@ -36,7 +36,7 @@ class Vaccination extends Model
     /**
      * Get all of the vaccination's image.
      */
-    public function image()
+    public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
     }
