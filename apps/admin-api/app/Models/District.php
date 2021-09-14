@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
-use App\models\Province;
-use App\models\Village;
+use App\Models\Province;
+use App\Models\Village;
 
 class District extends Model
 {
