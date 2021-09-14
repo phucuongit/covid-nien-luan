@@ -34,7 +34,7 @@ class Result_test extends Model
     /**
      * Get all of the result_test's image.
      */
-    public function image()
+    public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
     }

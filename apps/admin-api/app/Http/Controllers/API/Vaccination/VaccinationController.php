@@ -95,7 +95,7 @@ class VaccinationController extends BaseController
         try {
             $vaccinationResult = tap($vaccination)
                             ->delete();
-            return $this->sendResponse($vaccination);
+            return $this->sendResponse($vaccinationResult);
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);

@@ -29,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
 
         Relation::MorphMap([
             'user' => 'App\Models\User',
+            'vaccination' => 'App\Models\Vaccination',
+            'result_test' => 'App\Models\Result_test',
         ]);
     }
 }

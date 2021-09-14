@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\ImageResource;
 
 class VaccinationResource extends JsonResource
 {
@@ -18,6 +19,7 @@ class VaccinationResource extends JsonResource
         $data = parent::toArray($request);
         $data['user'] = $this->user;
         $data['user_create_by'] = $this->user_create_by;
+        $data['images'] = ImageResource::collection($this->images);
         return $data;
     }
 }
