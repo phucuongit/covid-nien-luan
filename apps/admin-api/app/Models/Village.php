@@ -23,6 +23,6 @@ class Village extends Model
 
     public function district()
     {
-        return $this->belongsTo(District::class, config('vietnam-maps.columns.district_id'), 'id');
+        return $this->belongsTo(District::class);
     }
 }
