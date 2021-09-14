@@ -98,8 +98,8 @@ class UserController extends BaseController
     public function destroy(User $user)
     {
         try{
-           $userResult = tap($user)->delete();
-            return $this->sendResponse($user);
+            $userResult = tap($user)->delete();
+            return $this->sendResponse($userResult);
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);

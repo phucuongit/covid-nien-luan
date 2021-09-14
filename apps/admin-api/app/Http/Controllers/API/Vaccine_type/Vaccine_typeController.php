@@ -97,7 +97,7 @@ class Vaccine_typeController extends BaseController
         try{
             $Vaccine_typeResult = tap($vaccine_type)
                             ->delete();
-            return $this->sendResponse($vaccine_type);
+            return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);

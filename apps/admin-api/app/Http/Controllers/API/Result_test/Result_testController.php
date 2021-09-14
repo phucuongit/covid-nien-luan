@@ -99,7 +99,7 @@ class Result_testController extends BaseController
         try{
             $result_testResult = tap($result_test)
                             ->delete();
-            return $this->sendResponse($result_test);
+            return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);

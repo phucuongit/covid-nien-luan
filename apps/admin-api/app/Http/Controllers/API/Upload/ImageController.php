@@ -93,12 +93,19 @@ class ImageController extends BaseController
      * @param  \App\Models\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Image $image)
+    public function destroy($params)
     {
         try{
-            $imageResult = 
-                new ImageResource(tap($image)->delete());
-             return $this->sendResponse($imageResult);
+            $ids = explode(",", $params);
+            // Delete files
+            $imageNames = Image::findOrFail($ids, 'name');
+            foreach ($imageNames as $index => $row)
+            {
+                Storage::disk('public')->delete('images/'.$row['name']);
+            }
+            // Delete in DB
+            $imageResult = Image::destroy($ids);
+            return $this->sendResponse([], "Successfully");
          }
          catch (Exception $e) {
              return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
