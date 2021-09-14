@@ -26,9 +26,13 @@ class CreateUsersTable extends Migration
             $table->string('phone')->unique()->nullable();
 
             $table->foreignId('village_id')
-                ->constrained();
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->foreignId('role_id')
-                ->constrained();
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             //Default famework columns
             $table->timestamps();
         });

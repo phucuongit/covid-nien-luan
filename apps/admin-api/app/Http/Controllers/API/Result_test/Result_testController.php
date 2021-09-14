@@ -97,7 +97,7 @@ class Result_testController extends BaseController
     public function destroy(Result_test $result_test)
     {
         try{
-            $result_testResult = $result_test
+            $result_testResult = tap($result_test)
                             ->delete();
             return $this->sendResponse($result_test);
         }

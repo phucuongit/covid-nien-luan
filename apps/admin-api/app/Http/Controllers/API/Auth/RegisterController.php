@@ -23,22 +23,22 @@ class RegisterController extends BaseController
             'fullname' => 'required',
             'gender' => 'required',
             'username' => 'required',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|max:32',
             'c_password' => 'required|same:password',
-            'role_id' => 'required',
+            'role_id' => 'required|numeric|min:0'
         ]);
    
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors(), 404);       
         }
         $input = $request->all();
-        //Hash password
+        // Hash password
         $input['password'] = bcrypt($input['password']);
         try{
             $user = User::create($input);
-            //Token for access
+            // Token for access
             $success['token'] =  $user->createToken('Acess token')->accessToken;
-            $success['name'] =  $user->username;
+            $success['username'] =  $user->username;
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);

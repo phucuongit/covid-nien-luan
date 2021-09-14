@@ -93,7 +93,7 @@ class VaccinationController extends BaseController
     public function destroy(Vaccination $vaccination)
     {
         try {
-            $vaccinationResult = $vaccination
+            $vaccinationResult = tap($vaccination)
                             ->delete();
             return $this->sendResponse($vaccination);
         }

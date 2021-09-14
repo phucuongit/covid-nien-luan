@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vaccine_type;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Http\Resources\Vaccine_type as Vaccine_typeResources;
+use App\Http\Resources\Vaccine_typeResource;
 use App\Http\Requests\Vaccine_typeRequest;
 use Exception;
 
@@ -22,7 +22,7 @@ class Vaccine_typeController extends BaseController
         try{
             $params = $request->all();
             $vaccine_typeQuery = Vaccine_type::filter($params);
-            $vaccine_types = Vaccine_typeResources::collection($vaccine_typeQuery->get());
+            $vaccine_types = Vaccine_typeResource::collection($vaccine_typeQuery->get());
             return $this->sendResponse($vaccine_types);
         }
         catch (Exception $e) {
@@ -40,7 +40,8 @@ class Vaccine_typeController extends BaseController
     {
         try{
             $validatedData = $request->validated();
-            $Vaccine_typeResult = new Vaccine_typeResources(Vaccine_type::create($validatedData));
+            $Vaccine_typeResult = 
+                new Vaccine_typeResource(Vaccine_type::create($validatedData));
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
@@ -57,7 +58,7 @@ class Vaccine_typeController extends BaseController
     public function show(Vaccine_type $vaccine_type)
     {
         try{
-            $Vaccine_typeResult = new Vaccine_typeResources($vaccine_type);
+            $Vaccine_typeResult = new Vaccine_typeResource($vaccine_type);
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
@@ -94,7 +95,7 @@ class Vaccine_typeController extends BaseController
     public function destroy(Vaccine_type $vaccine_type)
     {
         try{
-            $Vaccine_typeResult = $vaccine_type
+            $Vaccine_typeResult = tap($vaccine_type)
                             ->delete();
             return $this->sendResponse($vaccine_type);
         }

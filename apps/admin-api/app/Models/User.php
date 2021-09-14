@@ -68,17 +68,21 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the user's image.
+     * Get all of the user's image.
      */
-    public function image()
+    public function images()
     {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->morphMany(Image::class, 'imageable');
     }
-
+     /**
+     * Get village's user.
+     */
     public function village(){
         return $this->belongsTo(Village::class);
     }
-
+     /**
+     * Get role's user.
+     */
     public function role()
     {
         return $this->belongsTo(Role::class);
