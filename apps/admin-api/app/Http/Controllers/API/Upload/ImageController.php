@@ -7,6 +7,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\ImageResource as ImageResource;
+use Illuminate\Validation\Rule;
 use Validator;
 use Exception;
 
@@ -32,13 +33,16 @@ class ImageController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             "images" => "required|array|max:10",
-            "images.*" => "image|mimes:jpeg,jpg,png,gif|max:10000",
+            "images.*" => "image|mimes:jpeg,jpg,png,gif|max:4096",
             "imageable_id" => "required|numeric|min:0",
-            "imageable_type" => "required|string",
+            "imageable_type" => [
+                'required',
+                'string',
+                Rule::in(['user', 'result_test', 'vaccination']),
+            ]
         ]);
-        if($validator->fails()){
+        if($validator->fails())
             return $this->sendError('Validation Error.', $validator->errors(), 404);       
-        }
         $imgResponse = [];
         foreach($request->file('images') as $image)
         {
@@ -57,7 +61,7 @@ class ImageController extends BaseController
                 $imgResponse[] = new ImageResource(Image::create($image));
             } 
         }
-        return $this->sendResponse($imgResponse, 'Successfully. Your domain + url to access image');
+        return $this->sendResponse($imgResponse, 'Successfully. Your domain/url to access image');
     }
 
     /**

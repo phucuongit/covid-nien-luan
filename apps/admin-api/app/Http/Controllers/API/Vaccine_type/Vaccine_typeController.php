@@ -40,7 +40,8 @@ class Vaccine_typeController extends BaseController
     {
         try{
             $validatedData = $request->validated();
-            $Vaccine_typeResult = new Vaccine_typeResource(Vaccine_type::create($validatedData));
+            $Vaccine_typeResult = 
+                new Vaccine_typeResource(Vaccine_type::create($validatedData));
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
@@ -94,7 +95,7 @@ class Vaccine_typeController extends BaseController
     public function destroy(Vaccine_type $vaccine_type)
     {
         try{
-            $Vaccine_typeResult = $vaccine_type
+            $Vaccine_typeResult = tap($vaccine_type)
                             ->delete();
             return $this->sendResponse($vaccine_type);
         }
