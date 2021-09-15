@@ -24,12 +24,12 @@ trait Filterable
             }
     
             if (in_array($field, $this->filterable)) {
-                $query->where($this->table . '.' . $field, $value);
+                $query->where($this->table . '.' . $field, 'LIKE' ,'%'.$value.'%');
                 continue;
             }
     
             if (key_exists($field, $this->filterable)) {
-                $query->where($this->table . '.' . $this->filterable[$field], $value);
+                $query->where($this->table . '.' . $this->filterable[$field], 'LIKE', '%'.$value.'%');
                 continue;
             }
         }

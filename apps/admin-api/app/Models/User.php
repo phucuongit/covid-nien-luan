@@ -81,6 +81,12 @@ class User extends Authenticatable
         return $this->belongsTo(Village::class);
     }
      /**
+     * Get district's user.
+     */
+    public function district(){
+        return $this->hasOneThrough(Village::class, District::class);
+    }
+     /**
      * Get role's user.
      */
     public function role()

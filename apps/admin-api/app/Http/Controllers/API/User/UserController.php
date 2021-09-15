@@ -76,13 +76,13 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
         try{
-            $validatedData = $request->validated();
+            $validatedData = $request->all();
             $userResult = 
-                tap($user)->update($validatedData);
-            return $this->sendResponse($userResult);
+                $user->update($validatedData);
+            return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
@@ -98,8 +98,8 @@ class UserController extends BaseController
     public function destroy(User $user)
     {
         try{
-            $userResult = tap($user)->delete();
-            return $this->sendResponse($userResult);
+            $userResult = $user->delete();
+            return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);

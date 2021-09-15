@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'identity_card' => $this->identity_card,
             'social_insurance' => $this->social_insurance,
+            'username' => $this->username,
             'fullname' => $this->fullname,
             'birthday' => $this->birthday,
             'gender' => $this->gender,
@@ -36,7 +37,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             // 'village_id' => $this->village_id,
             // 'role_id' => $this->role_id,
-            'role' => new RoleResource($this->role),
+            'role' => $this->role()->get('name'),
             'images' => ImageResource::collection($this->images)
         ];
     }
