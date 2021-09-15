@@ -2,6 +2,7 @@
 import { defineComponent, provide, ref } from "vue"
 import useUsers from "./useUsers.ts"
 import AddUpdateUser from "./addUpdateUser/index.vue"
+import moment from "moment"
 
 export default defineComponent({
   components: {
@@ -72,6 +73,11 @@ export default defineComponent({
       changeAdd,
       changeUpdate
     }
+  },
+  methods: {
+    formatDate(date) {
+      return moment(date).format("DD/MM/YYYY")
+    }
   }
 })
 </script>
@@ -97,7 +103,7 @@ export default defineComponent({
             size="small"
             type="primary"
             class="text-white"
-            @click="changeUpdate"
+            @click="changeAdd"
           >
             <i class="el-icon-plus"></i>
             Thêm
@@ -146,15 +152,15 @@ export default defineComponent({
         label="Họ tên"
         width="200"
       ></el-table-column>
+      <el-table-column label="Tên đăng nhập" width="200">
+        <template #default="scope">
+          {{ scope.row.role.name == "admin" ? scope.row.username : "" }}
+        </template>
+      </el-table-column>
       <el-table-column
-        property="username"
-        label="Tên đăng nhập"
-        width="200"
-      ></el-table-column>
-      <el-table-column
+        property="identity_card"
         label="CMND"
-        width="200"
-        property="identify_card"
+        width="150"
       ></el-table-column>
       <el-table-column
         property="phone"
@@ -164,23 +170,25 @@ export default defineComponent({
       <el-table-column
         property="social_insurance"
         label="Bảo hiểm y tế"
-        width="200"
+        width="150"
       ></el-table-column>
-      <el-table-column label="Giới tính" width="100">
+      <el-table-column label="Giới tính" width="80">
         <template #default="scope">
           {{ scope.row.gender ? "Nam" : "Nữ" }}
         </template>
       </el-table-column>
-      <el-table-column
-        property="birthday"
-        label="Ngày sinh"
-        width="200"
-      ></el-table-column>
-      <el-table-column
-        property="address"
-        label="Địa chỉ"
-        width="200"
-      ></el-table-column>
+      <el-table-column label="Ngày sinh" width="150">
+        <template #default="scope">
+          {{ formatDate(scope.row.birthday) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Địa chỉ" width="500">
+        <template #default="scope">
+          {{ scope.row.address }} - {{ scope.row.address_full.village.name }} -
+          {{ scope.row.address_full.district.name }} -
+          {{ scope.row.address_full.province.name }}
+        </template>
+      </el-table-column>
     </el-table>
 
     <el-pagination
