@@ -12,21 +12,21 @@ export default function useConfigSideBar() {
   const sidebar = reactive<SideBarType[]>([
     {
       key: 1,
-      link: "PopulateManager",
+      link: "ResultTest",
       icon: "carbon:dashboard",
       label: "Thống kê",
       children: []
     },
     {
       key: 2,
-      link: "PopulateManager",
+      link: "ResultTest",
       icon: "carbon:id-management",
-      label: "Quản lý dân cư",
+      label: "Kiểm tra covid",
       children: []
     },
     {
       key: 3,
-      link: "PopulateManager",
+      link: "Vaccination",
       icon: "lucide:history",
       label: "Thêm lịch sử tiêm",
       children: []
@@ -46,14 +46,14 @@ export default function useConfigSideBar() {
       children: [
         {
           key: 1,
-          link: "PopulateManager",
+          link: "ResultTest",
           icon: "carbon:user-avatar-filled-alt",
           label: "Tài khoản",
           children: []
         },
         {
           key: 2,
-          link: "PopulateManager",
+          link: "Users",
           icon: "fa-solid:users",
           label: "Người dùng",
           children: []

@@ -3,6 +3,7 @@ import { defineComponent, ref, provide } from "vue"
 import useVaccineType from "./useVaccineType"
 import DeleteVaccineType from "./deleteVaccineType/index.vue"
 import AddUpdateVaccineType from "./addUpdateVaccineType"
+import moment from "moment"
 
 export default defineComponent({
   components: {
@@ -10,7 +11,8 @@ export default defineComponent({
     AddUpdateVaccineType
   },
   setup() {
-    const { getListVaccineType, data, isLoading } = useVaccineType()
+    const { getListVaccineType, data, isLoading, getVaccineTypeSearch } =
+      useVaccineType()
     getListVaccineType()
 
     const multipleSelection = ref([])
@@ -33,6 +35,18 @@ export default defineComponent({
       mode.value = action
     }
 
+    const textSearch = ref("")
+    const handleSearch = () => {
+      getVaccineTypeSearch(textSearch.value)
+      console.log(textSearch.value)
+    }
+
+    const handleCheckSearch = () => {
+      if (textSearch.value == "") {
+        getListVaccineType()
+      }
+    }
+
     provide("closeVaccineTypeDelete", handleChangeVisibleDelete)
     provide("closeVaccineTypeUpdate", handleChangeVisibleUpdate)
     provide("handleChangeVisibleUpdate", handleChangeVisibleUpdate)
@@ -49,7 +63,15 @@ export default defineComponent({
       handleChangeVisibleDelete,
       handleChangeVisibleUpdate,
       setMode,
-      mode
+      mode,
+      textSearch,
+      handleSearch,
+      handleCheckSearch
+    }
+  },
+  methods: {
+    formatDate(date) {
+      return moment(date).format("hh:mm:ss a, DD/MM/YYYY")
     }
   }
 })
@@ -57,10 +79,18 @@ export default defineComponent({
 
 <template>
   <div id="vaccine-list">
-    <el-row class="row-bg">
+    <h3 class="mr-0">Danh sách các loại vắc-xin</h3>
+    <el-row class="row-bg mb-10">
       <el-col :span="12">
         <div class="grid-content">
-          <h1>Danh sách các loại vắc-xin</h1>
+          <el-input
+            placeholder="Tìm kiếm theo tên vắc-xin..."
+            prefix-icon="el-icon-search"
+            v-model="textSearch"
+            v-on:keyup.enter="handleSearch"
+            v-on:keyup="handleCheckSearch"
+          >
+          </el-input>
         </div>
       </el-col>
       <el-col :span="12">
@@ -114,7 +144,7 @@ export default defineComponent({
       ref="multipleTable"
       :data="data"
       style="width: 100%"
-      max-height="500"
+      max-height="480"
       stripe
       border
       @selection-change="handleSelectionChange"
@@ -129,14 +159,15 @@ export default defineComponent({
       <el-table-column property="country" label="Nước sản xuất" width="305">
       </el-table-column>
       <el-table-column label="Thời gian thêm" width="305">
-        <template #default="scope">{{ scope.row.created_at }}</template>
+        <template #default="scope">{{
+          formatDate(scope.row.created_at)
+        }}</template>
       </el-table-column>
 
-      <el-table-column
-        property="updated_at"
-        label="Cập nhật lần cuối"
-        width="305"
-      >
+      <el-table-column label="Cập nhật lần cuối" width="305">
+        <template #default="scope">{{
+          formatDate(scope.row.updated_at)
+        }}</template>
       </el-table-column>
     </el-table>
   </div>

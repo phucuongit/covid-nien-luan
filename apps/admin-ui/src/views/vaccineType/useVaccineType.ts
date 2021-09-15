@@ -29,10 +29,35 @@ function useVaccineType() {
     }
   }
 
+  const getVaccineTypeSearch = async (name: string) => {
+    try {
+      const response = await API.get("vaccine_type?name=" + name)
+      if (response.data.success) {
+        console.log(response.data.data)
+        data.value = response.data.data
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const getVaccineTypeSearchID = async (id: number) => {
+    try {
+      const response = await API.get("vaccine_type?id=" + id)
+      if (response.data.success) {
+        return response.data.data
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return {
     getListVaccineType,
     data,
-    isLoading
+    isLoading,
+    getVaccineTypeSearch,
+    getVaccineTypeSearchID
   }
 }
 

@@ -60,7 +60,9 @@ export default defineComponent({
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="onSubmitDelete">Xóa</el-button>
+        <el-button type="primary" class="btn-11385e" @click="onSubmitDelete"
+          >Xóa</el-button
+        >
         <el-button @click="closeVaccineTypeDelete">Thoát</el-button>
       </span>
     </template>
