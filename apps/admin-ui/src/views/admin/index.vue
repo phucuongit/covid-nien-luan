@@ -19,8 +19,19 @@ export default defineComponent({
             <router-view />
           </keep-alive>
         </el-main>
-        <el-footer>Footer</el-footer>
+        <el-footer class="pd-0">
+          <div class="text-center pt-15">
+            @2021 - nhóm 1 - Website quản lý tiêm chủng vắc-xin
+          </div>
+        </el-footer>
       </el-container>
     </el-container>
   </div>
 </template>
+
+<style scoped>
+.el-footer {
+  border-top: 1px solid #ddd;
+  --el-footer-height: 50px;
+}
+</style>

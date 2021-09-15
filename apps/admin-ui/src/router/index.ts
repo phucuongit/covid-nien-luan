@@ -2,9 +2,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import Home from "../views/Home.vue"
 import Admin from "../views/admin/index.vue"
 import Login from "../views/login/index.vue"
-import PopulateManager from "../views/populate_manager/index.vue"
+import ResultTest from "../views/resultTest/index.vue"
 import Vaccine from "../views/vaccineType/index.vue"
-
+import Users from "../views/users/index.vue"
+import Vaccination from "../views/vaccination/index.vue"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -17,14 +18,24 @@ const routes: Array<RouteRecordRaw> = [
     component: Admin,
     children: [
       {
-        path: "populate-manager",
-        name: "PopulateManager",
-        component: PopulateManager
+        path: "result-test",
+        name: "ResultTest",
+        component: ResultTest
       },
       {
         path: "vaccine",
         name: "Vaccine",
         component: Vaccine
+      },
+      {
+        path: "users",
+        name: "Users",
+        component: Users
+      },
+      {
+        path: "vaccination",
+        name: "Vaccination",
+        component: Vaccination
       }
     ],
     meta: {

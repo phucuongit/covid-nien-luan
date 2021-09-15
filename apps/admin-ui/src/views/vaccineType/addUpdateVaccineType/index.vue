@@ -114,7 +114,7 @@ export default AddVaccineType
           type="primary"
           @click="onSubmitUpdate"
           :loading="isLoadingAddUpdate"
-          class="bg-11385e"
+          class="btn-11385e"
         >
           {{ valueMode == "add" ? "Thêm" : "Cập nhật" }}
         </el-button>
