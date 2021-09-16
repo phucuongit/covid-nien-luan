@@ -12,6 +12,10 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\UserResource as UserResource;
 use App\Http\Resources\UserCollection as UserCollection;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\Is_identity;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 
 class UserController extends BaseController
@@ -24,9 +28,9 @@ class UserController extends BaseController
     public function index(Request $request)
     {
         try{
-            $params = $request->all();
-            $userQuery = User::filter($params);
-            $users = new UserCollection($userQuery->paginate(5));
+            $inputs = $request->all();
+            $userQuery = User::filter($inputs);
+            $users = new UserCollection($userQuery->paginate(30));
             return $this->sendResponse($users->response()->getData(true));
         }
         catch (Exception $e) {
@@ -43,9 +47,9 @@ class UserController extends BaseController
     public function store(UserRequest $request)
     {
         try{
-            $validatedData = $request->validated();
-            $userResult = new UserResource(User::create($validatedData));
-            return $this->sendResponse($userResult);
+            $validated = $request->validated();
+            $userResult = new UserResource(User::create($validated));
+            return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
@@ -79,10 +83,37 @@ class UserController extends BaseController
     public function update(Request $request, User $user)
     {
         try{
-            $validatedData = $request->all();
-            $userResult = 
-                $user->update($validatedData);
-            return $this->sendResponse($userResult, "Successfully");
+            // if(Auth::id() == $user->id)
+            // {
+            //     return $this->sendResponse('OK');
+            // }
+            // else {
+            //     return $this->sendResponse([Auth::id(),  $user->id], 'Not you');
+            // }
+
+            if (Auth::id() != $user->id && $user->role_id == 1)
+                return $this->sendResponse([], "You cannot update this user.");
+            $validator = Validator::make(
+                $request->except(['username', 'role_id']), [
+                    'identity_card' => 
+                        ['numeric', new Is_identity],
+                    'social_insurance' => 'string',
+                    'password' => 'min:6',
+                    'fullname' => 'string',
+                    'birthday' => 'date',
+                    'gender' => [Rule::in([0,1])],
+                    'address' => 'string',
+                    'phone' => 'string',
+                    'role_id' => 'numeric|min:0',
+                    'village_id' => 'numeric|min:0',
+            ]);
+            $validated = $validator->validated();
+            // Hash password
+            if ($validated['password'])
+                $validated['password'] = bcrypt($validated['password']);
+            $result = 
+                $user->update($validated);
+            return $this->sendResponse($result, "Successfully");
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
@@ -98,6 +129,8 @@ class UserController extends BaseController
     public function destroy(User $user)
     {
         try{
+            if ($user->role_id == 1)
+                return $this->sendResponse([], "You cannot delete this user.");
             $userResult = $user->delete();
             return $this->sendResponse($userResult, "Successfully");
         }

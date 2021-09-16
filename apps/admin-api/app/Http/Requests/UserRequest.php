@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Rules\Is_identity;
 
 class UserRequest extends FormRequest
 {
@@ -25,17 +26,17 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'identity_card' => 'required|numeric',
-            'social_insurance' => 'required',
-            // 'username' => 'required|min:6',
-            // 'password' => 'required|min:6',
+            'identity_card' => ['required', new Is_identity],
+            'social_insurance' => 'required|string',
+            'username' => 'min:6',
+            'password' => 'min:6',
             'fullname' => 'required|string',
             'birthday' => 'required|date',
             'gender' => ['required', Rule::in([0,1])],
-            'address' => 'required',
+            'address' => 'required|string',
             'phone' => 'required',
-            'role_id' => 'required|numeric',
-            'village_id' => 'required|numeric',
+            'role_id' => 'required|numeric|min:0',
+            'village_id' => 'required|numeric|min:0',
         ];
     }
 }
