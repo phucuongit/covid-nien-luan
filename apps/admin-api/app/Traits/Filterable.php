@@ -24,7 +24,7 @@ trait Filterable
             }
     
             if (in_array($field, $this->filterable)) {
-                $query->where($this->table . '.' . $field, 'LIKE' ,'%'.$value.'%');
+                $query->where($this->table . '.' . $field, 'LIKE' , '%'.$value.'%');
                 continue;
             }
     
