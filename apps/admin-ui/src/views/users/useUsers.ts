@@ -27,6 +27,7 @@ function useUsers() {
       const response = await API.get("user?page=" + page)
       if (response.data.success) {
         data.value = response.data.data.users
+        console.log("hererere")
         console.log(response.data.data.users)
         totalPage.value = response.data.data.meta.last_page
       }

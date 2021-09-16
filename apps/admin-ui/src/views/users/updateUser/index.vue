@@ -3,11 +3,11 @@ import { defineComponent, inject, watch, ref, provide } from "vue"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
 import userType from "../useUsers"
-import useAddUpdateUser from "./useAddUpdateUser.ts"
+import useAddUser from "./useAddUser.ts"
 import useGetAddress from "../useGetAddress.ts"
 
 const AddUpdateUser = defineComponent({
-  name: "AddUpdateUser",
+  name: "AddUser",
   props: {
     isVisible: {
       type: Boolean,
@@ -16,23 +16,25 @@ const AddUpdateUser = defineComponent({
     selectUser: {
       type: Object,
       default: userType
-    },
-    mode: {
-      type: String,
-      default: ""
     }
   },
   setup(props) {
     const addUpdateUserSchema = yup.object({
       fullname: yup.string().required("Họ tên là bắt buộc!"),
-      username: yup.string().required("Tên đăng nhập là bắt buộc!"),
-      password: yup.string().required("Mật khẩu là bắt buộc!"),
-      identity_card: yup.string().required("Chứng minh nhân dân là bắt buộc!"),
+      // username: yup.string().required("Tên đăng nhập là bắt buộc!"),
+      // password: yup.string().required("Mật khẩu là bắt buộc!"),
+      identity_card: yup
+        .string()
+        .required("Chứng minh nhân dân là bắt buộc!")
+        .matches("^[0-9]{9}$", "CMND/CCCD không hợp lệ"),
       birthday: yup.date().required("Ngày sinh là bắt buộc!"),
       social_insurance: yup.string().required("Bảo hiểm y tế là bắt buộc!"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
       avatar: yup.string(),
-      phone: yup.string().required("Số điện thoại là bắt buộc!"),
+      phone: yup
+        .string()
+        .required("Số điện thoại là bắt buộc!")
+        .matches("^0[1-9]{9}$", "Số điện thoại không hợp lệ"),
       province_id: yup.number().required("Tỉnh / TP là bắt buộc"),
       district_id: yup.number().required("Huyện / Phường là bắt buộc"),
       village_id: yup.number().required("Xã là bắt buộc!"),
@@ -44,8 +46,7 @@ const AddUpdateUser = defineComponent({
     const getListUsers = inject("getListUsers")
     const currentPage = inject("currentPage")
 
-    const { isLoadingAddUpdateUser, createUser, updateUser } =
-      useAddUpdateUser()
+    const { isLoadingAddUpdateUser, createUser, updateUser } = useAddUser()
     const {
       provinceList,
       getProvinceList,
@@ -55,32 +56,25 @@ const AddUpdateUser = defineComponent({
       villageList
     } = useGetAddress()
 
+    getProvinceList()
+
     const isLoadingAddUpdate = ref(false)
-    const setMode = inject("setMode")
     const isShow = ref()
-    const valueMode = ref()
-    const idUserSelect = ref(0)
+    // const idUserSelect = ref(0)
     watch(props, () => {
       isShow.value = props.isVisible
-      valueMode.value = props.mode
-      if (props.selectUser[0] && valueMode.value == "update") {
-        fullname.value = props.selectUser[0].fullname
-        username.value = props.selectUser[0].username
-        identity_card.value = props.selectUser[0].identity_card
-        birthday.value = props.selectUser[0].birthday
-        social_insurance.value = props.selectUser[0].social_insurance
-        gender.value = props.selectUser[0].gender
-        address.value = props.selectUser[0].address
-        avatar.value = props.selectUser[0].avatar
-        phone.value = props.selectUser[0].phone
-        role_id.value = props.selectUser[0].role_id
-        village_id.value = props.selectUser[0].village_id
-
-        idUserSelect.value = props.selectUser[0].id
-      }
+      // idUserSelect.value = props.selectUser[0].id
+      // fullname.value = props.selectUser[0].fullname
+      // identity_card.value = props.selectUser[0].identity_card
+      // birthday.value = props.selectUser[0].birthday
+      // social_insurance.value = props.selectUser[0].social_insurance
+      // gender.value = props.selectUser[0].gender
+      // address.value = props.selectUser[0].address
+      // avatar.value = props.selectUser[0].avatar
+      // phone.value = props.selectUser[0].phone
+      // role_id.value = props.selectUser[0].role_id
+      // village_id.value = props.selectUser[0].village_id
     })
-
-    getProvinceList()
 
     const { handleSubmit, errors, resetForm } = useForm({
       validationSchema: addUpdateUserSchema
@@ -88,16 +82,8 @@ const AddUpdateUser = defineComponent({
 
     const onSubmitAddUpdate = handleSubmit(async (values) => {
       if (values) {
-        console.log(valueMode.value)
-        if (valueMode.value == "add") {
-          createUser(values, getListUsers(currentPage.value))
-        } else {
-          updateUser(
-            idUserSelect.value,
-            values,
-            getListUsers(currentPage.value)
-          )
-        }
+        createUser(values)
+        getListUsers(currentPage.value)
         cancelForm()
       }
     })
@@ -113,12 +99,9 @@ const AddUpdateUser = defineComponent({
     const cancelForm = () => {
       resetForm()
       closeAddUpdateUserModal()
-      setMode("")
     }
 
     const { value: fullname } = useField("fullname")
-    const { value: username } = useField("username")
-    const { value: password } = useField("password")
     const { value: identity_card } = useField("identity_card")
     const { value: birthday } = useField("birthday")
     const { value: social_insurance } = useField("social_insurance")
@@ -136,10 +119,7 @@ const AddUpdateUser = defineComponent({
       cancelForm,
       errors,
       isLoadingAddUpdate,
-      valueMode,
       fullname,
-      username,
-      password,
       identity_card,
       birthday,
       gender,
@@ -192,6 +172,13 @@ export default AddUpdateUser
         </el-col>
 
         <el-col :span="8">
+          <el-form-item label="CMND:">
+            <el-input v-model="identity_card"></el-input>
+            <div class="text-red">{{ errors.identity_card }}</div>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8">
           <el-form-item label="Tỉnh / TP:">
             <el-select
               placeholder="Chọn tỉnh / TP..."
@@ -210,19 +197,12 @@ export default AddUpdateUser
           </el-form-item>
         </el-col>
 
-        <el-col :span="8">
+        <!-- <el-col :span="8">
           <el-form-item label="Tên đăng nhập:">
             <el-input v-model="username"></el-input>
             <div class="text-red">{{ errors.username }}</div>
           </el-form-item>
-        </el-col>
-
-        <el-col :span="8">
-          <el-form-item label="CMND:">
-            <el-input v-model="identity_card"></el-input>
-            <div class="text-red">{{ errors.identity_card }}</div>
-          </el-form-item>
-        </el-col>
+        </el-col> -->
 
         <el-col :span="8">
           <el-form-item label="Huyện / Phường:">
@@ -243,12 +223,12 @@ export default AddUpdateUser
           </el-form-item>
         </el-col>
 
-        <el-col :span="8">
+        <!-- <el-col :span="8">
           <el-form-item label="Mật khẩu:">
             <el-input v-model="password" show-password></el-input>
             <div class="text-red">{{ errors.password }}</div>
           </el-form-item>
-        </el-col>
+        </el-col> -->
 
         <el-col :span="8">
           <el-form-item label="Số bảo hiểm:">
@@ -288,7 +268,7 @@ export default AddUpdateUser
           <el-form-item label="Vai trò:">
             <el-select placeholder="Chọn vai trò người dùng" v-model="role_id">
               <el-option label="Admin" :value="1"></el-option>
-              <el-option label="Editor" :value="2"></el-option>
+              <el-option label="User" :value="2"></el-option>
             </el-select>
             <div class="text-red">{{ errors.role_id }}</div>
           </el-form-item>
@@ -312,14 +292,7 @@ export default AddUpdateUser
         </el-col>
 
         <el-col :span="8">
-          <el-form-item label="Ảnh đại diện:">
-            <el-upload multiple :limit="1" :file-list="avatar">
-              <el-button size="small">Click to upload</el-button>
-              <!-- <template #tip>
-                <div class="el-upload__tip">jpg/png files with a size less than 500kb</div>
-              </template> -->
-            </el-upload>
-          </el-form-item>
+          <el-form-item label="Ảnh đại diện:"> </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -332,7 +305,7 @@ export default AddUpdateUser
           :loading="isLoadingAddUpdateUser"
           class="btn-11385e"
         >
-          {{ valueMode == "add" ? "Thêm" : "Cập nhật" }}
+          Add
         </el-button>
         <el-button @click="cancelForm">Thoát</el-button>
       </span>

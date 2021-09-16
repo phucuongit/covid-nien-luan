@@ -43,11 +43,11 @@ const AddVaccineType = defineComponent({
     watch(props, () => {
       isShow.value = props.isVisible
       valueMode.value = props.mode
-      if (props.selectVaccineType[0] && valueMode.value == "update") {
-        name.value = props.selectVaccineType[0].name
-        country.value = props.selectVaccineType[0].country
-        id.value = props.selectVaccineType[0].id
-      }
+      // if (props.selectVaccineType[0] && valueMode.value == "update") {
+      //   name.value = props.selectVaccineType[0].name
+      //   country.value = props.selectVaccineType[0].country
+      //   id.value = props.selectVaccineType[0].id
+      // }
     })
 
     const closeVaccineTypeUpdate = inject("closeVaccineTypeUpdate")

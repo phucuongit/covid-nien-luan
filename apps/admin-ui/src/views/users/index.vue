@@ -1,11 +1,14 @@
 <script>
 import { defineComponent, provide, ref } from "vue"
 import useUsers from "./useUsers.ts"
-import AddUpdateUser from "./addUpdateUser/index.vue"
+import AddUser from "./addUser/index.vue"
+import DeleteUser from "./deleteUser/index.vue"
+import moment from "moment"
 
 export default defineComponent({
   components: {
-    AddUpdateUser
+    AddUser,
+    DeleteUser
   },
   setup() {
     const {
@@ -25,15 +28,10 @@ export default defineComponent({
     }
     getListUsers(1)
 
-    const isVisibleAddUpdate = ref(false)
-    const handleVisibleAddUpdate = () => {
-      isVisibleAddUpdate.value = !isVisibleAddUpdate.value
-    }
+    const isVisibleAdd = ref(false)
+    const isVisibleUpdate = ref(false)
+    const isVisibleDelete = ref(false)
 
-    const mode = ref("")
-    const setMode = (str) => {
-      mode.value = str
-    }
     const currentPage = ref(1)
     const handleChangePage = (page) => {
       currentPage.value = page
@@ -41,19 +39,21 @@ export default defineComponent({
     }
 
     const changeAdd = () => {
-      setMode("add")
-      handleVisibleAddUpdate()
+      isVisibleAdd.value = !isVisibleAdd.value
     }
 
     const changeUpdate = () => {
-      setMode("update")
-      handleVisibleAddUpdate()
+      isVisibleUpdate.value = !isVisibleUpdate.value
     }
 
-    provide("setMode", setMode)
+    const changeDelete = () => {
+      isVisibleDelete.value = !isVisibleDelete.value
+    }
+
     provide("currentPage", currentPage)
     provide("getListUsers", getListUsers)
-    provide("closeAddUpdateUserModal", handleVisibleAddUpdate)
+    provide("closeAddUserModal", changeAdd)
+    provide("closeUserDelete", changeDelete)
 
     return {
       data,
@@ -62,15 +62,20 @@ export default defineComponent({
       handleSelectionChange,
       handleSearch,
       textSearch,
-      handleVisibleAddUpdate,
-      isVisibleAddUpdate,
-      setMode,
-      mode,
+      isVisibleAdd,
+      isVisibleUpdate,
+      isVisibleDelete,
       totalPage,
       currentPage,
       handleChangePage,
       changeAdd,
-      changeUpdate
+      changeUpdate,
+      changeDelete
+    }
+  },
+  methods: {
+    formatDate(date) {
+      return moment(date).format("DD/MM/YYYY")
     }
   }
 })
@@ -97,7 +102,7 @@ export default defineComponent({
             size="small"
             type="primary"
             class="text-white"
-            @click="changeUpdate"
+            @click="changeAdd"
           >
             <i class="el-icon-plus"></i>
             Thêm
@@ -119,6 +124,7 @@ export default defineComponent({
             type="danger"
             class="text-white"
             v-if="multipleSelection.length > 0"
+            @click="changeDelete"
           >
             <i class="el-icon-delete"></i>
             Xóa
@@ -131,7 +137,7 @@ export default defineComponent({
       :data="data"
       ref="multipleTable"
       style="width: 100%"
-      max-height="480"
+      max-height="400"
       stripe
       border
       @selection-change="handleSelectionChange"
@@ -146,16 +152,18 @@ export default defineComponent({
         label="Họ tên"
         width="200"
       ></el-table-column>
+      <el-table-column label="Tên đăng nhập" width="200">
+        <template #default="scope">
+          {{ scope.row.role.name == "admin" ? scope.row.username : "" }}
+        </template>
+      </el-table-column>
+
       <el-table-column
-        property="username"
-        label="Tên đăng nhập"
-        width="200"
+        property="identity_card"
+        label="CMND / CCCD"
+        width="150"
       ></el-table-column>
-      <el-table-column
-        label="CMND"
-        width="200"
-        property="identify_card"
-      ></el-table-column>
+
       <el-table-column
         property="phone"
         label="Số điện thoại"
@@ -164,23 +172,25 @@ export default defineComponent({
       <el-table-column
         property="social_insurance"
         label="Bảo hiểm y tế"
-        width="200"
+        width="150"
       ></el-table-column>
-      <el-table-column label="Giới tính" width="100">
+      <el-table-column label="Giới tính" width="80">
         <template #default="scope">
           {{ scope.row.gender ? "Nam" : "Nữ" }}
         </template>
       </el-table-column>
-      <el-table-column
-        property="birthday"
-        label="Ngày sinh"
-        width="200"
-      ></el-table-column>
-      <el-table-column
-        property="address"
-        label="Địa chỉ"
-        width="200"
-      ></el-table-column>
+      <el-table-column label="Ngày sinh" width="150">
+        <template #default="scope">
+          {{ formatDate(scope.row.birthday) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Địa chỉ" width="500">
+        <template #default="scope">
+          {{ scope.row.address }} - {{ scope.row.address_full.village.name }} -
+          {{ scope.row.address_full.district.name }} -
+          {{ scope.row.address_full.province.name }}
+        </template>
+      </el-table-column>
     </el-table>
 
     <el-pagination
@@ -194,12 +204,10 @@ export default defineComponent({
     </el-pagination>
   </div>
 
-  <AddUpdateUser
-    :mode="mode"
-    :isVisible="isVisibleAddUpdate"
-    :selectUser="multipleSelection"
-  >
-  </AddUpdateUser>
+  <AddUser :isVisible="isVisibleAdd"> </AddUser>
+
+  <DeleteUser :isVisible="isVisibleDelete" :selectUser="multipleSelection">
+  </DeleteUser>
 </template>
 
 <style scoped>
