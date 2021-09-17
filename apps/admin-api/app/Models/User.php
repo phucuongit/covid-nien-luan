@@ -13,6 +13,7 @@ use App\Models\Role;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, Filterable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'village_id',
         'role_id',
     ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -39,6 +41,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -68,24 +71,40 @@ class User extends Authenticatable
     ];
 
     /**
+     * Search users
+     */
+    public function filterSearch($query, $value)
+    {
+        return $query
+            ->where('identity_card', 'LIKE', '%'.$value.'%')
+            ->orWhere('social_insurance', 'LIKE', '%'.$value.'%')
+            ->orWhere('fullname', 'LIKE', '%'.$value.'%')
+            ->orWhere('address', 'LIKE', '%'.$value.'%')
+            ->orWhere('phone', 'LIKE', '%'.$value.'%');
+    }
+
+    /**
      * Get all of the user's image.
      */
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+
      /**
      * Get village's user.
      */
     public function village(){
         return $this->belongsTo(Village::class);
     }
+
      /**
      * Get district's user.
      */
     public function district(){
         return $this->hasOneThrough(Village::class, District::class);
     }
+
      /**
      * Get role's user.
      */

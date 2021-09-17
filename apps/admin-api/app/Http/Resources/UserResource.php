@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'identity_card' => $this->identity_card,
             'social_insurance' => $this->social_insurance,
-            // 'username' => $this->username,
+            'username' => $this->username,
             // 'password' => $this->password,
             'fullname' => $this->fullname,
             'birthday' => $this->birthday,
@@ -31,15 +31,20 @@ class UserResource extends JsonResource
             'address' => $this->address,
             'address_full' => 
             [
-                "village" => new VillageResource($this->village),
-                "district" => new DistrictResource($this->village->district),
-                "province" => new ProvinceResource($this->village->district->province),
+                "village" => 
+                    new VillageResource($this->village),
+                "district" => 
+                    new DistrictResource($this->village->district),
+                "province" => 
+                    new ProvinceResource($this->village->district->province),
             ],
             'phone' => $this->phone,
             // 'village_id' => $this->village_id,
             // 'role_id' => $this->role_id,
-            'role' => $this->role()->get('name'),
-            'images' => ImageResource::collection($this->images)
+            'role' => 
+                $this->role()->first('name'),
+            'images' => 
+                ImageResource::collection($this->images)
         ];
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
 use App\Models\User;
 use App\Models\Image;
+use App\Models\Vaccine_type;
 
 class Vaccination extends Model
 {
@@ -34,12 +35,30 @@ class Vaccination extends Model
     ];
 
     /**
+     * Search vaccination
+     */
+    public function filterSearch($query, $value)
+    {
+        return $query
+            // ->whereHas('user' , function($query) use ($value) {
+            //     $query->where('fullname', 'LIKE', '%' . $value . '%');
+            //  })
+            // ->orWhereHas('user_create_by' , function($query) use ($value) {
+            //     $query->where('fullname', 'LIKE', '%' . $value . '%');
+            //  })
+            ->whereHas('vaccine_type' , function($query) use ($value) {
+                $query->where('name', 'LIKE', '%' . $value . '%');
+             });
+    }
+
+    /**
      * Get all of the vaccination's image.
      */
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+
     /**
      * Get vaccination's user.
      */
@@ -47,12 +66,21 @@ class Vaccination extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     /**
      * Get vaccination's user create.
      */
     public function user_create_by()
     {
         return $this->belongsTo(User::class, 'create_by', 'id');
+    }
+
+    /**
+     * Get vaccination's user create.
+     */
+    public function vaccine_type()
+    {
+        return $this->belongsTo(Vaccine_type::class);
     }
 
 }

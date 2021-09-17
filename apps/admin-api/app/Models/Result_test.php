@@ -32,6 +32,21 @@ class Result_test extends Model
     ];
 
     /**
+     * Search result_test
+     */
+    public function filterSearch($query, $value)
+    {
+        return $query
+            ->where('status', 'LIKE', '%'.$value.'%')
+            ->orWhereHas('user' , function($query) use ($value) {
+                $query->where('fullname', 'LIKE', '%' . $value . '%');
+             })
+            ->orWhereHas('user_create_by' , function($query) use ($value) {
+                $query->where('fullname', 'LIKE', '%' . $value . '%');
+             });
+    }
+
+    /**
      * Get all of the result_test's image.
      */
     public function images()
