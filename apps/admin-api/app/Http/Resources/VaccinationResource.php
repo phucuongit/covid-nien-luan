@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserShortResource;
 use App\Http\Resources\ImageCollection;
+use App\Http\Resources\Vaccine_typeResource;
 
 class VaccinationResource extends JsonResource
 {
@@ -24,6 +25,8 @@ class VaccinationResource extends JsonResource
             new UserShortResource($this->user_create_by);
         $data['images'] = 
             new ImageCollection($this->images);
+        $data['vaccine_type'] =
+            $this->vaccine_type()->first("name");
         return $data;
     }
 }
