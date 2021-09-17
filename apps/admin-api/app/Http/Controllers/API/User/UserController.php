@@ -30,7 +30,7 @@ class UserController extends BaseController
         try{
             $inputs = $request->all();
             $userQuery = User::filter($inputs);
-            $users = new UserCollection($userQuery->paginate(30));
+            $users = new UserCollection($userQuery->paginate(20));
             return $this->sendResponse($users->response()->getData(true));
         }
         catch (Exception $e) {
@@ -83,18 +83,8 @@ class UserController extends BaseController
     public function update(Request $request, User $user)
     {
         try{
-            // if(Auth::id() == $user->id)
-            // {
-            //     return $this->sendResponse('OK');
-            // }
-            // else {
-            //     return $this->sendResponse([Auth::id(),  $user->id], 'Not you');
-            // }
-
-            if (Auth::id() != $user->id && $user->role_id == 1)
-                return $this->sendResponse([], "You cannot update this user.");
             $validator = Validator::make(
-                $request->except(['username', 'role_id']), [
+                $request->except(['username']), [
                     'identity_card' => 
                         ['numeric', new Is_identity],
                     'social_insurance' => 'string',
@@ -129,8 +119,8 @@ class UserController extends BaseController
     public function destroy(User $user)
     {
         try{
-            if ($user->role_id == 1)
-                return $this->sendResponse([], "You cannot delete this user.");
+            // if ($user->role_id == 1)
+            //     return $this->sendResponse([], "You cannot delete this user.");
             $userResult = $user->delete();
             return $this->sendResponse($userResult, "Successfully");
         }
