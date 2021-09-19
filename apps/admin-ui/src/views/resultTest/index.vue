@@ -178,11 +178,11 @@ export default defineComponent({
       </template>
     </el-table-column>
 
-    <el-table-column label="Cập nhật lần cuối" width="180">
+    <!-- <el-table-column label="Cập nhật lần cuối" width="180">
       <template #default="scope">
         {{ formatDateHour(scope.row.update_at) }}
       </template>
-    </el-table-column>
+    </el-table-column> -->
 
     <el-table-column
       label="Người tạo"

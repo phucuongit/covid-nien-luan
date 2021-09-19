@@ -23,7 +23,7 @@ export default defineComponent({
       isShow.value = props.isVisible
     })
 
-    const { deleteUser } = useDeleteUser()
+    const { deleteUser, isLoadingDeleteUser } = useDeleteUser()
 
     const onSubmitDelete = async () => {
       const ids = listDelete.value.map((item) => item.id)
@@ -38,7 +38,8 @@ export default defineComponent({
       isShow,
       closeUserDelete,
       listDelete,
-      onSubmitDelete
+      onSubmitDelete,
+      isLoadingDeleteUser
     }
   }
 })
@@ -63,7 +64,12 @@ export default defineComponent({
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" class="btn-11385e" @click="onSubmitDelete"
+        <el-button
+          type="primary"
+          class="btn-11385e"
+          @click="onSubmitDelete"
+          :loading="isLoadingDeleteUser"
+          :disabled="isLoadingDeleteUser"
           >Xóa</el-button
         >
         <el-button @click="closeUserDelete">Thoát</el-button>

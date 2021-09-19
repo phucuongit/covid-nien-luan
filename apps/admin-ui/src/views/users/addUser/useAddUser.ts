@@ -30,7 +30,7 @@ function useAddUser() {
         })
       } else {
         ElMessage.error({
-          message: "Xin lỗi! Vắc-xin chưa được thêm! Vui lòng thử lại",
+          message: "Chưa được thực hiện.",
           type: "error"
         })
       }
@@ -38,7 +38,7 @@ function useAddUser() {
       isLoadingAddUser.value = false
       console.log(e)
       ElMessage.error({
-        message: "Thêm người dùng chưa được thực hiện. ",
+        message: "Chưa được thực hiện. ",
         type: "error"
       })
     } finally {
@@ -46,9 +46,34 @@ function useAddUser() {
     }
   }
 
+  const updateUser = async (id: number, params: userType) => {
+    try {
+      isLoadingAddUser.value = true
+      const response = await API.put("user/" + id, params)
+      if (response.data.success) {
+        console.log(response.data.data)
+        ElMessage.success({
+          message: "Cập nhật thành công",
+          type: "success"
+        })
+      } else {
+        ElMessage.error({
+          message: "Cập nhật không thành công",
+          type: "error"
+        })
+      }
+    } catch (e) {
+      console.log("Lỗi update user: " + e)
+      isLoadingAddUser.value = false
+    } finally {
+      isLoadingAddUser.value = false
+    }
+  }
+
   return {
     isLoadingAddUser,
-    createUser
+    createUser,
+    updateUser
   }
 }
 
