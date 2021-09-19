@@ -2,13 +2,15 @@
 import { defineComponent, provide, ref } from "vue"
 import useUsers from "./useUsers.ts"
 import AddUser from "./addUser/index.vue"
+import AddAdmin from "./addAdmin/index.vue"
 import DeleteUser from "./deleteUser/index.vue"
 import moment from "moment"
 
 export default defineComponent({
   components: {
     AddUser,
-    DeleteUser
+    DeleteUser,
+    AddAdmin
   },
   setup() {
     const {
@@ -28,9 +30,10 @@ export default defineComponent({
     }
     getListUsers(1)
 
-    const isVisibleAdd = ref(false)
-    const isVisibleUpdate = ref(false)
+    const isVisibleAddUser = ref(false)
+    const isVisibleAddAdmin = ref(false)
     const isVisibleDelete = ref(false)
+    const mode = ref()
 
     const currentPage = ref(1)
     const handleChangePage = (page) => {
@@ -38,12 +41,25 @@ export default defineComponent({
       getListUsers(currentPage.value)
     }
 
-    const changeAdd = () => {
-      isVisibleAdd.value = !isVisibleAdd.value
+    const setMode = (value) => {
+      mode.value = value
+    }
+
+    const changeAddUser = () => {
+      isVisibleAddUser.value = !isVisibleAddUser.value
+    }
+
+    const changeAddAdmin = () => {
+      isVisibleAddAdmin.value = !isVisibleAddAdmin.value
     }
 
     const changeUpdate = () => {
-      isVisibleUpdate.value = !isVisibleUpdate.value
+      setMode("update")
+      if (multipleSelection.value[0].role.name == "admin") {
+        changeAddAdmin()
+      } else {
+        changeAddUser()
+      }
     }
 
     const changeDelete = () => {
@@ -52,8 +68,10 @@ export default defineComponent({
 
     provide("currentPage", currentPage)
     provide("getListUsers", getListUsers)
-    provide("closeAddUserModal", changeAdd)
+    provide("closeAddUserModal", changeAddUser)
+    provide("closeAddAdminModal", changeAddAdmin)
     provide("closeUserDelete", changeDelete)
+    provide("setMode", setMode)
 
     return {
       data,
@@ -62,15 +80,17 @@ export default defineComponent({
       handleSelectionChange,
       handleSearch,
       textSearch,
-      isVisibleAdd,
-      isVisibleUpdate,
+      isVisibleAddAdmin,
+      isVisibleAddUser,
       isVisibleDelete,
       totalPage,
       currentPage,
       handleChangePage,
-      changeAdd,
+      changeAddUser,
+      changeAddAdmin,
       changeUpdate,
-      changeDelete
+      changeDelete,
+      mode
     }
   },
   methods: {
@@ -102,10 +122,20 @@ export default defineComponent({
             size="small"
             type="primary"
             class="text-white"
-            @click="changeAdd"
+            @click="changeAddUser"
           >
             <i class="el-icon-plus"></i>
-            Thêm
+            Thêm User
+          </el-button>
+
+          <el-button
+            size="small"
+            type="primary"
+            class="text-white"
+            @click="changeAddAdmin"
+          >
+            <i class="el-icon-plus"></i>
+            Thêm Admin
           </el-button>
 
           <el-button
@@ -204,8 +234,18 @@ export default defineComponent({
     </el-pagination>
   </div>
 
-  <AddUser :isVisible="isVisibleAdd"> </AddUser>
-
+  <AddUser
+    :isVisible="isVisibleAddUser"
+    :mode="mode"
+    :selectUser="multipleSelection"
+  >
+  </AddUser>
+  <AddAdmin
+    :isVisible="isVisibleAddAdmin"
+    :mode="mode"
+    :selectUser="multipleSelection"
+  >
+  </AddAdmin>
   <DeleteUser :isVisible="isVisibleDelete" :selectUser="multipleSelection">
   </DeleteUser>
 </template>

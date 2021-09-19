@@ -3,7 +3,7 @@ import { defineComponent, inject, watch, ref } from "vue"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
 import userType from "../useUsers"
-import useAddUser from "./useAddUser.ts"
+import useAddAdmin from "../addUser/useAddUser.ts"
 import useGetAddress from "../useGetAddress.ts"
 
 const AddUser = defineComponent({
@@ -25,9 +25,13 @@ const AddUser = defineComponent({
   setup(props) {
     const addUserSchema = yup.object({
       fullname: yup.string().required("Họ tên là bắt buộc!"),
-      identity_card: yup.string().required("Chứng minh nhân dân là bắt buộc!"),
-      // .matches("^[0-9]{9}$", "CMND/CCCD không hợp lệ"),
-      birthday: yup.string().required("Ngày sinh là bắt buộc!"),
+      username: yup.string().required("Tên đăng nhập là bắt buộc!").min(6),
+      password: yup.string(),
+      identity_card: yup
+        .string()
+        .required("Chứng minh nhân dân là bắt buộc!")
+        .matches("^[0-9]{9}$", "CMND/CCCD không hợp lệ"),
+      birthday: yup.date().required("Ngày sinh là bắt buộc!"),
       social_insurance: yup.string().required("Bảo hiểm y tế là bắt buộc!"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
       avatar: yup.string(),
@@ -42,12 +46,12 @@ const AddUser = defineComponent({
       role_id: yup.number().required("Vai trò người dùng là bắt buộc!")
     })
 
-    const closeAddUserModal = inject("closeAddUserModal")
+    const closeAddAdminModal = inject("closeAddAdminModal")
     const getListUsers = inject("getListUsers")
     const currentPage = inject("currentPage")
     const setMode = inject("setMode")
 
-    const { isLoadingAddUser, createUser, updateUser } = useAddUser()
+    const { isLoadingAddUser, createUser, updateUser } = useAddAdmin()
     const {
       provinceList,
       getProvinceList,
@@ -64,6 +68,7 @@ const AddUser = defineComponent({
     const isMode = ref()
     const user = ref()
     const idUserSelect = ref()
+    const checkErrorPassword = ref()
     watch(props, () => {
       isShow.value = props.isVisible
       isMode.value = props.mode
@@ -72,7 +77,7 @@ const AddUser = defineComponent({
         // Truyền giá trị lên form
         idUserSelect.value = user.value.id
         fullname.value = user.value.fullname
-        //username.value = user.value.username
+        username.value = user.value.username
         identity_card.value = user.value.identity_card
         birthday.value = user.value.birthday
         social_insurance.value = user.value.social_insurance
@@ -89,7 +94,7 @@ const AddUser = defineComponent({
         avatar.value = user.value.avatar
         phone.value = user.value.phone
 
-        role_id.value = 2
+        role_id.value = 1
       }
     })
 
@@ -99,13 +104,20 @@ const AddUser = defineComponent({
 
     const onSubmitAdd = handleSubmit(async (values) => {
       if (values) {
-        if (isMode.value == "update") {
-          await updateUser(idUserSelect.value, values)
+        if (password?.value?.length > 0 && password?.value?.length < 6) {
+          checkErrorPassword.value = "Mật khẩu phải ít nhất 6 kí tự"
         } else {
-          await createUser(values)
+          if (isMode.value == "update") {
+            if (password.value == undefined) {
+              delete values.password
+            }
+            await updateUser(idUserSelect.value, values)
+          } else {
+            await createUser(values)
+          }
+          getListUsers(currentPage.value)
+          cancelForm()
         }
-        getListUsers(currentPage.value)
-        cancelForm()
       }
     })
 
@@ -119,11 +131,14 @@ const AddUser = defineComponent({
 
     const cancelForm = () => {
       resetForm()
-      closeAddUserModal()
+      closeAddAdminModal()
       setMode("")
+      checkErrorPassword.value = ""
     }
 
     const { value: fullname } = useField("fullname")
+    const { value: username } = useField("username")
+    const { value: password } = useField("password")
     const { value: identity_card } = useField("identity_card")
     const { value: birthday } = useField("birthday")
     const { value: social_insurance } = useField("social_insurance")
@@ -142,6 +157,8 @@ const AddUser = defineComponent({
       errors,
       isLoadingAdd,
       fullname,
+      username,
+      password,
       identity_card,
       birthday,
       gender,
@@ -160,7 +177,8 @@ const AddUser = defineComponent({
       handleChangeDistrict,
       districtList,
       villageList,
-      isMode
+      isMode,
+      checkErrorPassword
     }
   }
 })
@@ -170,7 +188,7 @@ export default AddUser
 
 <template>
   <el-dialog
-    title="Người dùng"
+    title="Người quản trị"
     v-model="isShow"
     width="74%"
     destroy-on-close
@@ -184,6 +202,29 @@ export default AddUser
           <el-form-item label="Họ tên:">
             <el-input v-model="fullname"></el-input>
             <div class="text-red">{{ errors.fullname }}</div>
+          </el-form-item>
+        </el-col>
+
+        <el-col :md="8" :sm="12" :xs="24">
+          <el-form-item label="Tên đăng nhập:">
+            <el-input
+              v-model="username"
+              :disabled="isMode == 'update' ? true : false"
+            ></el-input>
+            <div class="text-red">{{ errors.username }}</div>
+          </el-form-item>
+        </el-col>
+
+        <el-col :md="8" :sm="12" :xs="24">
+          <el-form-item label="Mật khẩu:">
+            <el-input
+              type="password"
+              show-password
+              v-model="password"
+            ></el-input>
+            <div class="text-red">
+              {{ errors.password }} {{ checkErrorPassword }}
+            </div>
           </el-form-item>
         </el-col>
 
@@ -277,8 +318,7 @@ export default AddUser
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Vai trò:">
             <el-select placeholder="Chọn vai trò người dùng" v-model="role_id">
-              <!-- <el-option label="Admin" :value="1"></el-option> -->
-              <el-option label="User" :value="2"></el-option>
+              <el-option label="Admin" :value="1"></el-option>
             </el-select>
             <div class="text-red">{{ errors.role_id }}</div>
           </el-form-item>
