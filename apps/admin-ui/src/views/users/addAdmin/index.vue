@@ -7,7 +7,7 @@ import useAddAdmin from "../addUser/useAddUser.ts"
 import useGetAddress from "../useGetAddress.ts"
 
 const AddUser = defineComponent({
-  name: "AddUser",
+  name: "AddAdmin",
   props: {
     isVisible: {
       type: Boolean,
