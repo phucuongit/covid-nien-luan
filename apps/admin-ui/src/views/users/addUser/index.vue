@@ -69,10 +69,8 @@ const AddUser = defineComponent({
       isMode.value = props.mode
       if (isMode.value == "update" && props.selectUser[0]) {
         user.value = props.selectUser[0]
-        // Truyền giá trị lên form
         idUserSelect.value = user.value.id
         fullname.value = user.value.fullname
-        //username.value = user.value.username
         identity_card.value = user.value.identity_card
         birthday.value = user.value.birthday
         social_insurance.value = user.value.social_insurance
@@ -195,7 +193,7 @@ export default AddUser
         </el-col>
 
         <el-col :md="8" :sm="12" :xs="24">
-          <el-form-item label="CMND:">
+          <el-form-item label="CMND / CCCD:">
             <el-input v-model="identity_card"></el-input>
             <div class="text-red">{{ errors.identity_card }}</div>
           </el-form-item>

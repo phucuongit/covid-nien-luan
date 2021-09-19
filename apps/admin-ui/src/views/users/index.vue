@@ -4,13 +4,15 @@ import useUsers from "./useUsers.ts"
 import AddUser from "./addUser/index.vue"
 import AddAdmin from "./addAdmin/index.vue"
 import DeleteUser from "./deleteUser/index.vue"
+import DetailUser from "./detailUser/index.vue"
 import moment from "moment"
 
 export default defineComponent({
   components: {
     AddUser,
     DeleteUser,
-    AddAdmin
+    AddAdmin,
+    DetailUser
   },
   setup() {
     const {
@@ -33,6 +35,7 @@ export default defineComponent({
     const isVisibleAddUser = ref(false)
     const isVisibleAddAdmin = ref(false)
     const isVisibleDelete = ref(false)
+    const isVisibleDetailUser = ref(false)
     const mode = ref()
 
     const currentPage = ref(1)
@@ -43,6 +46,10 @@ export default defineComponent({
 
     const setMode = (value) => {
       mode.value = value
+    }
+
+    const changeDetailUser = () => {
+      isVisibleDetailUser.value = !isVisibleDetailUser.value
     }
 
     const changeAddUser = () => {
@@ -72,6 +79,7 @@ export default defineComponent({
     provide("closeAddAdminModal", changeAddAdmin)
     provide("closeUserDelete", changeDelete)
     provide("setMode", setMode)
+    provide("closeDetailUser", changeDetailUser)
 
     return {
       data,
@@ -79,17 +87,19 @@ export default defineComponent({
       multipleSelection,
       handleSelectionChange,
       handleSearch,
+      handleChangePage,
       textSearch,
+      isVisibleDetailUser,
       isVisibleAddAdmin,
       isVisibleAddUser,
       isVisibleDelete,
       totalPage,
       currentPage,
-      handleChangePage,
       changeAddUser,
       changeAddAdmin,
       changeUpdate,
       changeDelete,
+      changeDetailUser,
       mode
     }
   },
@@ -118,6 +128,16 @@ export default defineComponent({
       </el-col>
       <el-col :span="12">
         <div class="grid-content text-right pt-10">
+          <el-button
+            size="small"
+            type="primary"
+            class="text-white"
+            @click="changeDetailUser"
+            v-if="multipleSelection.length == 1"
+          >
+            <i class="el-icon-view"> </i>
+            Xem
+          </el-button>
           <el-button
             size="small"
             type="primary"
@@ -182,42 +202,35 @@ export default defineComponent({
         label="Họ tên"
         width="200"
       ></el-table-column>
-      <el-table-column label="Tên đăng nhập" width="200">
-        <template #default="scope">
-          {{ scope.row.role.name == "admin" ? scope.row.username : "" }}
-        </template>
-      </el-table-column>
 
       <el-table-column
         property="identity_card"
         label="CMND / CCCD"
-        width="150"
+        width="180"
       ></el-table-column>
 
       <el-table-column
         property="phone"
         label="Số điện thoại"
-        width="150"
+        width="180"
       ></el-table-column>
       <el-table-column
         property="social_insurance"
         label="Bảo hiểm y tế"
         width="150"
       ></el-table-column>
-      <el-table-column label="Giới tính" width="80">
+      <el-table-column label="Giới tính" width="120">
         <template #default="scope">
           {{ scope.row.gender ? "Nam" : "Nữ" }}
         </template>
       </el-table-column>
-      <el-table-column label="Ngày sinh" width="150">
+      <el-table-column label="Ngày sinh" width="200">
         <template #default="scope">
           {{ formatDate(scope.row.birthday) }}
         </template>
       </el-table-column>
-      <el-table-column label="Địa chỉ" width="500">
+      <el-table-column label="Địa chỉ" width="200">
         <template #default="scope">
-          {{ scope.row.address }} - {{ scope.row.address_full.village.name }} -
-          {{ scope.row.address_full.district.name }} -
           {{ scope.row.address_full.province.name }}
         </template>
       </el-table-column>
@@ -233,6 +246,9 @@ export default defineComponent({
     >
     </el-pagination>
   </div>
+
+  <DetailUser :isVisible="isVisibleDetailUser" :selectUser="multipleSelection">
+  </DetailUser>
 
   <AddUser
     :isVisible="isVisibleAddUser"
