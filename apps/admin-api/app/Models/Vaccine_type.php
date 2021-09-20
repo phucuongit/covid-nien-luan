@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
+use Carbon\Carbon;
 
 class Vaccine_type extends Model
 {
@@ -27,4 +28,14 @@ class Vaccine_type extends Model
         'name',
         'country',
     ];
+
+    // public function getCreatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
+    
+    // public function getUpdatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
 }

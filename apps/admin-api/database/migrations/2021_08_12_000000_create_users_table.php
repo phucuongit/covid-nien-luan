@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('identity_card')->unique();
-            $table->string('social_insurance')->nullable();
+            $table->string('social_insurance')->unique()->nullable();
             $table->string('username')->unique()->nullable();
             $table->string('password')->nullable();
             $table->string('fullname');
@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            //Default famework columns
+            // Default famework columns
             $table->timestamps();
         });
     }

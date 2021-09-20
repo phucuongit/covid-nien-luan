@@ -8,6 +8,7 @@ use App\Traits\Filterable;
 use App\Models\User;
 use App\Models\Image;
 use App\Models\Vaccine_type;
+use Carbon\Carbon;
 
 class Vaccination extends Model
 {
@@ -33,6 +34,34 @@ class Vaccination extends Model
         'create_by',
         'vaccine_type_id',
     ];
+
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    // protected $dateFormat = 'U';
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    // protected $dates = [
+    //     'created_at',
+    //     'updated_at',
+    //     'deleted_at'
+    // ];
+
+    public function getCreatedAtAttribute($date)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    }
+    
+    public function getUpdatedAtAttribute($date)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    }
 
     /**
      * Search vaccination

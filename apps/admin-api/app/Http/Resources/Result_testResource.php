@@ -17,7 +17,10 @@ class Result_testResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data = parent::toArray($request);
+        $data = [
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
         $data['user'] = 
             new UserShortResource($this->user);
         $data['user_create_by'] = 
