@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
 use App\Models\User;
+use Carbon\Carbon;
 
 class Result_test extends Model
 {
@@ -31,6 +32,15 @@ class Result_test extends Model
         'create_by',
     ];
 
+    // public function getCreatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
+    // public function getUpdatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
+
     /**
      * Search result_test
      */
@@ -53,6 +63,7 @@ class Result_test extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+
     /**
      * Get result_test's user.
      */
@@ -60,6 +71,7 @@ class Result_test extends Model
     {
         return $this->belongsTo(User::class);
     }
+
      /**
      * Get result_test's user create by.
      */

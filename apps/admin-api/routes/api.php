@@ -13,6 +13,7 @@ use App\Http\Controllers\API\Address\ProvinceController;
 use App\Http\Controllers\API\Address\DistrictController;
 use App\Http\Controllers\API\Address\VillageController;
 use App\Http\Controllers\API\Upload\ImageController;
+use App\Http\Controllers\API\User\Look_upController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,7 @@ use App\Http\Controllers\API\Upload\ImageController;
 Route::prefix('v1')->group(function () {
     Route::post('/auth/register', [RegisterController::class, 'register']);
     Route::post('/auth/login', [LoginController::class, 'login']);
-    Route::get('/test',  [LoginController::class, 'test']);
+    Route::resource('look_up', Look_upController::class)->only('show');
     Route::middleware('auth:api')->group( function () {
         Route::resource('user', UserController::class);
         //api resource

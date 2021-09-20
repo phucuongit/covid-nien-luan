@@ -6,10 +6,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Village as VillageResource;
 use App\Http\Resources\District as DistrictResource;
 use App\Http\Resources\Province as ProvinceResource;
-use App\Http\Resources\RoleResource;
-use App\Http\Resources\ImageResource;
+use App\Http\Resources\VaccinationCollection;
+use App\Http\Resources\Result_testCollection;
 
-class UserResource extends JsonResource
+class UserLook_upResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,11 +20,8 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'identity_card' => $this->identity_card,
-            'social_insurance' => $this->social_insurance,
-            'username' => $this->username,
-            // 'password' => $this->password,
+            // 'identity_card' => $this->identity_card,
+            // 'social_insurance' => $this->social_insurance,
             'fullname' => $this->fullname,
             'birthday' => $this->birthday,
             'gender' => $this->gender,
@@ -38,15 +35,14 @@ class UserResource extends JsonResource
                 "province" => 
                     $this->province()->first('name')
             ],
-            'phone' => $this->phone,
-            // 'village_id' => $this->village_id,
-            // 'role_id' => $this->role_id,
-            'role' => 
-                $this->role()->first('name'),
+            // 'phone' => $this->phone,
             'images' => 
                 ImageResource::collection($this->images),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'vaccinations' =>
+                new VaccinationCollection($this->vaccinations),
+            'result_tests' =>
+                new Result_testCollection($this->result_tests)
+
         ];
     }
 }

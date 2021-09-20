@@ -9,6 +9,9 @@ use App\Models\Image;
 use App\Models\Village;
 use App\Models\District;
 use App\Models\Role;
+use App\Models\Vaccination;
+use App\Models\Result_test;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -48,7 +51,9 @@ class User extends Authenticatable
      * @var array
      */
     // protected $casts = [
-    //     'email_verified_at' => 'datetime',
+    //     // 'email_verified_at' => 'datetime',
+    //     'create_at' => 'datetime',
+    //     'update_at' => 'datetime',
     // ];
 
     /**
@@ -69,6 +74,16 @@ class User extends Authenticatable
         'village_id',
         'role_id',
     ];
+
+    // public function getCreatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
+    
+    // public function getUpdatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
 
     /**
      * Search users
@@ -92,17 +107,43 @@ class User extends Authenticatable
     }
 
      /**
-     * Get village's user.
+     * Get user's village.
      */
     public function village(){
         return $this->belongsTo(Village::class);
     }
 
      /**
-     * Get district's user.
+     * Get user's district.
      */
-    public function district(){
-        return $this->hasOneThrough(Village::class, District::class);
+    public function district()
+    {
+        return $this->village->district;
+        // return $this->hasOneThrough(District::class, Village::class, 'id', 'id', 'village_id', 'district_id');
+    }
+
+     /**
+     * Get user's province.
+     */
+    public function province()
+    {
+        return $this->village->district->province;
+    }
+
+     /**
+     * Get user's vaccination.
+     */
+    public function vaccinations()
+    {
+        return $this->hasMany(Vaccination::class);
+    }
+
+     /**
+     * Get user's result_test.
+     */
+    public function result_tests()
+    {
+        return $this->hasMany(Result_test::class);
     }
 
      /**
