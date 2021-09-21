@@ -9,7 +9,7 @@ use App\Http\Resources\Province as ProvinceResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\ImageResource;
 
-class UserResource extends JsonResource
+class LoginResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,7 +24,6 @@ class UserResource extends JsonResource
             'identity_card' => $this->identity_card,
             'social_insurance' => $this->social_insurance,
             'username' => $this->username,
-            // 'password' => $this->password,
             'fullname' => $this->fullname,
             'birthday' => $this->birthday,
             'gender' => $this->gender,
@@ -39,14 +38,13 @@ class UserResource extends JsonResource
                     new ProvinceResource($this->province()->first())
             ],
             'phone' => $this->phone,
-            // 'village_id' => $this->village_id,
-            // 'role_id' => $this->role_id,
             'role' => 
                 $this->role()->first('name'),
             'images' => 
                 ImageResource::collection($this->images),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'token' => $this->token
         ];
     }
 }
