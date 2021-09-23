@@ -89,7 +89,6 @@ export default defineComponent({
       @selection-change="handleSelectionChange"
       :data="vaccinationList"
       style="width: 100%"
-      max-height="480"
       stripe
       border
       v-loading="isLoadingVaccination"
@@ -99,40 +98,25 @@ export default defineComponent({
     >
       <el-table-column fixed type="selection" width="55"> </el-table-column>
       <el-table-column
-        label="Họ tên"
-        width="250"
-        property="user_id"
-      ></el-table-column>
-      <el-table-column
-        label="Người tạo"
-        width="250"
-        property="create_by"
-      ></el-table-column>
-      <el-table-column
-        label="Vắc-xin"
-        width="240"
-        property="vaccine_type_id"
-      ></el-table-column>
-      <el-table-column
         label="Thời gian tạo"
-        width="250"
         property="created_at"
       ></el-table-column>
       <el-table-column
-        label="Cập nhật lần cuối"
-        width="250"
-        property="updated_at"
-      >
-        <template #default="scope">{{
-          formatDate(scope.row.update_at)
-        }}</template>
-      </el-table-column>
-      <!-- <el-table-column
-        label="Cập nhật lần cuối"
-        width="305"
-      >
-      <template #default="scope">{{ formatDate(scope.row.updated_at) }}</template>
-      </el-table-column> -->
+        label="Họ tên"
+        property="user.fullname"
+      ></el-table-column>
+      <el-table-column
+        label="Vắc-xin"
+        property="vaccine_type.name"
+      ></el-table-column>
+      <el-table-column
+        label="Số điện thoại"
+        property="user.phone"
+      ></el-table-column>
+      <el-table-column
+        label="Người tạo"
+        property="user_create_by.fullname"
+      ></el-table-column>
     </el-table>
     <el-pagination
       class="text-center mt-20"
