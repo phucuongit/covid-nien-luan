@@ -14,6 +14,7 @@ use App\Http\Controllers\API\Address\DistrictController;
 use App\Http\Controllers\API\Address\VillageController;
 use App\Http\Controllers\API\Upload\ImageController;
 use App\Http\Controllers\API\User\Look_upController;
+use App\Http\Controllers\API\AdminProfile\AdminProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,15 +31,23 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [LoginController::class, 'login']);
     Route::resource('look_up', Look_upController::class)->only('show');
     Route::middleware('auth:api')->group( function () {
+        // api for admin profile
+        Route::get('profile', [AdminProfileController::class, 'index']);
+        Route::put('profile/update', [AdminProfileController::class, 'update']);
+        Route::delete('profile/destroy', [AdminProfileController::class, 'destroy']);
+
+        // api resource
         Route::resource('user', UserController::class);
-        //api resource
         Route::resource('vaccination', VaccinationController::class);
         Route::resource('result_test', Result_testController::class);
         Route::resource('vaccine_type', Vaccine_typeController::class);
 
+        // api for location
         Route::resource('address/province', ProvinceController::class)->only('index');
         Route::resource('address/district', DistrictController::class)->only('index');
         Route::resource('address/village', VillageController::class)->only('index');
+
+        // api for upload image
         Route::resource('file/image', ImageController::class)->only(['store','destroy']);
     });
 });
