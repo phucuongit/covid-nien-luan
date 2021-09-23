@@ -27,8 +27,8 @@ class CreateUsersTable extends Migration
 
             $table->foreignId('village_id')
                 ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onUpdate('cascade');
+                // ->onDelete('cascade');
             $table->foreignId('role_id')
                 ->constrained()
                 ->onUpdate('cascade')

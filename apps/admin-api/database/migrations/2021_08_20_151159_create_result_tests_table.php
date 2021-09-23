@@ -19,14 +19,14 @@ class CreateResultTestsTable extends Migration
 
             $table->foreignId('user_id')
                 ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onUpdate('cascade');
+                // ->onDelete('cascade');
             $table->foreignId('create_by')
                 ->references('id')
                 ->on('users')
                 ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onUpdate('cascade');
+                // ->onDelete('cascade');
             //Default famework columns
             $table->timestamps();
         });
