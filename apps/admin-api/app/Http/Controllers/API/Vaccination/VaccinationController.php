@@ -23,7 +23,7 @@ class VaccinationController extends BaseController
         try{
             $params = $request->all();
             $vaccinationQuery = Vaccination::filter($params);
-            $vaccinations = new VaccinationCollection($vaccinationQuery->paginate(5));           
+            $vaccinations = new VaccinationCollection($vaccinationQuery->paginate(20));           
             return $this->sendResponse($vaccinations->response()->getData(true));
         }
         catch (Exception $e) {

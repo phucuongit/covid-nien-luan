@@ -47,13 +47,15 @@ class Vaccine_typeTableSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
+            [
+                'name' => 'Janssen',
+                'country' => 'Netherlands',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
             // [
             //     'name' => 'Covaxin',
             //     'country' => 'Vietnam',
-            // ],
-            // [
-            //     'name' => 'Janssen',
-            //     'country' => 'Netherlands',
             // ],
         ];
         Vaccine_type::insert($data);
