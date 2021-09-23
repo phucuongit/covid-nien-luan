@@ -187,7 +187,7 @@ export default defineComponent({
       :data="data"
       ref="multipleTable"
       style="width: 100%"
-      max-height="400"
+      max-height="430px"
       stripe
       border
       @selection-change="handleSelectionChange"
@@ -196,40 +196,36 @@ export default defineComponent({
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.5)"
     >
-      <el-table-column fixed type="selection" width="40"> </el-table-column>
+      <el-table-column fixed type="selection" width="55"> </el-table-column>
       <el-table-column
         property="fullname"
         label="Họ tên"
-        width="200"
+        width="250"
       ></el-table-column>
 
       <el-table-column
         property="identity_card"
         label="CMND / CCCD"
-        width="180"
       ></el-table-column>
 
-      <el-table-column
-        property="phone"
-        label="Số điện thoại"
-        width="180"
-      ></el-table-column>
+      <el-table-column property="phone" label="Số điện thoại"></el-table-column>
       <el-table-column
         property="social_insurance"
         label="Bảo hiểm y tế"
-        width="150"
       ></el-table-column>
-      <el-table-column label="Giới tính" width="120">
+      <el-table-column label="Giới tính">
         <template #default="scope">
           {{ scope.row.gender ? "Nam" : "Nữ" }}
         </template>
       </el-table-column>
-      <el-table-column label="Ngày sinh" width="200">
+
+      <el-table-column label="Ngày sinh">
         <template #default="scope">
           {{ formatDate(scope.row.birthday) }}
         </template>
       </el-table-column>
-      <el-table-column label="Địa chỉ" width="200">
+
+      <el-table-column label="Địa chỉ">
         <template #default="scope">
           {{ scope.row.address_full.province.name }}
         </template>

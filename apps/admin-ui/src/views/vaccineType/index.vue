@@ -144,7 +144,6 @@ export default defineComponent({
       ref="multipleTable"
       :data="data"
       style="width: 100%"
-      max-height="480"
       stripe
       border
       @selection-change="handleSelectionChange"
@@ -154,17 +153,16 @@ export default defineComponent({
       element-loading-background="rgba(0, 0, 0, 0.5)"
     >
       <el-table-column fixed type="selection" width="55"> </el-table-column>
-      <el-table-column label="Tên vắc-xin" width="305" property="name">
+      <el-table-column label="Tên vắc-xin" property="name"> </el-table-column>
+      <el-table-column property="country" label="Nước sản xuất">
       </el-table-column>
-      <el-table-column property="country" label="Nước sản xuất" width="305">
-      </el-table-column>
-      <el-table-column label="Thời gian thêm" width="305">
+      <el-table-column label="Thời gian thêm">
         <template #default="scope">{{
           formatDate(scope.row.created_at)
         }}</template>
       </el-table-column>
 
-      <el-table-column label="Cập nhật lần cuối" width="305">
+      <el-table-column label="Cập nhật lần cuối">
         <template #default="scope">{{
           formatDate(scope.row.updated_at)
         }}</template>
