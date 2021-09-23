@@ -41,7 +41,16 @@ export default defineComponent({
 
     const handleChangeVisibleAddUpdate = () => {
       isVisibleAddUpdate.value = !isVisibleAddUpdate.value
-      console.log(isVisibleAddUpdate.value)
+    }
+
+    const handlechangeVisibleAdd = () => {
+      setMode("add")
+      handleChangeVisibleAddUpdate()
+    }
+
+    const handlechangeVisibleUpdate = () => {
+      setMode("update")
+      handleChangeVisibleAddUpdate()
     }
 
     provide("handleChangeVisibleAddUpdate", handleChangeVisibleAddUpdate)
@@ -59,7 +68,8 @@ export default defineComponent({
       textSearch,
       setMode,
       mode,
-      handleChangeVisibleAddUpdate,
+      handlechangeVisibleAdd,
+      handlechangeVisibleUpdate,
       isVisibleAddUpdate
     }
   },
@@ -90,7 +100,12 @@ export default defineComponent({
     </el-col>
     <el-col :span="12">
       <div class="grid-content text-right pt-10">
-        <el-button size="small" type="primary" class="text-white">
+        <el-button
+          size="small"
+          type="primary"
+          class="text-white"
+          @click="handlechangeVisibleAdd"
+        >
           <i class="el-icon-plus"></i>
           Thêm
         </el-button>
@@ -100,6 +115,7 @@ export default defineComponent({
           type="primary"
           class="text-white"
           v-if="multipleSelection.length == 1"
+          @click="handlechangeVisibleUpdate"
         >
           <i class="el-icon-edit"></i>
           Sửa
@@ -123,7 +139,6 @@ export default defineComponent({
     @selection-change="handleSelectionChange"
     :data="resultTestList"
     style="width: 100%"
-    max-height="480"
     stripe
     border
     v-loading="isLoadingResultTestList"
@@ -132,41 +147,24 @@ export default defineComponent({
     element-loading-background="rgba(0, 0, 0, 0.5)"
   >
     <el-table-column fixed type="selection" width="55"> </el-table-column>
-    <el-table-column label="Thời gian" width="180">
+    <el-table-column label="Thời gian">
       <template #default="scope">
         {{ formatDateHour(scope.row.created_at) }}
       </template>
     </el-table-column>
-
-    <el-table-column
-      label="Họ tên"
-      width="200"
-      property="user.fullname"
-    ></el-table-column>
-
-    <el-table-column label="Kết quả" width="120" property="status">
+    <el-table-column label="Họ tên" property="user.fullname"></el-table-column>
+    <el-table-column label="Kết quả">
       <template #default="scope">
         {{ scope.row.status == "negative" ? "Âm tính" : "Dương tính" }}
       </template>
     </el-table-column>
 
     <el-table-column
-      label="CMND"
-      width="120"
-      property="user.identity_card"
-    ></el-table-column>
-    <el-table-column
-      label="Số bảo hiểm"
-      width="120"
-      property="user.social_insurance"
-    ></el-table-column>
-    <el-table-column
       label="Số điện thoại"
-      width="120"
       property="user.phone"
     ></el-table-column>
 
-    <el-table-column label="Ngày sinh" width="120">
+    <el-table-column label="Ngày sinh">
       <template #default="scope">
         {{ formatDate(scope.row.user.birthday) }}
       </template>
@@ -178,18 +176,12 @@ export default defineComponent({
       </template>
     </el-table-column>
 
-    <!-- <el-table-column label="Cập nhật lần cuối" width="180">
-      <template #default="scope">
-        {{ formatDateHour(scope.row.update_at) }}
-      </template>
-    </el-table-column> -->
-
     <el-table-column
       label="Người tạo"
-      width="180"
       property="user_create_by.fullname"
     ></el-table-column>
   </el-table>
+
   <el-pagination
     class="text-center mt-20"
     background
