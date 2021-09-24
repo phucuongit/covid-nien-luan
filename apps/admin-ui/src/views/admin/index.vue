@@ -10,21 +10,18 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    const user = ref()
     onMounted(async () => {
       try {
         const response = await API.get("profile") // Call api get account login
         if (response.data.success) {
-          console.log("Trong onMounted test:")
-          console.log(response.data.data)
-          user.value = response.data.data
+          store.dispatch("setUser", response.data.data)
         }
       } catch (e) {
         console.log(e)
         router.push("/admin/login")
+        localStorage.setItem("token", "")
       }
     })
-    store.dispatch("setUser", user)
   }
 })
 </script>

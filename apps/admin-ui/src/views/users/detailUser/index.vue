@@ -27,6 +27,7 @@ const AddUser = defineComponent({
     const closeDetailUser = inject("closeDetailUser")
     const cancelForm = () => {
       closeDetailUser()
+      user.value = ""
     }
 
     return {
@@ -69,55 +70,65 @@ export default AddUser
           <el-row :gutter="30">
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Họ tên:">
-                <el-input v-model="user.fullname"></el-input>
+                <el-input v-model="user.fullname" disabled></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24" v-if="user.role.name == 'admin'">
               <el-form-item label="Tên đăng nhập:">
-                <el-input v-model="user.username"></el-input>
+                <el-input v-model="user.username" disabled></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Số điện thoại:">
-                <el-input v-model="user.phone"></el-input>
+                <el-input v-model="user.phone" disabled></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="CMND / CCCD:">
-                <el-input v-model="user.identity_card"></el-input>
+                <el-input v-model="user.identity_card" disabled></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Tỉnh / TP:">
-                <el-input v-model="user.address_full.province.name"></el-input>
+                <el-input
+                  v-model="user.address_full.province.name"
+                  disabled
+                ></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Huyện / Phường:">
-                <el-input v-model="user.address_full.district.name"></el-input>
+                <el-input
+                  v-model="user.address_full.district.name"
+                  disabled
+                ></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Số bảo hiểm:">
-                <el-input v-model="user.social_insurance"></el-input>
+                <el-input v-model="user.social_insurance" disabled></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Xã / Thị trấn:">
-                <el-input v-model="user.address_full.village.name"></el-input>
+                <el-input
+                  v-model="user.address_full.village.name"
+                  disabled
+                ></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Ngày sinh:">
                 <el-date-picker
+                  disabled
                   style="width: 100%"
                   value-format="YYYY-MM-DD"
                   type="date"
@@ -129,13 +140,13 @@ export default AddUser
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Vai trò:">
-                <el-input v-model="user.role.name"></el-input>
+                <el-input v-model="user.role.name" disabled></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Địa chỉ:">
-                <el-input v-model="user.address"></el-input>
+                <el-input v-model="user.address" disabled></el-input>
               </el-form-item>
             </el-col>
 
@@ -143,7 +154,7 @@ export default AddUser
               <el-form-item label="Giới tính:">
                 <el-radio-group v-model="user.gender">
                   <el-radio :label="1">Nam</el-radio>
-                  <el-radio :label="0">Nữ</el-radio>
+                  <el-radio :label="0" disabled>Nữ</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>

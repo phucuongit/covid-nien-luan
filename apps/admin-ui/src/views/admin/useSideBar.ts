@@ -21,7 +21,7 @@ export default function useConfigSideBar() {
       key: 2,
       link: "ResultTest",
       icon: "carbon:id-management",
-      label: "Kiểm tra covid",
+      label: "Kết quả xét nghiệm",
       children: []
     },
     {

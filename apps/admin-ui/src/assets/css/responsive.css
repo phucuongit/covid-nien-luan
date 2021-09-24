@@ -3,5 +3,9 @@
     height: 400px;
     padding: 0px 10px;
   }
-
 }
+
+@media screen and (max-width: 650px) {
+  .el-dialog { width: 90% !important}
+}
+

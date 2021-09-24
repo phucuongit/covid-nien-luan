@@ -20,7 +20,8 @@ export default defineComponent({
       loadingListUser,
       getListUsers,
       getListUsersSearch,
-      totalPage
+      totalPage,
+      loadingSearch
     } = useUsers()
     const multipleSelection = ref([])
     const handleSelectionChange = (value) => {
@@ -30,7 +31,6 @@ export default defineComponent({
     const handleSearch = () => {
       getListUsersSearch(textSearch.value)
     }
-    getListUsers(1)
 
     const isVisibleAddUser = ref(false)
     const isVisibleAddAdmin = ref(false)
@@ -39,6 +39,7 @@ export default defineComponent({
     const mode = ref()
 
     const currentPage = ref(1)
+    getListUsers(currentPage.value)
     const handleChangePage = (page) => {
       currentPage.value = page
       getListUsers(currentPage.value)
@@ -56,6 +57,16 @@ export default defineComponent({
       isVisibleAddUser.value = !isVisibleAddUser.value
     }
 
+    const handleChangeAddUser = () => {
+      changeAddUser()
+      setMode("add")
+    }
+
+    const handleChangeAddAdmin = () => {
+      changeAddAdmin()
+      setMode("add")
+    }
+
     const changeAddAdmin = () => {
       isVisibleAddAdmin.value = !isVisibleAddAdmin.value
     }
@@ -71,6 +82,12 @@ export default defineComponent({
 
     const changeDelete = () => {
       isVisibleDelete.value = !isVisibleDelete.value
+    }
+
+    const checkEmptyTextSearch = () => {
+      if (textSearch.value == "") {
+        getListUsers(currentPage.value)
+      }
     }
 
     provide("currentPage", currentPage)
@@ -95,11 +112,13 @@ export default defineComponent({
       isVisibleDelete,
       totalPage,
       currentPage,
-      changeAddUser,
-      changeAddAdmin,
+      handleChangeAddUser,
+      handleChangeAddAdmin,
       changeUpdate,
       changeDelete,
       changeDetailUser,
+      loadingSearch,
+      checkEmptyTextSearch,
       mode
     }
   },
@@ -113,25 +132,37 @@ export default defineComponent({
 
 <template>
   <div id="users-list">
-    <h3 class="mr-0">Danh sách các loại vắc-xin</h3>
-    <el-row class="row-bg mb-10">
-      <el-col :span="12">
+    <h3 class="mr-0 mt-0">Danh sách các người dùng</h3>
+    <el-row class="row-bg mb-10" :gutter="30">
+      <el-col :md="9" :sm="24" :xs="24" class="pt-5">
         <div class="grid-content">
           <el-input
-            placeholder="Tìm kiếm theo tên..."
+            size="small"
+            placeholder="Tìm kiếm..."
             prefix-icon="el-icon-search"
             v-model="textSearch"
-            v-on:keypress.enter="handleSearch"
+            v-on:keyup="checkEmptyTextSearch"
           >
+            <template #append>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                class="btn-search"
+                @click="handleSearch"
+                :loading="loadingSearch"
+                :disabled="loadingSearch"
+              >
+              </el-button>
+            </template>
           </el-input>
         </div>
       </el-col>
-      <el-col :span="12">
-        <div class="grid-content text-right pt-10">
+      <el-col :md="15" :sm="24" :xs="24">
+        <div class="grid-content text-right">
           <el-button
             size="small"
             type="primary"
-            class="text-white"
+            class="text-white mt-5"
             @click="changeDetailUser"
             v-if="multipleSelection.length == 1"
           >
@@ -141,8 +172,8 @@ export default defineComponent({
           <el-button
             size="small"
             type="primary"
-            class="text-white"
-            @click="changeAddUser"
+            class="text-white mt-5"
+            @click="handleChangeAddUser"
           >
             <i class="el-icon-plus"></i>
             Thêm User
@@ -151,8 +182,8 @@ export default defineComponent({
           <el-button
             size="small"
             type="primary"
-            class="text-white"
-            @click="changeAddAdmin"
+            class="text-white mt-5"
+            @click="handleChangeAddAdmin"
           >
             <i class="el-icon-plus"></i>
             Thêm Admin
@@ -161,7 +192,7 @@ export default defineComponent({
           <el-button
             size="small"
             type="primary"
-            class="text-white"
+            class="text-white mt-5"
             v-if="multipleSelection.length == 1"
             @click="changeUpdate"
           >
@@ -172,7 +203,7 @@ export default defineComponent({
           <el-button
             size="small"
             type="danger"
-            class="text-white"
+            class="text-white mt-5"
             v-if="multipleSelection.length > 0"
             @click="changeDelete"
           >
@@ -187,7 +218,6 @@ export default defineComponent({
       :data="data"
       ref="multipleTable"
       style="width: 100%"
-      max-height="430px"
       stripe
       border
       @selection-change="handleSelectionChange"
