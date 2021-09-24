@@ -1,4 +1,5 @@
 import API from "@/services"
+import { ElMessage } from "element-plus"
 import { ref } from "vue"
 
 type resultTestType = {
@@ -33,9 +34,17 @@ function useAddUpdateResultTest() {
       const response = await API.post("result_test", params)
       if (response.data.success) {
         console.log(response.data)
+        ElMessage.success({
+          message: "Thêm kết quả xét nghiệm thành công",
+          type: "success"
+        })
       }
     } catch (e) {
       console.log(e)
+      ElMessage.error({
+        message: "Thêm kết quả xét nghiệm không thành công",
+        type: "error"
+      })
       isLoadingAddUpdateResultTest.value = false
     } finally {
       isLoadingAddUpdateResultTest.value = false
@@ -48,10 +57,18 @@ function useAddUpdateResultTest() {
       const response = await API.patch("result_test/" + id, params)
       if (response.data.success) {
         console.log(response.data)
+        ElMessage.success({
+          message: "Cập nhật kết quả xét nghiệm thành công",
+          type: "success"
+        })
       }
     } catch (e) {
       console.log(e)
       isLoadingAddUpdateResultTest.value = false
+      ElMessage.error({
+        message: "Cập nhật kết quả xét nghiệm không thành công",
+        type: "error"
+      })
     } finally {
       isLoadingAddUpdateResultTest.value = false
     }

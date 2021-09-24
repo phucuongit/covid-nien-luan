@@ -25,8 +25,10 @@ const AddUser = defineComponent({
   setup(props) {
     const addUserSchema = yup.object({
       fullname: yup.string().required("Họ tên là bắt buộc!"),
-      identity_card: yup.string().required("Chứng minh nhân dân là bắt buộc!"),
-      // .matches("^[0-9]{9}$", "CMND/CCCD không hợp lệ"),
+      identity_card: yup
+        .string()
+        .required("Chứng minh nhân dân là bắt buộc!")
+        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD không hợp lệ"),
       birthday: yup.string().required("Ngày sinh là bắt buộc!"),
       social_insurance: yup.string().required("Bảo hiểm y tế là bắt buộc!"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
@@ -67,7 +69,10 @@ const AddUser = defineComponent({
     watch(props, () => {
       isShow.value = props.isVisible
       isMode.value = props.mode
-      if (isMode.value == "update" && props.selectUser[0]) {
+      if (
+        isMode.value == "update" &&
+        props.selectUser[0]?.role.name == "user"
+      ) {
         user.value = props.selectUser[0]
         idUserSelect.value = user.value.id
         fullname.value = user.value.fullname
@@ -95,8 +100,10 @@ const AddUser = defineComponent({
       validationSchema: addUserSchema
     })
 
+    // const error_identity_card = ref('');
     const onSubmitAdd = handleSubmit(async (values) => {
       if (values) {
+        // if (identity_card.value.length == 9 || identity_card.value.length == 12) {
         if (isMode.value == "update") {
           await updateUser(idUserSelect.value, values)
         } else {
@@ -105,6 +112,9 @@ const AddUser = defineComponent({
         getListUsers(currentPage.value)
         cancelForm()
       }
+      // } else {
+      //   error_identity_card.value = "CMND/CCCD không hợp lệ"
+      // }
     })
 
     const handleChangeProvince = () => {
@@ -116,9 +126,9 @@ const AddUser = defineComponent({
     }
 
     const cancelForm = () => {
+      setMode("")
       resetForm()
       closeAddUserModal()
-      setMode("")
     }
 
     const { value: fullname } = useField("fullname")
@@ -159,6 +169,7 @@ const AddUser = defineComponent({
       districtList,
       villageList,
       isMode
+      // error_identity_card
     }
   }
 })
@@ -202,6 +213,7 @@ export default AddUser
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Tỉnh / TP:">
             <el-select
+              style="width: 100%"
               placeholder="Chọn tỉnh / TP..."
               v-model="province_id"
               @change="handleChangeProvince"
@@ -221,6 +233,7 @@ export default AddUser
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Huyện / Phường:">
             <el-select
+              style="width: 100%"
               placeholder="Chọn phường..."
               v-model="district_id"
               @change="handleChangeDistrict"
@@ -246,7 +259,11 @@ export default AddUser
 
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Xã / Thị trấn:">
-            <el-select placeholder="Chọn xã / Thị trấn..." v-model="village_id">
+            <el-select
+              style="width: 100%"
+              placeholder="Chọn xã / Thị trấn..."
+              v-model="village_id"
+            >
               <el-option
                 v-for="village in villageList"
                 :key="village.id"
@@ -274,7 +291,11 @@ export default AddUser
 
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Vai trò:">
-            <el-select placeholder="Chọn vai trò người dùng" v-model="role_id">
+            <el-select
+              style="width: 100%"
+              placeholder="Chọn vai trò người dùng"
+              v-model="role_id"
+            >
               <!-- <el-option label="Admin" :value="1"></el-option> -->
               <el-option label="User" :value="2"></el-option>
             </el-select>

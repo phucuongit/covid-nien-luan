@@ -3,24 +3,32 @@ import { defineComponent, provide, ref } from "vue"
 import useResultTest from "./useResultTest"
 import moment from "moment"
 import AddUpdateResultTest from "./addUpdateResultTest"
+import DeleteResultTest from "./deleteResultTest"
 
 export default defineComponent({
   components: {
-    AddUpdateResultTest
+    AddUpdateResultTest,
+    DeleteResultTest
   },
   setup() {
     const {
       isLoadingResultTestList,
       resultTestList,
-      gettResultTestList,
-      totalPage
+      getResultTestList,
+      totalPage,
+      searchResultTest,
+      isLoadingSearch,
+      filterResultTest
     } = useResultTest()
+
     const currentPage = ref(1)
     const multipleSelection = ref([])
     const textSearch = ref("")
     const mode = ref("")
     const isVisibleAddUpdate = ref(false)
-    gettResultTestList(currentPage.value)
+    const isVisibleDelete = ref(false)
+    const filter = ref()
+    getResultTestList(currentPage.value)
 
     const handleSelectionChange = (value) => {
       multipleSelection.value = value
@@ -28,11 +36,7 @@ export default defineComponent({
 
     const handleChangePage = (value) => {
       currentPage.value = value
-      gettResultTestList(currentPage.value)
-    }
-
-    const handleSearch = () => {
-      console.log("Chưa làm tìm kiếm: " + textSearch.value)
+      getResultTestList(currentPage.value)
     }
 
     const setMode = (value) => {
@@ -53,6 +57,27 @@ export default defineComponent({
       handleChangeVisibleAddUpdate()
     }
 
+    const handleSearch = () => {
+      searchResultTest(textSearch.value)
+    }
+
+    const handleVisibleDelete = () => {
+      isVisibleDelete.value = !isVisibleDelete.value
+    }
+
+    const filterState = () => {
+      filterResultTest(filter.value)
+    }
+
+    const checkEmptyText = (value) => {
+      if (textSearch.value == "") {
+        getResultTestList(currentPage.value)
+      }
+    }
+
+    provide("closeDeleteResultTest", handleVisibleDelete)
+    provide("getResultTestList", getResultTestList)
+    provide("currentPage", currentPage)
     provide("handleChangeVisibleAddUpdate", handleChangeVisibleAddUpdate)
     provide("setMode", setMode)
 
@@ -70,12 +95,18 @@ export default defineComponent({
       mode,
       handlechangeVisibleAdd,
       handlechangeVisibleUpdate,
-      isVisibleAddUpdate
+      isVisibleAddUpdate,
+      isVisibleDelete,
+      handleVisibleDelete,
+      isLoadingSearch,
+      filter,
+      filterState,
+      checkEmptyText
     }
   },
   methods: {
     formatDateHour(date) {
-      return moment(date).format("hh:mm:ss a, DD/MM/YYYY")
+      return moment(date).format("hh:mm, DD/MM/YYYY")
     },
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY")
@@ -85,25 +116,50 @@ export default defineComponent({
 </script>
 
 <template>
-  <h3>Danh sách kết quả xét nghiệm</h3>
-  <el-row class="row-bg mb-10">
-    <el-col :span="12">
+  <h3 class="mt-0">Danh sách kết quả xét nghiệm</h3>
+  <el-row class="row-bg mb-10" :gutter="30">
+    <el-col :md="7" :sm="12" :xs="24" class="pt-5">
       <div class="grid-content">
         <el-input
+          size="small"
           placeholder="Tìm kiếm..."
           prefix-icon="el-icon-search"
           v-model="textSearch"
-          v-on:keyup.enter="handleSearch"
+          v-on:keyup="checkEmptyText"
         >
+          <template #append>
+            <el-button
+              size="small"
+              type="primary"
+              icon="el-icon-search"
+              class="btn-search"
+              @click="handleSearch"
+              :loading="isLoadingSearch"
+              :disabled="isLoadingSearch"
+            >
+            </el-button>
+          </template>
         </el-input>
       </div>
     </el-col>
-    <el-col :span="12">
-      <div class="grid-content text-right pt-10">
+    <el-col :md="5" :sm="12" :xs="24" class="pt-5">
+      <el-select
+        size="small"
+        v-model="filter"
+        @change="filterState"
+        placeholder="Lọc theo kết quả..."
+        style="width: 100%"
+      >
+        <el-option value="positive" label="Dương tính"></el-option>
+        <el-option value="negative" label="Âm tính"></el-option>
+      </el-select>
+    </el-col>
+    <el-col :md="12" :sm="24" :xs="24">
+      <div class="grid-content text-right">
         <el-button
           size="small"
           type="primary"
-          class="text-white"
+          class="text-white mt-5"
           @click="handlechangeVisibleAdd"
         >
           <i class="el-icon-plus"></i>
@@ -113,7 +169,7 @@ export default defineComponent({
         <el-button
           size="small"
           type="primary"
-          class="text-white"
+          class="text-white mt-5"
           v-if="multipleSelection.length == 1"
           @click="handlechangeVisibleUpdate"
         >
@@ -124,8 +180,9 @@ export default defineComponent({
         <el-button
           size="small"
           type="danger"
-          class="text-white"
+          class="text-white mt-5"
           v-if="multipleSelection.length > 0"
+          @click="handleVisibleDelete"
         >
           <i class="el-icon-delete"></i>
           Xóa
@@ -155,7 +212,11 @@ export default defineComponent({
     <el-table-column label="Họ tên" property="user.fullname"></el-table-column>
     <el-table-column label="Kết quả">
       <template #default="scope">
-        {{ scope.row.status == "negative" ? "Âm tính" : "Dương tính" }}
+        <span v-if="scope.row.status == 'positive'" class="text-red"
+          >Dương tính</span
+        >
+        <span v-else>Âm tính</span>
+        <!-- {{ scope.row.status == "negative" ? "Âm tính" : "Dương tính" }} -->
       </template>
     </el-table-column>
 
@@ -198,6 +259,11 @@ export default defineComponent({
     :multipleSelection="multipleSelection"
   >
   </AddUpdateResultTest>
+
+  <DeleteResultTest
+    :isVisible="isVisibleDelete"
+    :multipleSelection="multipleSelection"
+  ></DeleteResultTest>
 </template>
 
 <style scoped>

@@ -30,7 +30,7 @@ const AddUser = defineComponent({
       identity_card: yup
         .string()
         .required("Chứng minh nhân dân là bắt buộc!")
-        .matches("^[0-9]{9}$", "CMND/CCCD không hợp lệ"),
+        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD không hợp lệ"),
       birthday: yup.date().required("Ngày sinh là bắt buộc!"),
       social_insurance: yup.string().required("Bảo hiểm y tế là bắt buộc!"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
@@ -72,7 +72,10 @@ const AddUser = defineComponent({
     watch(props, () => {
       isShow.value = props.isVisible
       isMode.value = props.mode
-      if (isMode.value == "update" && props.selectUser[0]) {
+      if (
+        isMode.value == "update" &&
+        props.selectUser[0]?.role.name == "admin"
+      ) {
         user.value = props.selectUser[0]
         // Truyền giá trị lên form
         idUserSelect.value = user.value.id
@@ -245,6 +248,7 @@ export default AddUser
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Tỉnh / TP:">
             <el-select
+              style="width: 100%"
               placeholder="Chọn tỉnh / TP..."
               v-model="province_id"
               @change="handleChangeProvince"
@@ -264,6 +268,7 @@ export default AddUser
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Huyện / Phường:">
             <el-select
+              style="width: 100%"
               placeholder="Chọn phường..."
               v-model="district_id"
               @change="handleChangeDistrict"
@@ -289,7 +294,11 @@ export default AddUser
 
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Xã / Thị trấn:">
-            <el-select placeholder="Chọn xã / Thị trấn..." v-model="village_id">
+            <el-select
+              style="width: 100%"
+              placeholder="Chọn xã / Thị trấn..."
+              v-model="village_id"
+            >
               <el-option
                 v-for="village in villageList"
                 :key="village.id"
@@ -317,7 +326,11 @@ export default AddUser
 
         <el-col :md="8" :sm="12" :xs="24">
           <el-form-item label="Vai trò:">
-            <el-select placeholder="Chọn vai trò người dùng" v-model="role_id">
+            <el-select
+              style="width: 100%"
+              placeholder="Chọn vai trò người dùng"
+              v-model="role_id"
+            >
               <el-option label="Admin" :value="1"></el-option>
             </el-select>
             <div class="text-red">{{ errors.role_id }}</div>
