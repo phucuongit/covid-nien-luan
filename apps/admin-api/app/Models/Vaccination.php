@@ -53,24 +53,24 @@ class Vaccination extends Model
     //     'deleted_at'
     // ];
 
-    public function getCreatedAtAttribute($date)
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
-    }
+    // public function getCreatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
     
-    public function getUpdatedAtAttribute($date)
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
-    }
+    // public function getUpdatedAtAttribute($date)
+    // {
+    //     return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    // }
 
     /**
      * Search vaccination
      */
     public function filterSearch($query, $value)
     {
-
+        // $date = date("yyyy-mm-dd", strtotime($value));
         return $query
-            ->where('created_at', 'LIKE', '%'.$value.'%') // Cant use wheredate, cause it will convert to carbon
+            ->where('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon
             ->orWhereHas('user' , function($query) use ($value) {
                 $query->where('fullname', 'LIKE', '%' . $value . '%');
              })

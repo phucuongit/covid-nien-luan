@@ -30,7 +30,7 @@ class VaccinationResource extends JsonResource
         $data['images'] = 
             new ImageCollection($this->images);
         $data['vaccine_type'] =
-            $this->vaccine_type()->first("name");
+            $this->vaccine_type()->first(['id','name']);
 
         return $data;
     }
