@@ -68,14 +68,16 @@ class Vaccination extends Model
      */
     public function filterSearch($query, $value)
     {
+
         return $query
-            // ->whereHas('user' , function($query) use ($value) {
-            //     $query->where('fullname', 'LIKE', '%' . $value . '%');
-            //  })
-            // ->orWhereHas('user_create_by' , function($query) use ($value) {
-            //     $query->where('fullname', 'LIKE', '%' . $value . '%');
-            //  })
-            ->whereHas('vaccine_type' , function($query) use ($value) {
+            ->where('created_at', 'LIKE', '%'.$value.'%') // Cant use wheredate, cause it will convert to carbon
+            ->orWhereHas('user' , function($query) use ($value) {
+                $query->where('fullname', 'LIKE', '%' . $value . '%');
+             })
+            ->orWhereHas('user_create_by' , function($query) use ($value) {
+                $query->where('fullname', 'LIKE', '%' . $value . '%');
+             })
+            ->orWhereHas('vaccine_type' , function($query) use ($value) {
                 $query->where('name', 'LIKE', '%' . $value . '%');
              });
     }

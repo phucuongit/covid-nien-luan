@@ -95,7 +95,8 @@ class User extends Authenticatable
             ->orWhere('social_insurance', 'LIKE', '%'.$value.'%')
             ->orWhere('fullname', 'LIKE', '%'.$value.'%')
             ->orWhere('address', 'LIKE', '%'.$value.'%')
-            ->orWhere('phone', 'LIKE', '%'.$value.'%');
+            ->orWhere('phone', 'LIKE', '%'.$value.'%')
+            ->orWhere('created_at', 'LIKE', '%'.$value.'%'); // Cant use wheredate, cause it will convert to carbon
     }
 
     /**

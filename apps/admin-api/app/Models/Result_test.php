@@ -48,6 +48,7 @@ class Result_test extends Model
     {
         return $query
             ->where('status', 'LIKE', '%'.$value.'%')
+            ->orWhere('created_at', 'LIKE', '%'.$value.'%') // Cant use wheredate, cause it will convert to carbon
             ->orWhereHas('user' , function($query) use ($value) {
                 $query->where('fullname', 'LIKE', '%' . $value . '%');
              })
