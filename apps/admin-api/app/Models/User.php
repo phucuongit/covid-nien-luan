@@ -90,8 +90,9 @@ class User extends Authenticatable
      */
     public function filterSearch($query, $value)
     {
+        $date = date("Y-m-d", strtotime($value));
         return $query
-            ->where('identity_card', 'LIKE', '%'.$value.'%')
+            ->where('identity_card', 'LIKE', '%'.$date.'%')
             ->orWhere('social_insurance', 'LIKE', '%'.$value.'%')
             ->orWhere('fullname', 'LIKE', '%'.$value.'%')
             ->orWhere('address', 'LIKE', '%'.$value.'%')

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Image;
 use App\Models\Vaccine_type;
 use Carbon\Carbon;
+use DateTime;
 
 class Vaccination extends Model
 {
@@ -68,9 +69,9 @@ class Vaccination extends Model
      */
     public function filterSearch($query, $value)
     {
-        // $date = date("yyyy-mm-dd", strtotime($value));
+        $date = date("y-m-d", strtotime($value));
         return $query
-            ->where('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon
+            ->where('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon type
             ->orWhereHas('user' , function($query) use ($value) {
                 $query->where('fullname', 'LIKE', '%' . $value . '%');
              })
