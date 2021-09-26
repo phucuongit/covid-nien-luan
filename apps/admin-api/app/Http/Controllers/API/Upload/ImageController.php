@@ -56,7 +56,8 @@ class ImageController extends BaseController
                     'name' => $name,
                     'url' => $url,
                     'imageable_id' => $request->input('imageable_id'),
-                    'imageable_type' => $request->input('imageable_type')
+                    'imageable_type' => $request->input('imageable_type'),
+                    'type' => $request->input('type')
                 ];
                 $imgResponse[] = new ImageResource(Image::create($image));
             } 
