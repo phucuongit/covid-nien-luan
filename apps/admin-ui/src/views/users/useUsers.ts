@@ -47,7 +47,6 @@ function useUsers() {
       const response = await API.get("user?search=" + text)
       if (response.data.success) {
         data.value = response.data.data.users
-        console.log(response.data.data.users)
       }
     } catch (e) {
       console.log(e)

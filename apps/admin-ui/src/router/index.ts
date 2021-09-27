@@ -6,6 +6,8 @@ import ResultTest from "../views/resultTest/index.vue"
 import Vaccine from "../views/vaccineType/index.vue"
 import Users from "../views/users/index.vue"
 import Vaccination from "../views/vaccination/index.vue"
+import NotFound from "../views/notFound/index.vue"
+import Account from "../views/account/index.vue"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -36,6 +38,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "vaccination",
         name: "Vaccination",
         component: Vaccination
+      },
+      {
+        path: "account",
+        name: "Account",
+        component: Account
       }
     ],
     meta: {
@@ -46,6 +53,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/admin/login",
     name: "Login",
     component: Login
+  },
+  {
+    path: "/:pathMatch(.*)",
+    name: "NotFound",
+    component: NotFound
   }
 ]
 

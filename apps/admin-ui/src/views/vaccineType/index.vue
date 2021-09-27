@@ -11,8 +11,12 @@ export default defineComponent({
     AddUpdateVaccineType
   },
   setup() {
-    const { getListVaccineType, data, isLoading, getVaccineTypeSearch } =
-      useVaccineType()
+    const {
+      getListVaccineType,
+      dataVaccineType,
+      isLoading,
+      getVaccineTypeSearch
+    } = useVaccineType()
     getListVaccineType()
 
     const multipleSelection = ref([])
@@ -54,7 +58,7 @@ export default defineComponent({
     provide("setMode", setMode)
 
     return {
-      data,
+      dataVaccineType,
       isLoading,
       isVisibleDelete,
       isVisibleUpdate,
@@ -142,7 +146,7 @@ export default defineComponent({
 
     <el-table
       ref="multipleTable"
-      :data="data"
+      :data="dataVaccineType"
       style="width: 100%"
       stripe
       border

@@ -26,8 +26,7 @@ function useVaccination() {
   const vaccinationList = ref()
   const isLoadingVaccination = ref(false)
   const totalPage = ref(1)
-  // const { getVaccineTypeSearchID } = useVaccineType();
-  // const res: Array<resType> = [];
+  const isLoadingSearch = ref(false)
 
   const getVaccinationList = async (page: number) => {
     try {
@@ -36,15 +35,6 @@ function useVaccination() {
       if (response.data.success) {
         totalPage.value = response.data.data.meta.last_page
         vaccinationList.value = response.data.data.vaccinations
-
-        // for(const i in response.data.data.vaccinations) {
-        //   test.value = await getVaccineTypeSearchID(response.data.data.vaccinations[i].id);
-        //   const item = {
-        //     user: test.value[0],
-        //     data: response.data.data.vaccinations[i]
-        //   }
-        //   res.push(item);
-        // }
       }
     } catch (e) {
       console.log(e)
@@ -54,11 +44,32 @@ function useVaccination() {
     }
   }
 
+  const searchVaccineType = async (text: string) => {
+    try {
+      isLoadingSearch.value = true
+      isLoadingVaccination.value = true
+      const response = await API.get("vaccination?search=" + text)
+      if (response.data.success) {
+        vaccinationList.value = response.data.data.vaccinations
+        totalPage.value = response.data.data.meta.last_page
+      }
+    } catch (e) {
+      console.log(e)
+      isLoadingSearch.value = false
+      isLoadingVaccination.value = false
+    } finally {
+      isLoadingSearch.value = false
+      isLoadingVaccination.value = false
+    }
+  }
+
   return {
     isLoadingVaccination,
     getVaccinationList,
     vaccinationList,
-    totalPage
+    totalPage,
+    searchVaccineType,
+    isLoadingSearch
   }
 }
 
