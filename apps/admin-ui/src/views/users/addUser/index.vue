@@ -119,10 +119,13 @@ const AddUser = defineComponent({
 
     const handleChangeProvince = () => {
       getDistrictList(province_id.value)
+      district_id.value = ref()
+      village_id.value = ref()
     }
 
     const handleChangeDistrict = () => {
       getVillageList(district_id.value)
+      village_id.value = ref()
     }
 
     const cancelForm = () => {

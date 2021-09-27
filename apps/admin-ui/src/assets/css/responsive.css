@@ -3,6 +3,11 @@
     height: 400px;
     padding: 0px 10px;
   }
+
+  .account-left-avt img {
+    width: 150px !important;
+    height: 150px !important;
+  }
 }
 
 @media screen and (max-width: 650px) {

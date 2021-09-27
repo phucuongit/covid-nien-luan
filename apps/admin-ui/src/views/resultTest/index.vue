@@ -58,6 +58,7 @@ export default defineComponent({
     }
 
     const handleSearch = () => {
+      filter.value = ""
       searchResultTest(textSearch.value)
     }
 
@@ -66,6 +67,7 @@ export default defineComponent({
     }
 
     const filterState = () => {
+      textSearch.value = ""
       filterResultTest(filter.value)
     }
 
