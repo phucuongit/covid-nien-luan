@@ -1,26 +1,74 @@
-<script>
-import { defineComponent, ref } from "vue"
-import useVaccination from "./useVaccination.ts"
+<script lang="ts">
+import { defineComponent, provide, ref } from "vue"
+import useVaccination from "./useVaccination"
 import moment from "moment"
+import AddUpdateVaccination from "./addUpdateVaccination/index.vue"
+import DeleteVaccination from "./deleteVaccination/index.vue"
 export default defineComponent({
+  components: {
+    AddUpdateVaccination,
+    DeleteVaccination
+  },
   setup() {
     const {
       isLoadingVaccination,
       getVaccinationList,
       vaccinationList,
-      totalPage
+      totalPage,
+      isLoadingSearch,
+      searchVaccineType
     } = useVaccination()
+
     const currentPage = ref(1)
+    const isVisibleAddUpdate = ref(false)
+    const isVisibleDelete = ref(false)
+    const mode = ref("")
     getVaccinationList(currentPage.value)
 
-    const handleChangePage = (page) => {
+    const multipleSelection = ref([])
+    const textSearch = ref("")
+
+    const handleChangePage = (page: number) => {
       currentPage.value = page
       getVaccinationList(currentPage.value)
     }
-    const multipleSelection = ref([])
-    const handleSelectionChange = (value) => {
+
+    const handleSelectionChange = (value: any) => {
       multipleSelection.value = value
     }
+
+    const checkEmptyText = () => {
+      if (textSearch.value == "") {
+        getVaccinationList(currentPage.value)
+      }
+    }
+
+    const handleSearch = () => {
+      searchVaccineType(textSearch.value)
+    }
+
+    const setMode = (act: string) => {
+      mode.value = act
+    }
+
+    const handleVisibleAddUpdate = () => {
+      isVisibleAddUpdate.value = !isVisibleAddUpdate.value
+    }
+    const handleChangeVisible = (modeValue: "add" | "update") => {
+      handleVisibleAddUpdate()
+      setMode(modeValue)
+    }
+
+    const handleVisisbleDelete = () => {
+      isVisibleDelete.value = !isVisibleDelete.value
+    }
+
+    provide("handleVisibleAddUpdate", handleVisibleAddUpdate)
+    provide("handleVisisbleDelete", handleVisisbleDelete)
+    provide("setMode", setMode)
+    provide("getVaccinationList", getVaccinationList)
+    provide("currentPage", currentPage)
+
     return {
       vaccinationList,
       isLoadingVaccination,
@@ -28,12 +76,21 @@ export default defineComponent({
       currentPage,
       handleChangePage,
       handleSelectionChange,
-      multipleSelection
+      multipleSelection,
+      textSearch,
+      checkEmptyText,
+      isLoadingSearch,
+      handleSearch,
+      isVisibleAddUpdate,
+      handleChangeVisible,
+      mode,
+      handleVisisbleDelete,
+      isVisibleDelete
     }
   },
   methods: {
-    formatDate(date) {
-      return moment(date).format("hh:mm:ss a, DD/MM/YYYY")
+    formatDate(date: Date) {
+      return moment(date).format("hh:mm DD-MM-YYYY")
     }
   }
 })
@@ -42,21 +99,39 @@ export default defineComponent({
 <template>
   <div id="vaccine-list">
     <h3 class="mr-0">Danh sách tiêm chủng vắc-xin</h3>
-    <el-row class="row-bg mb-10">
-      <el-col :span="12">
+    <el-row class="row-bg mb-10" :gutter="30">
+      <el-col :md="9" :sm="12" :xs="24" class="pt-5">
         <div class="grid-content">
-          <!-- <el-input
+          <el-input
+            size="small"
             placeholder="Tìm kiếm..."
             prefix-icon="el-icon-search"
             v-model="textSearch"
-            v-on:keyup.enter="handleSearch"
+            v-on:keyup="checkEmptyText"
           >
-          </el-input> -->
+            <template #append>
+              <el-button
+                size="small"
+                type="primary"
+                icon="el-icon-search"
+                class="btn-search"
+                @click="handleSearch"
+                :loading="isLoadingSearch"
+                :disabled="isLoadingSearch"
+              >
+              </el-button>
+            </template>
+          </el-input>
         </div>
       </el-col>
-      <el-col :span="12">
-        <div class="grid-content text-right pt-10">
-          <el-button size="small" type="primary" class="text-white">
+      <el-col :md="15" :sm="12" :xs="24">
+        <div class="grid-content text-right">
+          <el-button
+            size="small"
+            type="primary"
+            class="text-white mt-5"
+            @click="handleChangeVisible('add')"
+          >
             <i class="el-icon-plus"></i>
             Thêm
           </el-button>
@@ -64,8 +139,9 @@ export default defineComponent({
           <el-button
             size="small"
             type="primary"
-            class="text-white"
+            class="text-white mt-5"
             v-if="multipleSelection.length == 1"
+            @click="handleChangeVisible('update')"
           >
             <i class="el-icon-edit"></i>
             Sửa
@@ -74,8 +150,9 @@ export default defineComponent({
           <el-button
             size="small"
             type="danger"
-            class="text-white"
+            class="text-white mt-5"
             v-if="multipleSelection.length > 0"
+            @click="handleVisisbleDelete"
           >
             <i class="el-icon-delete"></i>
             Xóa
@@ -89,7 +166,6 @@ export default defineComponent({
       @selection-change="handleSelectionChange"
       :data="vaccinationList"
       style="width: 100%"
-      max-height="480"
       stripe
       border
       v-loading="isLoadingVaccination"
@@ -98,41 +174,27 @@ export default defineComponent({
       element-loading-background="rgba(0, 0, 0, 0.5)"
     >
       <el-table-column fixed type="selection" width="55"> </el-table-column>
+      <el-table-column label="Thời gian tạo">
+        <template #default="scope">
+          {{ formatDate(scope.row.created_at) }}
+        </template>
+      </el-table-column>
       <el-table-column
         label="Họ tên"
-        width="250"
-        property="user_id"
-      ></el-table-column>
-      <el-table-column
-        label="Người tạo"
-        width="250"
-        property="create_by"
+        property="user.fullname"
       ></el-table-column>
       <el-table-column
         label="Vắc-xin"
-        width="240"
-        property="vaccine_type_id"
+        property="vaccine_type.name"
       ></el-table-column>
       <el-table-column
-        label="Thời gian tạo"
-        width="250"
-        property="created_at"
+        label="Số điện thoại"
+        property="user.phone"
       ></el-table-column>
       <el-table-column
-        label="Cập nhật lần cuối"
-        width="250"
-        property="updated_at"
-      >
-        <template #default="scope">{{
-          formatDate(scope.row.update_at)
-        }}</template>
-      </el-table-column>
-      <!-- <el-table-column
-        label="Cập nhật lần cuối"
-        width="305"
-      >
-      <template #default="scope">{{ formatDate(scope.row.updated_at) }}</template>
-      </el-table-column> -->
+        label="Người tạo"
+        property="user_create_by.fullname"
+      ></el-table-column>
     </el-table>
     <el-pagination
       class="text-center mt-20"
@@ -144,6 +206,18 @@ export default defineComponent({
     >
     </el-pagination>
   </div>
+
+  <addUpdateVaccination
+    :isVisible="isVisibleAddUpdate"
+    :isMode="mode"
+    :selectVaccineType="multipleSelection"
+  >
+  </addUpdateVaccination>
+
+  <DeleteVaccination
+    :isVisible="isVisibleDelete"
+    :selectVaccination="multipleSelection"
+  ></DeleteVaccination>
 </template>
 
 <style scoped>

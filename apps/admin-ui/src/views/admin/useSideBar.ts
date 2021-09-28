@@ -21,14 +21,14 @@ export default function useConfigSideBar() {
       key: 2,
       link: "ResultTest",
       icon: "carbon:id-management",
-      label: "Kiểm tra covid",
+      label: "Kết quả xét nghiệm",
       children: []
     },
     {
       key: 3,
       link: "Vaccination",
       icon: "lucide:history",
-      label: "Thêm lịch sử tiêm",
+      label: "Lịch sử tiêm",
       children: []
     },
     {
@@ -46,7 +46,7 @@ export default function useConfigSideBar() {
       children: [
         {
           key: 1,
-          link: "ResultTest",
+          link: "Account",
           icon: "carbon:user-avatar-filled-alt",
           label: "Tài khoản",
           children: []

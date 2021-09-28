@@ -1,9 +1,27 @@
 <script>
-import { defineComponent } from "vue"
+import { defineComponent, onMounted, ref } from "vue"
+import API from "../../services"
+import router from "@/router"
 import SideBar from "./sidebar"
+import { useStore } from "vuex"
 export default defineComponent({
   components: {
     SideBar
+  },
+  setup() {
+    const store = useStore()
+    onMounted(async () => {
+      try {
+        const response = await API.get("profile") // Call api get account login
+        if (response.data.success) {
+          store.dispatch("setUser", response.data.data)
+        }
+      } catch (e) {
+        console.log(e)
+        router.push("/admin/login")
+        localStorage.setItem("token", "")
+      }
+    })
   }
 })
 </script>
@@ -21,7 +39,7 @@ export default defineComponent({
         </el-main>
         <el-footer class="pd-0">
           <div class="text-center pt-15">
-            @2021 - nhóm 1 - Website quản lý tiêm chủng vắc-xin
+            @2021 - nhóm 1 - Website quản lý xét nghiệm và tiêm phòng Covid-19
           </div>
         </el-footer>
       </el-container>
