@@ -8,6 +8,7 @@ use App\Models\Vaccination;
 use App\Http\Resources\VaccinationResource as VaccinationResource;
 use App\Http\Resources\VaccinationCollection as VaccinationCollection;
 use App\Http\Requests\VaccinationRequest;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 Use Exception;
 
@@ -75,8 +76,7 @@ class VaccinationController extends BaseController
     {
         try {
             $validatedData = $request->validated();
-            $vaccinationResult = tap($vaccination)
-                            ->update($validatedData);
+            $vaccinationResult = $vaccination->update($validatedData);
             return $this->sendResponse($vaccinationResult);
         }
         catch (Exception $e) {
@@ -93,8 +93,16 @@ class VaccinationController extends BaseController
     public function destroy(Vaccination $vaccination)
     {
         try {
-            $vaccinationResult = tap($vaccination)
-                            ->delete();
+            // Delete vaccination image's file
+            $imageNames = $vaccination->images()->get('name');
+            foreach ($imageNames as $index => $row)
+            {
+                Storage::disk('public')->delete('images/'.$row['name']);
+            }
+            // Delete images in DB
+            $imageResult = $vaccination->images()->delete();
+            $vaccinationResult = 
+                $vaccination->delete() && $imageResult;
             return $this->sendResponse($vaccinationResult);
         }
         catch (Exception $e) {
