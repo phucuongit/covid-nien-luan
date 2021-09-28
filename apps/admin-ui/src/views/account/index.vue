@@ -84,7 +84,6 @@ export default defineComponent({
       username.value = user?.value?.username
       password.value = user?.value?.password
       identity_card.value = user?.value?.identity_card
-      // birthday.value = user?.value?.birthday
       birthday.value = moment(user?.value?.birthday).format("YYYY-MM-DD")
       social_insurance.value = user?.value?.social_insurance
       gender.value = user?.value?.gender
