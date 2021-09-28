@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
 import { defineComponent, provide, ref } from "vue"
 import useResultTest from "./useResultTest"
 import moment from "moment"
-import AddUpdateResultTest from "./addUpdateResultTest"
-import DeleteResultTest from "./deleteResultTest"
+import AddUpdateResultTest from "./addUpdateResultTest/index.vue"
+import DeleteResultTest from "./deleteResultTest/index.vue"
 
 export default defineComponent({
   components: {
@@ -47,13 +47,8 @@ export default defineComponent({
       isVisibleAddUpdate.value = !isVisibleAddUpdate.value
     }
 
-    const handlechangeVisibleAdd = () => {
-      setMode("add")
-      handleChangeVisibleAddUpdate()
-    }
-
-    const handlechangeVisibleUpdate = () => {
-      setMode("update")
+    const handlechangeVisible = (modeValue: "add" | "update") => {
+      setMode(modeValue)
       handleChangeVisibleAddUpdate()
     }
 
@@ -95,8 +90,7 @@ export default defineComponent({
       textSearch,
       setMode,
       mode,
-      handlechangeVisibleAdd,
-      handlechangeVisibleUpdate,
+      handlechangeVisible,
       isVisibleAddUpdate,
       isVisibleDelete,
       handleVisibleDelete,
@@ -162,7 +156,7 @@ export default defineComponent({
           size="small"
           type="primary"
           class="text-white mt-5"
-          @click="handlechangeVisibleAdd"
+          @click="handlechangeVisible('add')"
         >
           <i class="el-icon-plus"></i>
           Thêm
@@ -173,7 +167,7 @@ export default defineComponent({
           type="primary"
           class="text-white mt-5"
           v-if="multipleSelection.length == 1"
-          @click="handlechangeVisibleUpdate"
+          @click="handlechangeVisible('update')"
         >
           <i class="el-icon-edit"></i>
           Sửa

@@ -17,10 +17,6 @@ function useUploadImage() {
     try {
       const response = await API.post("file/image", params, {
         onUploadProgress: (uploadEvent) => {
-          console.log(
-            "Upload progress: " +
-              Math.round((uploadEvent.loaded / uploadEvent.total) * 100)
-          )
           percent.value = Math.round(
             (uploadEvent.loaded / uploadEvent.total) * 100
           )
@@ -44,6 +40,10 @@ function useUploadImage() {
         message: "Tải ảnh lên không thành công",
         type: "error"
       })
+    } finally {
+      setTimeout(() => {
+        percent.value = 0
+      }, 2000)
     }
   }
 
@@ -79,7 +79,14 @@ function useUploadImage() {
       isLoadingUpdateImage.value = true
       const responseDelete = await API.delete("file/image/" + id)
       if (responseDelete.data.success) {
-        const response = await API.post("file/image", params)
+        const response = await API.post("file/image", params, {
+          onUploadProgress: (uploadEvent) => {
+            percent.value = Math.round(
+              (uploadEvent.loaded / uploadEvent.total) * 100
+            )
+            console.log(percent.value)
+          }
+        })
         if (response.data.success) {
           ElMessage.success({
             message: "Cập nhật ảnh thành công",
@@ -106,6 +113,9 @@ function useUploadImage() {
       })
     } finally {
       isLoadingUpdateImage.value = false
+      setTimeout(() => {
+        percent.value = 0
+      }, 2000)
     }
   }
 

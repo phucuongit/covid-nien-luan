@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
 import { defineComponent, provide, ref } from "vue"
-import useVaccination from "./useVaccination.ts"
+import useVaccination from "./useVaccination"
 import moment from "moment"
 import AddUpdateVaccination from "./addUpdateVaccination/index.vue"
 import DeleteVaccination from "./deleteVaccination/index.vue"
@@ -28,12 +28,12 @@ export default defineComponent({
     const multipleSelection = ref([])
     const textSearch = ref("")
 
-    const handleChangePage = (page) => {
+    const handleChangePage = (page: number) => {
       currentPage.value = page
       getVaccinationList(currentPage.value)
     }
 
-    const handleSelectionChange = (value) => {
+    const handleSelectionChange = (value: any) => {
       multipleSelection.value = value
     }
 
@@ -44,10 +44,6 @@ export default defineComponent({
     }
 
     const handleSearch = () => {
-      // console.log(moment(textSearch.value, "DD/MM/YYY", true).isValid())
-      // console.log(moment(textSearch.value, "YYYY/MM/DD", true).isValid())
-      // console.log(moment(textSearch.value, "DD-MM-YYY", true).isValid())
-      // console.log(moment(textSearch.value, "YYYY-MM-DD", true).isValid())
       searchVaccineType(textSearch.value)
     }
 
@@ -58,14 +54,9 @@ export default defineComponent({
     const handleVisibleAddUpdate = () => {
       isVisibleAddUpdate.value = !isVisibleAddUpdate.value
     }
-    const handleChangeVisibleAdd = () => {
+    const handleChangeVisible = (modeValue: "add" | "update") => {
       handleVisibleAddUpdate()
-      setMode("add")
-    }
-
-    const handleChangeVisibleUpdate = () => {
-      handleVisibleAddUpdate()
-      setMode("update")
+      setMode(modeValue)
     }
 
     const handleVisisbleDelete = () => {
@@ -91,8 +82,7 @@ export default defineComponent({
       isLoadingSearch,
       handleSearch,
       isVisibleAddUpdate,
-      handleChangeVisibleAdd,
-      handleChangeVisibleUpdate,
+      handleChangeVisible,
       mode,
       handleVisisbleDelete,
       isVisibleDelete
@@ -140,7 +130,7 @@ export default defineComponent({
             size="small"
             type="primary"
             class="text-white mt-5"
-            @click="handleChangeVisibleAdd"
+            @click="handleChangeVisible('add')"
           >
             <i class="el-icon-plus"></i>
             Thêm
@@ -151,7 +141,7 @@ export default defineComponent({
             type="primary"
             class="text-white mt-5"
             v-if="multipleSelection.length == 1"
-            @click="handleChangeVisibleUpdate"
+            @click="handleChangeVisible('update')"
           >
             <i class="el-icon-edit"></i>
             Sửa

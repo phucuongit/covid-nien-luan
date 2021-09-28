@@ -9,7 +9,7 @@ type resultTestType = {
 }
 
 function useAddUpdateResultTest() {
-  const dataSearchUser = ref()
+  const dataSearchUser = ref([])
   const isLoadingSearch = ref(false)
   const isLoadingAddUpdateResultTest = ref(false)
   const dataAddUpdateResultTest = ref()

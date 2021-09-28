@@ -69,6 +69,8 @@ export default defineComponent({
         status.value = props.multipleSelection[0].status
         create_by.value = props.multipleSelection[0].user_create_by.id
         fullname.value = props.multipleSelection[0].user.fullname
+      } else {
+        fullname.value = ""
       }
     })
 
@@ -90,9 +92,11 @@ export default defineComponent({
       resetForm()
     }
 
-    const querySearch = (queryString, cb) => {
-      searchUser(queryString)
-      cb(dataSearchUser.value)
+    const querySearch = async (queryString, cb) => {
+      if (queryString != "") {
+        await searchUser(queryString)
+        cb(dataSearchUser.value)
+      }
     }
 
     const handleSelect = (item) => {
@@ -144,6 +148,7 @@ export default defineComponent({
           :fetch-suggestions="querySearch"
           popper-class="my-autocomplete"
           placeholder="Tìm kiếm người dùng..."
+          debounce="1500"
           @select="handleSelect"
         >
           <template #default="{ item }">
