@@ -90,9 +90,11 @@ export default defineComponent({
       fullname.value = ""
     }
 
-    const querySelectUser = (queryString, cb) => {
-      getListUsersSearch(queryString)
-      cb(data.value)
+    const querySelectUser = async (queryString, cb) => {
+      if (queryString != "") {
+        await getListUsersSearch(queryString)
+        cb(data.value)
+      }
     }
 
     const handleSelectUser = (item) => {
@@ -136,6 +138,7 @@ export default defineComponent({
           :fetch-suggestions="querySelectUser"
           popper-class="my-autocomplete"
           placeholder="Tìm kiếm người dùng..."
+          debounce="1500"
           @select="handleSelectUser"
         >
           <template #default="{ item }">

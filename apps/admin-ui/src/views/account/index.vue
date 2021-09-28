@@ -8,6 +8,7 @@ import { useStore } from "vuex"
 import useUploadImage from "../uploadImages/useUploadImage.ts"
 import useBaseUrl from "@/services/baseUrl.ts"
 import { ElMessageBox } from "element-plus"
+import moment from "moment"
 export default defineComponent({
   setup() {
     const accountSchema = yup.object({
@@ -63,16 +64,10 @@ export default defineComponent({
     const avatar = ref()
     const avatarUpload = ref()
     const imageListShow = ref([]) // Show hình ảnh lớn
-    const images = ref()
-    const imageListShowPreUpload = ref([]) // Xem hình ảnh gốc trước khi upload
-    const imageListPreUpload = ref([]) // Hiển thị hình ảnh trước khi upload
-    const uploadListImages = ref() // Danh sách sẽ upload
-    const numbersProgress = ref(0) // Check để hiển thị progress bar
 
-    watch(store.state, () => {
+    watch(store.state, async () => {
       user.value = store.state.user
       imageListShow.value = []
-      images.value = user.value.images
       user.value.images.map((image) => {
         if (image) {
           if (image.type == "avatar") {
@@ -89,53 +84,18 @@ export default defineComponent({
       username.value = user?.value?.username
       password.value = user?.value?.password
       identity_card.value = user?.value?.identity_card
-      birthday.value = user?.value?.birthday
+      // birthday.value = user?.value?.birthday
+      birthday.value = moment(user?.value?.birthday).format("YYYY-MM-DD")
       social_insurance.value = user?.value?.social_insurance
       gender.value = user?.value?.gender
       address.value = user?.value?.address
       phone.value = user?.value?.phone
       province_id.value = user?.value?.address_full?.province?.id
-      getDistrictList(province_id.value)
+      await getDistrictList(province_id.value)
       district_id.value = user?.value?.address_full?.district?.id
-      getVillageList(district_id.value)
+      await getVillageList(district_id.value)
       village_id.value = user?.value?.address_full?.village?.id
     })
-
-    const accountImages = (values) => {
-      uploadListImages.value = values.target.files
-      imageListPreUpload.value = []
-      for (let i = 0; i < values.target.files.length; i++) {
-        let fileReader = new FileReader()
-        fileReader.readAsDataURL(values.target.files[i])
-        fileReader.addEventListener("load", () => {
-          imageListPreUpload.value.push({
-            id: i + 1,
-            name: values.target.files[i].name,
-            url: fileReader.result
-          })
-          imageListShowPreUpload.value.push(fileReader.result)
-        })
-      }
-      percent.value = 0
-    }
-    const handleUploadListImages = async () => {
-      for (let i = 0; i < uploadListImages?.value?.length; i++) {
-        const dataForm = new FormData()
-        dataForm.append("images[]", uploadListImages.value[i])
-        dataForm.append("imageable_id", user?.value?.id)
-        dataForm.append("imageable_type", "user")
-        dataForm.append("type", "")
-        numbersProgress.value = i + 1
-        await uploadImage(dataForm)
-        if (i != uploadListImages?.value?.length - 1) {
-          percent.value = 0
-        }
-      }
-      uploadListImages.value = []
-      numbersProgress.value = 0
-      imageListPreUpload.value = []
-      getAccount()
-    }
 
     const handleChangeProvince = () => {
       getDistrictList(province_id.value)
@@ -150,11 +110,10 @@ export default defineComponent({
       checkErrorPassword.value = ""
       getAccount()
     }
+
     const onSubmitAccount = handleSubmit(async (values) => {
       if (values) {
-        if (password?.value?.length > 0 && password?.value?.length < 6) {
-          checkErrorPassword.value = "Mật khẩu phải ít nhất 6 kí tự"
-        } else {
+        if (checkErrorPassword.value == "") {
           if (password.value == undefined) {
             delete values.password
           }
@@ -206,24 +165,6 @@ export default defineComponent({
         }
       })
     }
-    const getIdImage = async (id) => {
-      if (id > 0) {
-        await ElMessageBox({
-          type: "warning",
-          title: "Thông báo",
-          message: "Bạn muốn xóa ảnh này?",
-          confirmButtonText: "Xóa",
-          showCancelButton: true,
-          cancelButtonText: "Hủy"
-        }).then(async () => {
-          await deleteImage(id)
-          if (id == avatar?.value?.id) {
-            avatar.value = ""
-          }
-          await getAccount()
-        })
-      }
-    }
 
     const { value: fullname } = useField("fullname")
     const { value: username } = useField("username")
@@ -274,16 +215,9 @@ export default defineComponent({
       isLoadingRemoveImage,
       isLoadingUpdateImage,
       imageListShow,
-      accountImages,
-      imageListPreUpload,
       BASE_URL,
-      images,
-      getIdImage,
       percent,
-      format,
-      numbersProgress,
-      handleUploadListImages,
-      imageListShowPreUpload
+      format
     }
   }
 })
@@ -317,7 +251,7 @@ export default defineComponent({
           size="mini"
           @click="$refs.accountAvatarInput.click()"
           :loading="isLoadingUpdateImage"
-          class="mt-10"
+          class="mb-10"
         >
           Đổi ảnh
         </el-button>
@@ -326,10 +260,15 @@ export default defineComponent({
           size="mini"
           @click="removeAvatar"
           :loading="isLoadingRemoveImage"
-          class="mt-10"
+          class="mb-10"
         >
           Xóa ảnh
         </el-button>
+        <el-progress
+          v-if="percent"
+          :percentage="percent"
+          :format="format"
+        ></el-progress>
       </div>
     </el-col>
     <el-col :lg="1" :md="1" :sm="0" :xs="0"></el-col>
@@ -454,7 +393,7 @@ export default defineComponent({
                   style="width: 100%"
                   value-format="YYYY-MM-DD"
                   type="date"
-                  placeholder="Pick a date"
+                  placeholder="Chọn ngày sinh"
                   v-model="birthday"
                 ></el-date-picker>
                 <div class="text-red">{{ errors.birthday }}</div>
@@ -475,68 +414,6 @@ export default defineComponent({
                   <el-radio :label="0">Nữ</el-radio>
                 </el-radio-group>
                 <div class="text-red">{{ errors.gender }}</div>
-              </el-form-item>
-            </el-col>
-
-            <el-col :md="24" :sm="24">
-              <el-form-item label="Hình ảnh:">
-                <div class="account-image-list">
-                  <span v-for="img in images" :key="img?.id" class="wrap-image">
-                    <i
-                      class="el-icon-delete icon-delete-image"
-                      @click="getIdImage(img?.id)"
-                      title="Xóa"
-                    ></i>
-                    <el-image
-                      style="width: 100px; height: 100px"
-                      fit="cover"
-                      :src="BASE_URL + img?.url"
-                      :preview-src-list="imageListShow"
-                    >
-                    </el-image>
-                  </span>
-                </div>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="$refs.uploadImageListInput.click()"
-                  >Thêm ảnh</el-button
-                >
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="handleUploadListImages"
-                  >Lưu ảnh</el-button
-                >
-                <input
-                  type="file"
-                  multiple
-                  @change="accountImages"
-                  ref="uploadImageListInput"
-                  accept="image/*"
-                  style="display: none"
-                />
-                <div class="img-preview mt-20">
-                  <div
-                    v-for="img in imageListPreUpload"
-                    :key="img?.id"
-                    class="img-preview-wrap"
-                  >
-                    <el-image
-                      style="width: 35px; height: 35px"
-                      fit="cover"
-                      :src="img?.url"
-                      :preview-src-list="imageListShowPreUpload"
-                    >
-                    </el-image>
-                    <span style="margin-left: 10px">{{ img?.name }}</span>
-                    <el-progress
-                      v-if="numbersProgress == img?.id"
-                      :percentage="percent"
-                      :format="format"
-                    ></el-progress>
-                  </div>
-                </div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -563,22 +440,5 @@ export default defineComponent({
   height: 180px;
   border-radius: 50%;
   border: 1px solid #ddd;
-}
-.icon-delete-image {
-  position: absolute;
-  right: 0px;
-  z-index: 1;
-  padding: 3px;
-  background: #f0f0f0;
-  color: red;
-  cursor: pointer;
-}
-.icon-delete-image:hover {
-  font-weight: bold;
-}
-.wrap-image {
-  display: inline-block;
-  margin-right: 5px;
-  position: relative;
 }
 </style>
