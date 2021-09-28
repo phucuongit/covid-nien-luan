@@ -47,7 +47,7 @@ export default defineComponent({
       searchVaccineType(textSearch.value)
     }
 
-    const setMode = (act) => {
+    const setMode = (act: string) => {
       mode.value = act
     }
 
@@ -89,7 +89,7 @@ export default defineComponent({
     }
   },
   methods: {
-    formatDate(date) {
+    formatDate(date: Date) {
       return moment(date).format("hh:mm DD-MM-YYYY")
     }
   }

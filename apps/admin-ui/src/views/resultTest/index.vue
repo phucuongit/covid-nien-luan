@@ -30,16 +30,16 @@ export default defineComponent({
     const filter = ref()
     getResultTestList(currentPage.value)
 
-    const handleSelectionChange = (value) => {
+    const handleSelectionChange = (value: any) => {
       multipleSelection.value = value
     }
 
-    const handleChangePage = (value) => {
-      currentPage.value = value
+    const handleChangePage = (page: number) => {
+      currentPage.value = page
       getResultTestList(currentPage.value)
     }
 
-    const setMode = (value) => {
+    const setMode = (value: string) => {
       mode.value = value
     }
 
@@ -66,7 +66,7 @@ export default defineComponent({
       filterResultTest(filter.value)
     }
 
-    const checkEmptyText = (value) => {
+    const checkEmptyText = (value: string) => {
       if (textSearch.value == "") {
         getResultTestList(currentPage.value)
       }
@@ -101,10 +101,10 @@ export default defineComponent({
     }
   },
   methods: {
-    formatDateHour(date) {
+    formatDateHour(date: Date) {
       return moment(date).format("hh:mm, DD/MM/YYYY")
     },
-    formatDate(date) {
+    formatDate(date: Date) {
       return moment(date).format("DD/MM/YYYY")
     }
   }
