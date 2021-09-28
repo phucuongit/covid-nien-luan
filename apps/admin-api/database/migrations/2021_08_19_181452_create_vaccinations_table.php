@@ -18,8 +18,8 @@ class CreateVaccinationsTable extends Migration
             
             $table->foreignId('user_id')
                 ->constrained()
-                ->onUpdate('cascade');
-                // ->onDelete('cascade');
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->foreignId('create_by')
                 ->references('id')
                 ->on('users')

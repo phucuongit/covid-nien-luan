@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vaccination;
 use App\Models\Test_result;
 use App\Models\User;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\Is_identity;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class UserController extends BaseController
@@ -118,10 +120,17 @@ class UserController extends BaseController
      */
     public function destroy(User $user)
     {
-        try{
-            // if ($user->role_id == 1)
-            //     return $this->sendResponse([], "You cannot delete this user.");
-            $userResult = $user->delete();
+        try{            
+            // Delete user image's file
+            $imageNames = $user->images()->get('name');
+            foreach ($imageNames as $index => $row)
+            {
+                Storage::disk('public')->delete('images/'.$row['name']);
+            }
+            // Delete images in DB
+            $imageResult = $user->images()->delete();
+            // Delete user
+            $userResult = $user->delete() && $imageResult;
             return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {

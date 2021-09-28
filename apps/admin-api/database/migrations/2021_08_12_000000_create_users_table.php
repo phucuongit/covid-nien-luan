@@ -31,8 +31,9 @@ class CreateUsersTable extends Migration
                 // ->onDelete('cascade');
             $table->foreignId('role_id')
                 ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onUpdate('cascade');
+                // ->onDelete('cascade');
+                
             // Default famework columns
             $table->timestamps();
         });

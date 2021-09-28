@@ -34,9 +34,9 @@ class UserResource extends JsonResource
                 "village" => 
                     new VillageResource($this->village),
                 "district" => 
-                    new DistrictResource($this->district()->first()),
+                    new DistrictResource($this->district()),
                 "province" => 
-                    new ProvinceResource($this->province()->first())
+                    new ProvinceResource($this->province())
             ],
             'phone' => $this->phone,
             // 'village_id' => $this->village_id,

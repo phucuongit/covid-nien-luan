@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Result_test;
 use Illuminate\Http\Request;
 use App\Http\Requests\Result_testRequest;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\Result_testResource as Result_testResource;
 use App\Http\Resources\Result_testCollection as Result_testCollection;
@@ -79,8 +80,7 @@ class Result_testController extends BaseController
     {
         try{
             $validatedData = $request->validated();
-            $result_testResult = tap($result_test)
-                            ->update($validatedData);
+            $result_testResult = $result_test->update($validatedData);
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
@@ -97,8 +97,15 @@ class Result_testController extends BaseController
     public function destroy(Result_test $result_test)
     {
         try{
-            $result_testResult = tap($result_test)
-                            ->delete();
+             // Delete result_test image's file
+             $imageNames = $result_test->images()->get('name');
+             foreach ($imageNames as $index => $row)
+             {
+                 Storage::disk('public')->delete('images/'.$row['name']);
+             }
+             // Delete images in DB
+             $imageResult = $result_test->images()->delete();
+            $result_testResult = $result_test->delete() && $imageResult;
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
