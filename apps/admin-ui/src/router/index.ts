@@ -7,7 +7,9 @@ import Vaccine from "../views/vaccineType/index.vue"
 import Users from "../views/users/index.vue"
 import Vaccination from "../views/vaccination/index.vue"
 import NotFound from "../views/notFound/index.vue"
+import Dashboard from "../views/Dashboard/index.vue"
 import Account from "../views/account/index.vue"
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -19,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Admin",
     component: Admin,
     children: [
+      {
+        path: "dashboard",
+        name: "Dashboard",
+        component: Dashboard
+      },
       {
         path: "result-test",
         name: "ResultTest",
