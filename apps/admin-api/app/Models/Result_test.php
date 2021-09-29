@@ -46,10 +46,10 @@ class Result_test extends Model
      */
     public function filterSearch($query, $value)
     {
-        $date = date("Y-m-d", strtotime($value));
+        $date = date("y-m-d", strtotime($value));
         return $query
-            ->where('status', 'LIKE', '%'.$date.'%')
-            ->orWhere('created_at', 'LIKE', '%'.$value.'%') // Cant use wheredate, cause it will convert to carbon
+            ->where('status', 'LIKE', '%'.$value.'%')
+            ->orWhere('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon
             ->orWhereHas('user' , function($query) use ($value) {
                 $query->where('fullname', 'LIKE', '%' . $value . '%');
              })
