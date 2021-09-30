@@ -106,8 +106,8 @@ a { text-decoration: none; }
   /* ADMIN - HEADER */
 .admin .header {
   border-bottom: 1px solid #11385e;
-  height: 50px;
-  padding: 15px;
+  height: 55px;
+  padding: 5px 10px;
 }
 
 /* Button search */

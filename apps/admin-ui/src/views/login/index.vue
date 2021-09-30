@@ -16,7 +16,6 @@ export default defineComponent({
     })
     const onSubmit = handleSubmit((values) => {
       if (values) {
-        console.log(values)
         login(values)
       }
     })
