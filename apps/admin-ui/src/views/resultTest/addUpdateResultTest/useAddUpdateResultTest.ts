@@ -13,6 +13,7 @@ function useAddUpdateResultTest() {
   const isLoadingSearch = ref(false)
   const isLoadingAddUpdateResultTest = ref(false)
   const dataAddUpdateResultTest = ref()
+  const newResultTestId = ref(0)
   const searchUser = async (str: string) => {
     try {
       isLoadingSearch.value = true
@@ -33,19 +34,19 @@ function useAddUpdateResultTest() {
       isLoadingAddUpdateResultTest.value = true
       const response = await API.post("result_test", params)
       if (response.data.success) {
-        console.log(response.data)
+        newResultTestId.value = response.data.data.id
         ElMessage.success({
           message: "Thêm kết quả xét nghiệm thành công",
           type: "success"
         })
       }
     } catch (e) {
+      isLoadingAddUpdateResultTest.value = false
       console.log(e)
       ElMessage.error({
         message: "Thêm kết quả xét nghiệm không thành công",
         type: "error"
       })
-      isLoadingAddUpdateResultTest.value = false
     } finally {
       isLoadingAddUpdateResultTest.value = false
     }
@@ -56,7 +57,6 @@ function useAddUpdateResultTest() {
       isLoadingAddUpdateResultTest.value = true
       const response = await API.patch("result_test/" + id, params)
       if (response.data.success) {
-        console.log(response.data)
         ElMessage.success({
           message: "Cập nhật kết quả xét nghiệm thành công",
           type: "success"
@@ -81,7 +81,8 @@ function useAddUpdateResultTest() {
     isLoadingAddUpdateResultTest,
     dataAddUpdateResultTest,
     addResultTest,
-    updateResultTest
+    updateResultTest,
+    newResultTestId
   }
 }
 

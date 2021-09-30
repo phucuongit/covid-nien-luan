@@ -121,3 +121,13 @@ a { text-decoration: none; }
   border-color: #66b1ff;
 }
 
+/* hình ảnh chung cho cac trang khi không load được hình */
+.el-image .image-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #f5f7fa;
+  font-size: 20px;
+}

@@ -12,8 +12,6 @@ function useResultTest() {
       const response = await API.get("result_test?page=" + page)
       if (response.data.success) {
         resultTestList.value = response.data.data.result_tests
-        console.log("check")
-        console.log(resultTestList.value)
         totalPage.value = response.data.data.meta.last_page
       }
     } catch (e) {
