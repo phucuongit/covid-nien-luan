@@ -28,7 +28,7 @@ const Dashboard = defineComponent({
       series: [percentInjectedFirst.value, 100 - percentInjectedFirst.value],
       chartOptions: {
         chart: {
-          width: 380,
+          width: 880,
           type: "donut"
         },
         dataLabels: {
@@ -37,7 +37,7 @@ const Dashboard = defineComponent({
             return val + "%"
           }
         },
-        colors: ["#379d1a", "#e43232"],
+        colors: ["#56cc34", "#e43232"],
 
         labels: ["Đã được tiêm ít nhất một mũi", "Chưa được tiêm"],
         responsive: [
@@ -61,7 +61,7 @@ const Dashboard = defineComponent({
         plotOptions: {
           pie: {
             donut: {
-              size: "50%"
+              size: "70%"
             }
           }
         }
@@ -245,7 +245,7 @@ export default Dashboard
           <div id="chart">
             <apexchart
               type="donut"
-              width="380"
+              width="550"
               :options="chartOptions"
               :series="series"
             ></apexchart>
