@@ -1,38 +1,144 @@
 <script lang="ts">
-import { defineComponent, provide, ref } from "vue"
+import { computed, defineComponent, reactive } from "vue"
 import { Icon } from "@iconify/vue"
+import moment from "moment"
 
 const Dashboard = defineComponent({
   name: "Dashboard",
   components: {
     Icon
   },
-  data() {
-    return {
-      title: "",
-      points: [10, 0, 8, 2, 6, 4, 5, 5],
-      chartType: "Spline",
-      seriesColor: "#6fcd98",
-      colorInputIsSupported: null,
+  setup() {
+    const dataStats = reactive({
+      vietNamPopuplation: 97580000,
+      injectFirstTime: 10000000,
+      injectSecondTime: 2,
+      injectTotal: 10000
+    })
+    const percentInjectedFirst = computed(() => {
+      return (
+        Math.round(
+          (dataStats.injectFirstTime / dataStats.vietNamPopuplation +
+            Number.EPSILON) *
+            10000
+        ) / 100
+      )
+    })
+    const dataBI = {
+      series: [percentInjectedFirst.value, 100 - percentInjectedFirst.value],
       chartOptions: {
         chart: {
-          type: "spline"
+          width: 380,
+          type: "donut"
         },
-        title: {
-          text: "Sin chart"
-        },
-        series: [
-          {
-            data: [10, 0, 8, 2, 6, 4, 5, 5],
-            color: "#6fcd98"
+        dataLabels: {
+          enabled: true,
+          formatter: function (val: number) {
+            return val + "%"
           }
-        ]
+        },
+        colors: ["#379d1a", "#e43232"],
+
+        labels: ["Đã được tiêm ít nhất một mũi", "Chưa được tiêm"],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                show: false
+              }
+            }
+          }
+        ],
+        legend: {
+          position: "right",
+          offsetY: 0,
+          height: 230
+        },
+        plotOptions: {
+          pie: {
+            donut: {
+              size: "50%"
+            }
+          }
+        }
       }
     }
+
+    const dataInjectByDate = {
+      series: [
+        {
+          name: "Số lượng",
+          data: [100, 41, 35, 51, 49, 62, 69]
+        }
+      ],
+      chartOptions: {
+        chart: {
+          type: "area",
+          stacked: false,
+          height: 350,
+          zoom: {
+            type: "x",
+            enabled: true,
+            autoScaleYaxis: true
+          },
+          toolbar: {
+            autoSelected: "zoom"
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        markers: {
+          size: 0
+        },
+        title: {
+          text: "Thống kê số lượng vắc xin tiêm theo ngày",
+          align: "left"
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            shadeIntensity: 1,
+            inverseColors: false,
+            opacityFrom: 0.5,
+            opacityTo: 0,
+            stops: [0, 90, 100]
+          }
+        },
+        yaxis: {
+          title: {
+            text: "Số lượng tiêm chủng"
+          }
+        },
+        xaxis: {
+          categories: [
+            moment(new Date()).format("DD-MM-yyyy"),
+            moment(new Date()).add(1, "days").format("DD-MM-yyyy"),
+            moment(new Date()).add(2, "days").format("DD-MM-yyyy"),
+            moment(new Date()).add(3, "days").format("DD-MM-yyyy"),
+            moment(new Date()).add(4, "days").format("DD-MM-yyyy"),
+            moment(new Date()).add(5, "days").format("DD-MM-yyyy"),
+            moment(new Date()).add(6, "days").format("DD-MM-yyyy")
+          ],
+          title: {
+            text: "Ngày"
+          }
+        },
+        tooltip: {
+          shared: false
+        }
+      }
+    }
+    return {
+      dataStats,
+      ...dataBI,
+      dataInjectByDate
+    }
   }
-  //   setup() {
-  //     return ""
-  //   }
 })
 export default Dashboard
 </script>
@@ -51,7 +157,9 @@ export default Dashboard
           <div class="title_summary">
             <p>Số mũi đã tiêm toàn quốc</p>
             <div>
-              <b class="amount">40,211,442 </b>
+              <b class="amount">{{
+                Number(dataStats.injectTotal).toLocaleString()
+              }}</b>
               <span class="unit">(mũi)</span>
             </div>
           </div>
@@ -71,7 +179,9 @@ export default Dashboard
           <div class="title_summary">
             <p>Số người chỉ tiêm được một mũi</p>
             <div>
-              <b class="amount">40,211,442 </b>
+              <b class="amount">{{
+                Number(dataStats.injectFirstTime).toLocaleString()
+              }}</b>
               <span class="unit">(mũi)</span>
             </div>
           </div>
@@ -91,7 +201,9 @@ export default Dashboard
           <div class="title_summary">
             <p>Số người đã được tiêm đủ hai mũi</p>
             <div>
-              <b class="amount">40,211,442 </b>
+              <b class="amount">{{
+                Number(dataStats.injectSecondTime).toLocaleString()
+              }}</b>
               <span class="unit">(mũi)</span>
             </div>
           </div>
@@ -109,9 +221,11 @@ export default Dashboard
             <Icon icon="carbon:manage-protection" />
           </div>
           <div class="title_summary">
-            <p>Số dân toàn quốc</p>
+            <p>Số dân toàn quốc năm 2020</p>
             <div>
-              <b class="amount">40,211,442 </b>
+              <b class="amount">{{
+                Number(dataStats.vietNamPopuplation).toLocaleString()
+              }}</b>
               <span class="unit">(người)</span>
             </div>
           </div>
@@ -120,13 +234,41 @@ export default Dashboard
     </el-col>
   </el-row>
   <el-row>
-    <el-col :span="24" class="chart">
+    <el-col :span="12" class="chart">
       <el-card
-        class="box-card box_card"
+        class="box-card char-box"
         shadow="hover"
         body-style="{background: 'red'}"
       >
-        <Chart />
+        <div class="chart-wrap">
+          <p>Tỷ lệ đã tiêm ít nhất 1 mũi trên dân số</p>
+          <div id="chart">
+            <apexchart
+              type="donut"
+              width="380"
+              :options="chartOptions"
+              :series="series"
+            ></apexchart>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+    <el-col :span="12" class="chart">
+      <el-card
+        class="box-card char-box"
+        shadow="hover"
+        body-style="{background: 'red'}"
+      >
+        <div class="chart-wrap">
+          <div id="chart">
+            <apexchart
+              type="area"
+              height="350"
+              :options="dataInjectByDate.chartOptions"
+              :series="dataInjectByDate.series"
+            ></apexchart>
+          </div>
+        </div>
       </el-card>
     </el-col>
   </el-row>
@@ -137,12 +279,21 @@ $primaryColor: #379d1a;
 .chart {
   margin-top: 30px;
 }
+.char-box {
+  margin: 0 16px;
+  p {
+    font-weight: bold;
+    font-size: 18px;
+    width: 100%;
+  }
+}
+:global(.box_card .el-card__body) {
+  display: flex;
+  flex-direction: row;
+}
 .box_card {
   margin: 0 16px;
-  :global(.el-card__body) {
-    display: flex;
-    flex-direction: row;
-  }
+
   .icon svg {
     width: 30px;
     height: 30px;
