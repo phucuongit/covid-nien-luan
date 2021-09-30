@@ -6,6 +6,7 @@ use App\Models\Vaccination;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Vaccine_type;
+use Carbon\Carbon;
 
 class VaccinationFactory extends Factory
 {
@@ -29,15 +30,19 @@ class VaccinationFactory extends Factory
         $userCreateIds = 
             User::where('role_id', 1)->inRandomOrder()->first()->id;
         // 40% vaccine is Astra
-        $vaccineTypeIds = rand(1, 100) > 60 ?
+        $vaccineTypeIds = rand(1, 10) > 6 ?
             Vaccine_type::where('name', 'AstraZeneca')->first()->id :
             Vaccine_type::inRandomOrder()->first()->id;
         $time = rand(1,2);
+
+        // Custom created_at
+        $created_at = Carbon::now()->subDays(rand(0, 14));
         return [
             'user_id' => $userIds,
             'create_by' => $userCreateIds,
             'vaccine_type_id' => $vaccineTypeIds,
-            'time' => $time
+            'time' => $time,
+            'created_at' => $created_at
         ];
     }
 }

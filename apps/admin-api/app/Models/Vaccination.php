@@ -24,7 +24,8 @@ class Vaccination extends Model
         'user_id',
         'create_by',
         'vaccine_type_id',
-        'time'
+        'time',
+        'created_at'
     ];
     /**
      *   Atrr for the trait filters

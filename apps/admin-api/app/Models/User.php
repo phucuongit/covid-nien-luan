@@ -34,6 +34,7 @@ class User extends Authenticatable
         'phone',
         'village_id',
         'role_id',
+        'created_at'
     ];
 
     /**

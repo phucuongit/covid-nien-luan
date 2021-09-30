@@ -20,6 +20,7 @@ class Result_test extends Model
         'status',
         'user_id',
         'create_by',
+        'created_at'
     ];
     /**
      *   Atrr for the trait filters
