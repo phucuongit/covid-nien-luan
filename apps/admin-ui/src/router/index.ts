@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Admin,
     children: [
       {
-        path: "dashboard",
+        path: "/admin",
         name: "Dashboard",
         component: Dashboard
       },
