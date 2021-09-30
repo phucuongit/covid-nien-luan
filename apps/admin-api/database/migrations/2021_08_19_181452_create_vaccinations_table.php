@@ -16,6 +16,7 @@ class CreateVaccinationsTable extends Migration
         Schema::create('vaccinations', function (Blueprint $table) {
             $table->id();
             
+            $table->tinyInteger('time');
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')

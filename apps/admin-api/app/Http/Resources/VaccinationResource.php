@@ -22,6 +22,7 @@ class VaccinationResource extends JsonResource
             'id' => $this->id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'time' => $this->time,
         ];
         $data['user'] = 
             new UserShortResource($this->user);

@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers\API\Statistic;
 
+use App\Http\Controllers\API\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Statistic;
 use Illuminate\Http\Request;
+use App\Models\Vaccination;
+use App\Models\Test_result;
+use App\Models\User;
+use Carbon\Carbon;
+use Exception;
+use DB;
 
-class StatisticController extends Controller
+class StatisticController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +22,31 @@ class StatisticController extends Controller
      */
     public function index()
     {
-        //
+        try{
+            $data = [];
+
+            // Injection statistic
+            $data['injection_first_time'] = Vaccination::where('time', 1)->count();
+            $data['injection_second_time'] = Vaccination::where('time', 2)->count();
+            $data['injection_total_time'] = Vaccination::where('time', '>' , 2)->count();
+            
+            // Injection in last 7 days
+            $data['injection_last_7days'] = 
+                    Vaccination::select(
+                        DB::raw("DATE_FORMAT(created_at, '%d-%m-%Y') as date"),
+                        DB::raw("COUNT(id) as quantity"),
+                    )
+                    ->where('created_at', '>' , Carbon::now()->subDays(7))
+                    ->orderBy('created_at')
+                    ->groupBy(DB::raw("DATE_FORMAT(created_at, '%d-%m-%Y')"))
+                    ->get();
+                    
+            // Send
+            return $this->sendResponse($data, 'Successfully');
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }  
     }
 
     /**

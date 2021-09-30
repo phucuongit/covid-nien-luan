@@ -15,49 +15,40 @@ class Vaccine_typeTableSeeder extends Seeder
      */
     public function run()
     {
+        // Remove all current data
         Vaccine_type::truncate();
         $data = [
             [
                 'name' => 'Pfizer',
                 'country' => 'United States',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name' => 'AstraZeneca',
                 'country' => 'England',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name' => 'Moderna',
                 'country' => 'United States',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name' => 'Sputnik V',
                 'country' => 'Russian',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name' => 'Sinopharm',
                 'country' => 'China',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name' => 'Janssen',
                 'country' => 'Netherlands',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
-            // [
-            //     'name' => 'Covaxin',
-            //     'country' => 'Vietnam',
-            // ],
+            [
+                'name' => 'Covaxin',
+                'country' => 'Vietnam',
+            ],
         ];
-        Vaccine_type::insert($data);
+        foreach ($data as $key => $value) {
+            Vaccine_type::create($value);
+        }
     }
 }
