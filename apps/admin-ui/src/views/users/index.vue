@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
 import { defineComponent, provide, ref } from "vue"
-import useUsers from "./useUsers.ts"
+import useUsers from "./useUsers"
+import { userType } from "./useUsers"
 import AddUser from "./addUser/index.vue"
 import AddAdmin from "./addAdmin/index.vue"
 import DeleteUser from "./deleteUser/index.vue"
@@ -23,8 +24,8 @@ export default defineComponent({
       totalPage,
       loadingSearch
     } = useUsers()
-    const multipleSelection = ref([])
-    const handleSelectionChange = (value) => {
+    const multipleSelection = ref<userType[]>([])
+    const handleSelectionChange = (value: any) => {
       multipleSelection.value = value
     }
     const textSearch = ref("")
@@ -40,12 +41,12 @@ export default defineComponent({
 
     const currentPage = ref(1)
     getListUsers(currentPage.value)
-    const handleChangePage = (page) => {
+    const handleChangePage = (page: number) => {
       currentPage.value = page
       getListUsers(currentPage.value)
     }
 
-    const setMode = (value) => {
+    const setMode = (value: string) => {
       mode.value = value
     }
 
@@ -73,7 +74,7 @@ export default defineComponent({
 
     const changeUpdate = () => {
       setMode("update")
-      if (multipleSelection.value[0].role.name == "admin") {
+      if (multipleSelection.value[0]?.role?.name == "admin") {
         changeAddAdmin()
       } else {
         changeAddUser()
@@ -123,7 +124,7 @@ export default defineComponent({
     }
   },
   methods: {
-    formatDate(date) {
+    formatDate(date: Date) {
       return moment(date).format("DD/MM/YYYY")
     }
   }

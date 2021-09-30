@@ -102,10 +102,10 @@ export default defineComponent({
   },
   methods: {
     formatDateHour(date: Date) {
-      return moment(date).format("hh:mm, DD/MM/YYYY")
+      return moment(date).format("hh:mm DD-MM-YYYY")
     },
     formatDate(date: Date) {
-      return moment(date).format("DD/MM/YYYY")
+      return moment(date).format("DD-MM-YYYY")
     }
   }
 })

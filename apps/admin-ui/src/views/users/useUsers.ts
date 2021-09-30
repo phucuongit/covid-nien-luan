@@ -10,11 +10,15 @@ export type userType = {
   gender: number
   username: string
   address: string
+  address_full: []
   phone: string
   village_id: number
-  role_id: number
+  role: {
+    name: string
+  }
   created_at: null
   updated_at: null
+  images: []
 }
 
 function useUsers() {
@@ -28,8 +32,6 @@ function useUsers() {
       const response = await API.get("user?page=" + page)
       if (response.data.success) {
         data.value = response.data.data.users
-        console.log("hererere")
-        console.log(response.data.data.users)
         totalPage.value = response.data.data.meta.last_page
       }
     } catch (e) {

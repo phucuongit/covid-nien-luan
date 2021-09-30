@@ -1,8 +1,9 @@
 <script>
-import { ref, defineComponent, inject, watch } from "vue"
+import { ref, defineComponent, inject, watch, PropType, computed } from "vue"
 import useDeleteUser from "./useDeleteUser.ts"
 export default defineComponent({
   name: "DeleteUser",
+  inject: ["closeUserDelete"],
   props: {
     isVisible: {
       type: Boolean
@@ -31,9 +32,9 @@ export default defineComponent({
         await deleteUser(ids[i])
         getListUsers(currentPage.value)
       }
-      console.log("xong " + currentPage.value)
       closeUserDelete()
     }
+
     return {
       isShow,
       closeUserDelete,
