@@ -24,16 +24,18 @@ class Vaccination extends Model
         'user_id',
         'create_by',
         'vaccine_type_id',
+        'time'
     ];
     /**
-    *   Atrr for the trait filters
-    *   @var array
-    */
+     *   Atrr for the trait filters
+     *   @var array
+     */
     protected $filterable = [
         'id',
         'user_id',
         'create_by',
         'vaccine_type_id',
+        'time'
     ];
 
     /**
@@ -114,5 +116,4 @@ class Vaccination extends Model
     {
         return $this->belongsTo(Vaccine_type::class);
     }
-
 }

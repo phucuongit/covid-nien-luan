@@ -15,6 +15,7 @@ use App\Http\Controllers\API\Address\VillageController;
 use App\Http\Controllers\API\Upload\ImageController;
 use App\Http\Controllers\API\User\Look_upController;
 use App\Http\Controllers\API\AdminProfile\AdminProfileController;
+use App\Http\Controllers\API\Statistic\StatisticController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +28,14 @@ use App\Http\Controllers\API\AdminProfile\AdminProfileController;
 |
 */
 Route::prefix('v1')->group(function () {
+    // api for authentication
     Route::post('/auth/register', [RegisterController::class, 'register']);
     Route::post('/auth/login', [LoginController::class, 'login']);
+    // api for users
     Route::resource('look_up', Look_upController::class)->only('show');
+    // api for statistic information
+    Route::resource('statistic', StatisticController::class)->only('index');
+    // api for admin
     Route::middleware('auth:api')->group( function () {
         // api for admin profile
         Route::get('profile', [AdminProfileController::class, 'index']);

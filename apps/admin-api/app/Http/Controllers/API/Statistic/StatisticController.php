@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\API\Statistic;
 
+use App\Http\Controllers\API\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Statistic;
 use Illuminate\Http\Request;
+use App\Models\Vaccination;
+use App\Models\Test_result;
+use App\Models\User;
+use Exception;
 
-class StatisticController extends Controller
+class StatisticController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +20,16 @@ class StatisticController extends Controller
      */
     public function index()
     {
-        //
+        try{
+            $data = [];
+
+            // Injection statistic
+            // $data['injection_first_time'] = Vaccination::where('')
+                
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }  
     }
 
     /**

@@ -32,10 +32,12 @@ class VaccinationFactory extends Factory
         $vaccineTypeIds = rand(1, 100) > 60 ?
             Vaccine_type::where('name', 'AstraZeneca')->first()->id :
             Vaccine_type::inRandomOrder()->first()->id;
+        $time = rand(1,2);
         return [
             'user_id' => $userIds,
             'create_by' => $userCreateIds,
             'vaccine_type_id' => $vaccineTypeIds,
+            'time' => $time
         ];
     }
 }
