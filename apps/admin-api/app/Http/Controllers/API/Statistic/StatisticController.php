@@ -28,7 +28,7 @@ class StatisticController extends BaseController
             // Injection statistic
             $data['injection_first_time'] = Vaccination::where('time', 1)->count();
             $data['injection_second_time'] = Vaccination::where('time', 2)->count();
-            $data['injection_total_time'] = Vaccination::where('time', '>' , 2)->count();
+            $data['injection_total_time'] = Vaccination::all()->count();
             
             // Injection in last 7 days
             $data['injection_last_7days'] = 
