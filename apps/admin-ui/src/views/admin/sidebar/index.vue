@@ -1,8 +1,15 @@
-<script>
-import { defineComponent, ref } from "vue"
-import useConfigSideBar from "../useSideBar.ts"
+<script lang="ts">
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  getTransitionRawChildren,
+  watch
+} from "vue"
+import useConfigSideBar from "../useSideBar"
 import SideBarItem from "./components/SideBarItem.vue"
 import { Icon } from "@iconify/vue"
+import router from "../../../router"
 
 export default defineComponent({
   components: {
@@ -11,15 +18,43 @@ export default defineComponent({
   },
   setup() {
     const isOpenSidebar = ref(false)
+    const numberDefault = ref("1")
+    const currentUrl = ref()
     const { sidebar } = useConfigSideBar()
     const handleChangeOpenSideBar = () => {
       isOpenSidebar.value = !isOpenSidebar.value
     }
+    onMounted(() => {
+      getNumberDefault()
+    })
+
+    const getNumberDefault = () => {
+      currentUrl.value = router.currentRoute.value.name
+      sidebar.map((item) => {
+        if (item?.children) {
+          item?.children.map((childItem) => {
+            if (childItem.link == currentUrl.value) {
+              numberDefault.value = item.key + "-" + childItem.key
+              return
+            }
+          })
+        }
+        if (item.link == currentUrl.value) {
+          numberDefault.value = item.key
+          return
+        }
+      })
+    }
+
+    watch(router.currentRoute, () => {
+      getNumberDefault()
+    })
 
     return {
       isOpenSidebar,
       handleChangeOpenSideBar,
-      sidebar
+      sidebar,
+      numberDefault
     }
   }
 })
@@ -36,11 +71,11 @@ export default defineComponent({
       />
     </div>
     <el-menu
-      default-active="1"
+      :default-active="numberDefault"
       class="aside-menu bg-11385e el-menu-vertical-demo"
       :collapse="isOpenSidebar"
     >
-      <SideBarItem v-for="item in sidebar" :key="item.key" :item="item" />
+      <SideBarItem v-for="item in sidebar" :key="item?.key" :item="item" />
     </el-menu>
   </div>
 </template>
