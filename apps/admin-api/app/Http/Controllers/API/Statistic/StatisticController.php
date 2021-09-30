@@ -25,13 +25,13 @@ class StatisticController extends BaseController
         try{
             $data = [];
 
-            // Injection statistic
-            $data['injection_first_time'] = Vaccination::where('time', 1)->count();
-            $data['injection_second_time'] = Vaccination::where('time', 2)->count();
-            $data['injection_total_time'] = Vaccination::all()->count();
+            // injected statistic
+            $data['injected_first_time'] = Vaccination::where('time', 1)->count();
+            $data['injected_second_time'] = Vaccination::where('time', 2)->count();
+            $data['injected_total_time'] = Vaccination::all()->count();
             
-            // Injection in last 7 days
-            $data['injection_last_7days'] = 
+            // injected in last 7 days
+            $data['injected_lastest_7days'] = 
                     Vaccination::select(
                         DB::raw("DATE_FORMAT(created_at, '%d-%m-%Y') as date"),
                         DB::raw("COUNT(id) as quantity"),
