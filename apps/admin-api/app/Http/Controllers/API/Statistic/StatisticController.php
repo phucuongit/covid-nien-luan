@@ -31,16 +31,20 @@ class StatisticController extends BaseController
             $data['injected_total_time'] = Vaccination::all()->count();
             
             // injected in last 7 days
-            $data['injected_lastest_7days'] = 
-                    Vaccination::select(
-                        DB::raw("DATE_FORMAT(created_at, '%d-%m-%Y') as date"),
-                        DB::raw("COUNT(id) as quantity"),
-                    )
-                    ->where('created_at', '>' , Carbon::now()->subDays(7))
-                    ->orderBy('created_at')
-                    ->groupBy(DB::raw("DATE_FORMAT(created_at, '%d-%m-%Y')"))
-                    ->get();
-                    
+            $begin = Carbon::today()->subDays(6);
+            $end   = Carbon::today();
+            $last7Days = [];
+            for($i = $begin; $i <= $end; $i->addDay(1)){
+                $dayQuantity= 
+                    Vaccination::whereDate('created_at', '=', $i)
+                    ->count();
+                $dateString = $i->isoFormat('DD-MM-YYYY');
+                $last7Days[] = 
+                    (object) ['date' => $dateString,
+                              'quantity' => $dayQuantity];
+            }
+            $data['injected_lastest_7days'] = $last7Days;
+
             // Send
             return $this->sendResponse($data, 'Successfully');
         }
