@@ -1,7 +1,7 @@
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue"
+import { computed, defineComponent } from "vue"
 import { Icon } from "@iconify/vue"
-import moment from "moment"
+import useStats from "./hooks/useStats"
 
 const Dashboard = defineComponent({
   name: "Dashboard",
@@ -9,141 +9,143 @@ const Dashboard = defineComponent({
     Icon
   },
   setup() {
-    const dataStats = reactive({
-      vietNamPopuplation: 97580000,
-      injectFirstTime: 10000000,
-      injectSecondTime: 2,
-      injectTotal: 10000
-    })
+    const { data: dataStats, isLoading } = useStats()
+    let vietNamPopuplation = 97580000
+
     const percentInjectedFirst = computed(() => {
+      if (!dataStats.value) {
+        return 0
+      }
       return (
         Math.round(
-          (dataStats.injectFirstTime / dataStats.vietNamPopuplation +
+          (dataStats.value.injected_first_time / vietNamPopuplation +
             Number.EPSILON) *
             10000
         ) / 100
       )
     })
-    const dataBI = {
-      series: [percentInjectedFirst.value, 100 - percentInjectedFirst.value],
-      chartOptions: {
-        chart: {
-          width: 880,
-          type: "donut"
-        },
-        dataLabels: {
-          enabled: true,
-          formatter: function (val: number) {
-            return val + "%"
-          }
-        },
-        colors: ["#56cc34", "#e43232"],
+    const dataBI = computed(() => {
+      return {
+        series: [percentInjectedFirst.value, 100 - percentInjectedFirst.value],
+        chartOptions: {
+          chart: {
+            width: 880,
+            type: "donut"
+          },
+          dataLabels: {
+            enabled: true,
+            formatter: function (val: number) {
+              return val + "%"
+            }
+          },
+          colors: ["#56cc34", "#e43232"],
 
-        labels: ["Đã được tiêm ít nhất một mũi", "Chưa được tiêm"],
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200
-              },
-              legend: {
-                show: false
+          labels: ["Đã được tiêm ít nhất một mũi", "Chưa được tiêm"],
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  show: false
+                }
+              }
+            }
+          ],
+          legend: {
+            position: "right",
+            offsetY: 0,
+            height: 230
+          },
+          plotOptions: {
+            pie: {
+              donut: {
+                size: "70%"
               }
             }
           }
-        ],
-        legend: {
-          position: "right",
-          offsetY: 0,
-          height: 230
-        },
-        plotOptions: {
-          pie: {
-            donut: {
-              size: "70%"
-            }
-          }
         }
       }
-    }
+    })
 
-    const dataInjectByDate = {
-      series: [
-        {
-          name: "Số lượng",
-          data: [100, 41, 35, 51, 49, 62, 69]
-        }
-      ],
-      chartOptions: {
-        chart: {
-          type: "area",
-          stacked: false,
-          height: 350,
-          zoom: {
-            type: "x",
-            enabled: true,
-            autoScaleYaxis: true
+    const dataInjectByDate = computed(() => {
+      return {
+        series: [
+          {
+            name: "Số lượng",
+            data: dataStats.value.injected_lastest_7days.map(
+              (item) => item.quantity
+            )
+          }
+        ],
+        chartOptions: {
+          chart: {
+            type: "area",
+            stacked: false,
+            height: 350,
+            zoom: {
+              type: "x",
+              enabled: true,
+              autoScaleYaxis: true
+            },
+            toolbar: {
+              autoSelected: "zoom"
+            }
           },
-          toolbar: {
-            autoSelected: "zoom"
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        markers: {
-          size: 0
-        },
-        title: {
-          text: "Thống kê số lượng vắc xin tiêm theo ngày",
-          align: "left"
-        },
-        fill: {
-          type: "gradient",
-          gradient: {
-            shadeIntensity: 1,
-            inverseColors: false,
-            opacityFrom: 0.5,
-            opacityTo: 0,
-            stops: [0, 90, 100]
-          }
-        },
-        yaxis: {
+          dataLabels: {
+            enabled: false
+          },
+          markers: {
+            size: 0
+          },
           title: {
-            text: "Số lượng tiêm chủng"
+            text: "Thống kê số lượng vắc xin tiêm theo ngày",
+            align: "left"
+          },
+          fill: {
+            type: "gradient",
+            gradient: {
+              shadeIntensity: 1,
+              inverseColors: false,
+              opacityFrom: 0.5,
+              opacityTo: 0,
+              stops: [0, 90, 100]
+            }
+          },
+          yaxis: {
+            title: {
+              text: "Số lượng tiêm chủng"
+            }
+          },
+          xaxis: {
+            categories: dataStats.value.injected_lastest_7days.map(
+              (item) => item.date
+            ),
+            title: {
+              text: "Ngày"
+            }
+          },
+          tooltip: {
+            shared: false
           }
-        },
-        xaxis: {
-          categories: [
-            moment(new Date()).format("DD-MM-yyyy"),
-            moment(new Date()).add(1, "days").format("DD-MM-yyyy"),
-            moment(new Date()).add(2, "days").format("DD-MM-yyyy"),
-            moment(new Date()).add(3, "days").format("DD-MM-yyyy"),
-            moment(new Date()).add(4, "days").format("DD-MM-yyyy"),
-            moment(new Date()).add(5, "days").format("DD-MM-yyyy"),
-            moment(new Date()).add(6, "days").format("DD-MM-yyyy")
-          ],
-          title: {
-            text: "Ngày"
-          }
-        },
-        tooltip: {
-          shared: false
         }
       }
-    }
+    })
     return {
       dataStats,
-      ...dataBI,
-      dataInjectByDate
+      ...dataBI.value,
+      dataInjectByDate,
+      isLoading,
+      vietNamPopuplation
     }
   }
 })
 export default Dashboard
 </script>
 <template>
-  <el-row>
+  <el-row v-if="!isLoading">
     <el-col :span="6"
       ><div class="grid-content bg-purple">
         <el-card
@@ -158,7 +160,7 @@ export default Dashboard
             <p>Số mũi đã tiêm toàn quốc</p>
             <div>
               <b class="amount">{{
-                Number(dataStats.injectTotal).toLocaleString()
+                Number(dataStats.injected_total_time).toLocaleString()
               }}</b>
               <span class="unit">(mũi)</span>
             </div>
@@ -180,7 +182,7 @@ export default Dashboard
             <p>Số người chỉ tiêm được một mũi</p>
             <div>
               <b class="amount">{{
-                Number(dataStats.injectFirstTime).toLocaleString()
+                Number(dataStats.injected_first_time).toLocaleString()
               }}</b>
               <span class="unit">(mũi)</span>
             </div>
@@ -202,7 +204,7 @@ export default Dashboard
             <p>Số người đã được tiêm đủ hai mũi</p>
             <div>
               <b class="amount">{{
-                Number(dataStats.injectSecondTime).toLocaleString()
+                Number(dataStats.injected_second_time).toLocaleString()
               }}</b>
               <span class="unit">(mũi)</span>
             </div>
@@ -224,7 +226,7 @@ export default Dashboard
             <p>Số dân toàn quốc năm 2020</p>
             <div>
               <b class="amount">{{
-                Number(dataStats.vietNamPopuplation).toLocaleString()
+                Number(vietNamPopuplation).toLocaleString()
               }}</b>
               <span class="unit">(người)</span>
             </div>
@@ -283,7 +285,7 @@ $primaryColor: #379d1a;
   margin: 0 16px;
   p {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 14px;
     width: 100%;
   }
 }
@@ -304,7 +306,7 @@ $primaryColor: #379d1a;
     p {
       margin: 0;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 16px;
     }
     .amount {
       font-size: 28px;
