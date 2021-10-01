@@ -27,20 +27,22 @@ class UserFactory extends Factory
      */  
     public function definition()
     {
-        //Create fake id card 
+        // Create fake id card 
         $identity_card = 
-                Str::padLeft(strval(rand(1,63)), 3, "0") //Provinces type: 0xx
-                .strval(rand(1,9)) // Gender
+                Str::padLeft(strval(rand(1,63)), 3, "0") // Provinces type: 0xx
+                .$this->faker->randomNumber(1) // Gender
                 .$this->faker->randomNumber(2, true) // Birthday code
-                .$this->faker->unique()->randomNumber(6, true); // Random number
+                .$this->faker->unique()->randomNumber(6, true); // Random unique number
     
         $fullname = 
-            rand(0,1) == 1 ? vnfaker()->fullname($word = 3) : vnfaker()->fullname($word = 4);
+            rand(0,1) == 1 ? 
+            vnfaker()->fullname($word = 3) : 
+            vnfaker()->fullname($word = 4);
 
         $birthday = 
             $this->faker->dateTime('-5 years'); // -5 year from now
 
-        //username = name + last 6 numbers indetity card
+        // username = name + last 6 numbers indetity card
         $username = 
             vnfaker()->vnToString(substr($fullname, strrpos($fullname, ' ') + 1))
             .substr($identity_card, -6);
@@ -51,7 +53,7 @@ class UserFactory extends Factory
         $password = 
             Hash::make('123123');
 
-        $village_id = 
+        $village_id =
             Village::inRandomOrder()->first()->id;
 
         $address = 
@@ -71,6 +73,8 @@ class UserFactory extends Factory
 
         // Custom created_at
         $created_at = Carbon::now()->subDays(rand(90, 180));
+        $updated_at = $created_at;
+
         return [
             'identity_card' => $identity_card,
             'social_insurance' => $social_insurance,
@@ -83,7 +87,8 @@ class UserFactory extends Factory
             'phone' => $phone,
             'village_id' => $village_id,
             'role_id' => $role_id,
-            'created_at' => $created_at
+            'created_at' => $created_at,
+            'updated_at' => $updated_at
         ];
     }
 
