@@ -52,5 +52,4 @@ function useVaccineType() {
     isLoadingSearchVaccineType
   }
 }
-
 export default useVaccineType

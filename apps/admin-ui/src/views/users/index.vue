@@ -268,10 +268,13 @@ export default defineComponent({
       class="text-center mt-20"
       layout="prev, pager, next"
       :total="totalPage * 10"
+      :pager-count="4"
+      small
       :current-page="currentPage"
       @current-change="handleChangePage"
     >
     </el-pagination>
+    <el-backtop style="color: #11385e" />
   </div>
 
   <DetailUser :isVisible="isVisibleDetailUser" :selectUser="multipleSelection">

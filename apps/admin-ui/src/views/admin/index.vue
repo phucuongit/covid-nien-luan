@@ -48,7 +48,7 @@ export default defineComponent({
         confirmButtonText: "Đăng xuất"
       }).then(async () => {
         localStorage.setItem("token", "")
-        router.push("/admin/login")
+        router.replace("/admin/login")
       })
     }
     return {
@@ -115,7 +115,6 @@ export default defineComponent({
                   style="width: 45px; height: 45px"
                   fit="cover"
                   :src="avatar[0]"
-                  :preview-src-list="avatar"
                 >
                   <template #error>
                     <div class="image-slot">

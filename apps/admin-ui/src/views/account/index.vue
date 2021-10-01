@@ -74,8 +74,6 @@ export default defineComponent({
             avatar.value = image
           }
           imageListShow.value.push(BASE_URL + image.url)
-        } else {
-          avatar.value = ""
         }
       })
 
