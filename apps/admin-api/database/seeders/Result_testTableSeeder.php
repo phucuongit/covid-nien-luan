@@ -39,7 +39,7 @@ class Result_testTableSeeder extends Seeder
         $this->faker = Faker::create();
     }
     
-    public function run($count = 10)
+    public function run($count = 10, $maxUserId)
     {
         // Remove all current data
         Result_test::truncate();
@@ -49,13 +49,11 @@ class Result_testTableSeeder extends Seeder
         // Seeding
         for ( $i=0; $i < $count ; $i++) {
             $status = rand(0, 10) == 1 ? 'positive' : 'negative';
-            $userId = 
-                User::where('role_id', 2)->inRandomOrder()->first()->id;
-            $userCreate_by = rand(1, 10);
-                User::where('role_id', 1)->inRandomOrder()->first()->id;
+            $userId = rand(1, $maxUserId);
+            $userCreate_by = 1;
 
             // Custom created_at data
-            $created_at = Carbon::now()->subDays(rand(0, 90));
+            $created_at = Carbon::now()->subDays(rand(0, 60));
             $updated_at = $created_at;
 
             $result_testData[] = [

@@ -40,7 +40,7 @@ class VaccinationTableSeeder extends Seeder
         $this->faker = Faker::create();
     }
 
-    public function run($count)
+    public function run($count, $maxUserId)
     {
         // Remove all current data
         Vaccination::truncate();
@@ -49,22 +49,17 @@ class VaccinationTableSeeder extends Seeder
 
         // Seeding
         for ( $i=0; $i < $count ; $i++) {
-            //Get id from user
-            $userIds =
-                User::inRandomOrder()->first()->id;
-
-            $userCreateIds =
-                User::where('role_id', 1)->inRandomOrder()->first()->id;
+            // Id from 1 to max user agrument
+            $userIds = rand(1, $maxUserId);
+            $userCreateIds = 1;
 
             // > 40% vaccine type is Astra
-            $vaccineTypeIds = rand(1, 10) > 6 ? 
-                Vaccine_type::where('name', 'AstraZeneca')->first()->id :
-                Vaccine_type::inRandomOrder()->first()->id;
+            $vaccineTypeIds = rand(1, 10) > 6 ? 2 : rand(1,7);
 
             $time = rand(1,2);
 
             // Custom created_at
-            $created_at = Carbon::now()->subDays(rand(0, 90));
+            $created_at = Carbon::now()->subDays(rand(0, 60));
             $updated_at = $created_at;
 
             $vaccinationData[] = [
