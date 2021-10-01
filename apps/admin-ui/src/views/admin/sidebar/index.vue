@@ -1,11 +1,5 @@
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  getTransitionRawChildren,
-  watch
-} from "vue"
+import { defineComponent, ref, onMounted, watch } from "vue"
 import useConfigSideBar from "../useSideBar"
 import SideBarItem from "./components/SideBarItem.vue"
 import { Icon } from "@iconify/vue"
@@ -61,23 +55,23 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="aside">
-    <div class="icon-change-open-sidebar text-right pr-20">
+  <el-menu
+    :default-active="numberDefault"
+    class="aside-menu bg-11385e el-menu-vertical-demo"
+    :collapse="isOpenSidebar"
+  >
+    <div class="icon-change-open-sidebar text-right pr-20 mt-20">
       <Icon
-        icon="bx:bx-chevrons-right"
+        icon="bx:bx-chevrons-left"
         color="white"
         width="30"
         @click="handleChangeOpenSideBar"
+        class="rotate-180"
       />
     </div>
-    <el-menu
-      :default-active="numberDefault"
-      class="aside-menu bg-11385e el-menu-vertical-demo"
-      :collapse="isOpenSidebar"
-    >
-      <SideBarItem v-for="item in sidebar" :key="item?.key" :item="item" />
-    </el-menu>
-  </div>
+
+    <SideBarItem v-for="item in sidebar" :key="item?.key" :item="item" />
+  </el-menu>
 </template>
 
 <style scoped>
@@ -85,5 +79,14 @@ export default defineComponent({
   width: 200px;
   min-height: 400px;
   text-align: left;
+}
+
+.rotate-180 {
+  transition: transform 0.3s ease;
+}
+
+.el-menu--collapse .rotate-180 {
+  transform: rotateZ(180deg);
+  transition: transform 0.3s ease;
 }
 </style>

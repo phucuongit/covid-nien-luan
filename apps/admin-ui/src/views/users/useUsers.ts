@@ -49,6 +49,7 @@ function useUsers() {
       const response = await API.get("user?search=" + text)
       if (response.data.success) {
         data.value = response.data.data.users
+        totalPage.value = response.data.data.meta.last_page
       }
     } catch (e) {
       console.log(e)

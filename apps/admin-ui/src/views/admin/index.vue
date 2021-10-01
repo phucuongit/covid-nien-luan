@@ -69,7 +69,7 @@ export default defineComponent({
   <div class="admin">
     <el-container>
       <SideBar />
-      <el-container>
+      <el-container class="section-right">
         <el-header class="header text-right">
           <el-popover placement="bottom-start" :width="250" trigger="hover">
             <el-row :gutter="30">
@@ -153,6 +153,16 @@ export default defineComponent({
   border-radius: 50%;
 }
 
+.admin .header {
+  border-bottom: 1px solid #11385e;
+  height: 55px;
+  padding: 5px 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #f2f2f2;
+}
+
 .header-ul {
   list-style: none;
   padding: 0;
@@ -162,6 +172,7 @@ export default defineComponent({
 .header-ul li {
   padding: 10px;
   cursor: pointer;
+  color: black;
 }
 
 .header-ul li a {
@@ -169,6 +180,7 @@ export default defineComponent({
   align-items: center;
   width: 100%;
   height: 100%;
+  color: black;
 }
 
 .header-ul li a:active {

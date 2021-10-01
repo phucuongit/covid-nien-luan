@@ -98,7 +98,7 @@ export default defineComponent({
 
 <template>
   <div id="vaccine-list">
-    <h3 class="mr-0">Danh sách tiêm chủng vắc-xin</h3>
+    <h3 class="mr-0 mt-0">Danh sách tiêm chủng vắc-xin</h3>
     <el-row class="row-bg mb-10" :gutter="30">
       <el-col :md="9" :sm="12" :xs="24" class="pt-5">
         <div class="grid-content">

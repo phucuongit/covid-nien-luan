@@ -68,22 +68,29 @@ a { text-decoration: none; }
 
 /* ADMIN ----------------------------------------------------------------------------- */
   /* SIDE BAR */
-.aside {
+  .aside-menu { border-right: 1px solid #11385e;
   min-height: 100vh;
   background: #11385e;
-  /* position: fixed;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   z-index: 101;
-  overflow: hidden; */
+  overflow: hidden;
 }
 
-/* .wrapper {
+.section-right {
   position: absolute;
   left: 200px;
   width: calc(100% - 200px);
-} */
+  transition: all ease-in-out 0.1s;
+}
+
+.el-menu--collapse + .section-right {
+  left: 64px !important;
+  width: calc(100% - 64px);
+}
+
 .el-menu-item-group__title {
   padding: 0px;
 }
@@ -101,14 +108,8 @@ a { text-decoration: none; }
   background-color: #14283d;
 }
 
-.aside-menu { border-right: 1px solid #11385e }
 
   /* ADMIN - HEADER */
-.admin .header {
-  border-bottom: 1px solid #11385e;
-  height: 55px;
-  padding: 5px 10px;
-}
 
 /* Button search */
 .el-input-group__append {
