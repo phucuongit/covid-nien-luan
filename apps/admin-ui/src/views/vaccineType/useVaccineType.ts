@@ -12,6 +12,7 @@ type vaccineType = {
 function useVaccineType() {
   const dataVaccineType = ref<vaccineType[]>([])
   const isLoading = ref(false)
+  const isLoadingSearchVaccineType = ref(false)
 
   const getListVaccineType = async () => {
     try {
@@ -30,23 +31,16 @@ function useVaccineType() {
 
   const getVaccineTypeSearch = async (name: string) => {
     try {
+      isLoadingSearchVaccineType.value = true
       const response = await API.get("vaccine_type?name=" + name)
       if (response.data.success) {
         dataVaccineType.value = response.data.data
       }
     } catch (e) {
+      isLoadingSearchVaccineType.value = false
       console.log(e)
-    }
-  }
-
-  const getVaccineTypeSearchID = async (id: number) => {
-    try {
-      const response = await API.get("vaccine_type?id=" + id)
-      if (response.data.success) {
-        return response.data.data
-      }
-    } catch (e) {
-      console.log(e)
+    } finally {
+      isLoadingSearchVaccineType.value = false
     }
   }
 
@@ -55,7 +49,7 @@ function useVaccineType() {
     dataVaccineType,
     isLoading,
     getVaccineTypeSearch,
-    getVaccineTypeSearchID
+    isLoadingSearchVaccineType
   }
 }
 
