@@ -212,7 +212,6 @@ export default defineComponent({
           >Dương tính</span
         >
         <span v-else>Âm tính</span>
-        <!-- {{ scope.row.status == "negative" ? "Âm tính" : "Dương tính" }} -->
       </template>
     </el-table-column>
 
@@ -244,10 +243,13 @@ export default defineComponent({
     background
     layout="prev, pager, next"
     :current-page="currentPage"
+    :pager-count="4"
+    small
     @current-change="handleChangePage"
     :total="totalPage * 10"
   >
   </el-pagination>
+  <el-backtop style="color: #11385e" />
 
   <AddUpdateResultTest
     :isVisible="isVisibleAddUpdate"

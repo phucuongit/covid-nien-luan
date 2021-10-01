@@ -200,11 +200,14 @@ export default defineComponent({
       class="text-center mt-20"
       background
       layout="prev, pager, next"
+      :pager-count="4"
+      small
       :current-page="currentPage"
       @current-change="handleChangePage"
       :total="totalPage * 10"
     >
     </el-pagination>
+    <el-backtop style="color: #11385e" />
   </div>
 
   <addUpdateVaccination
