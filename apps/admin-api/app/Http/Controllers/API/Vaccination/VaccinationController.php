@@ -42,6 +42,11 @@ class VaccinationController extends BaseController
     {
         try {
             $validatedData = $request->validated();
+            // Set injection's time
+            $currentTime = 
+                Vaccination::where('user_id', $validatedData['user_id'])->count();
+            $validatedData['time'] = $currentTime + 1;
+            
             $vaccinationResult = new VaccinationResource(Vaccination::create($validatedData));
             return $this->sendResponse($vaccinationResult);
         } catch (Exception $e) {

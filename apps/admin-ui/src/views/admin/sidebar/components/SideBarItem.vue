@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { defineComponent, computed } from "vue"
 import { Icon } from "@iconify/vue"
 const SideBarItem = defineComponent({
@@ -11,6 +11,7 @@ const SideBarItem = defineComponent({
       type: Object,
       default: () => ({
         key: null,
+        link: null,
         label: null,
         children: [],
         icon: null
@@ -72,7 +73,7 @@ export default SideBarItem
             :to="{ name: submenu.link ? submenu.link : '' }"
           >
             <Icon :icon="submenu.icon" color="white" width="18" class="mr-5" />
-            <span>{{ submenu.label }} </span>
+            <span>{{ submenu.label }}</span>
           </router-link>
         </el-menu-item>
       </el-menu-item-group>

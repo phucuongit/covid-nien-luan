@@ -15,19 +15,19 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
+        // Remove all current
         Role::truncate();
         $data = [
             [
                 'name' => 'admin',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name' => 'user',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
         ];
-        Role::insert($data);
+        
+        foreach ($data as $key => $value) {
+            Role::create($value);
+        }
     }
 }

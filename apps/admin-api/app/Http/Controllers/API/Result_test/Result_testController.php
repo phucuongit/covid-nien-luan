@@ -7,9 +7,9 @@ use App\Models\Result_test;
 use Illuminate\Http\Request;
 use App\Http\Requests\Result_testRequest;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\API\BaseController as BaseController;
-use App\Http\Resources\Result_testResource as Result_testResource;
-use App\Http\Resources\Result_testCollection as Result_testCollection;
+use App\Http\Controllers\API\BaseController;
+use App\Http\Resources\Result_testResource;
+use App\Http\Resources\Result_testCollection;
 use Exception;
 
 class Result_testController extends BaseController
