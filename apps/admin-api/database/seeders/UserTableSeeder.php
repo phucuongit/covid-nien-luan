@@ -60,59 +60,59 @@ class UserTableSeeder extends Seeder
 
         // User seeding
         for ($i = 0; $i < $count; $i++) {
+
             // Create fake id card 
             $identity_card = 
-                Str::padLeft(strval(rand(1,63)), 3, "0") // Provinces type: 0xx
-                .$this->faker->randomNumber(1) // Gender
-                .$this->faker->randomNumber(2, true) // Birthday code
-                .$this->faker->unique()->randomNumber(6, true); // Random unique number
+                '0' // 0xx
+                .$this->faker->unique()->randomNumber(9, true); // Random unique number
 
-            $fullname = 
+            $fullname =
                 rand(0,1) == 1 ? 
-                vnfaker()->fullname($word = 3) : 
-                vnfaker()->fullname($word = 4);
+                vnfaker()->fullname($word = 3)
+                : vnfaker()->fullname($word = 4);
 
             $birthday = 
                 $this->faker->dateTime('-5 years'); // -5 year from now
 
-            // username = name + last 6 numbers indetity card
-            $username = 
-                vnfaker()->vnToString(substr($fullname, strrpos($fullname, ' ') + 1))
-                .substr($identity_card, -6);
+            // username = 'user' + last 6 numbers indetity card
+            // $username =
+            //     'user'.substr($identity_card, -6);
 
             $gender = 
                 rand(0,1);
 
-            $password = 
-                Hash::make('123123');
+            // $password = 
+            //     Hash::make('123123');
 
-            $village_id =
-                Village::inRandomOrder()->first()->id;
+            $village_id = 
+                rand(1, 10603);
 
             $address = 
                 'Đường '
-                .rand(0,99)
-                .chr(rand(65,90)); //A-Z
+                .rand(1,9)
+                .rand(1,9)
+                .chr(rand(65,90)); // A-Z
 
             $phone = 
-                vnfaker()->mobilephone($numbers = 10);
+                substr(vnfaker()->mobilephone($numbers = 10), 0, 3)
+                .$this->faker->unique()->randomNumber(7, true);
 
             $role_id = 2;
 
-            $social_insurance = 
-                chr(rand(65,90)) // String code
+            $social_insurance =
+                chr(rand(65,90))
                 .chr(rand(65,90))
                 .$this->faker->randomNumber(9, true);
 
             // Custom created_at
-            $created_at = Carbon::now()->subDays(rand(90, 180));
+            $created_at = Carbon::now()->subDays(rand(60, 120));
             $updated_at = $created_at;
 
             $userData[] = [
                 'identity_card' => $identity_card,
                 'social_insurance' => $social_insurance,
-                'username' => $username,
-                'password' => $password,
+                // 'username' => $username,
+                // 'password' => $password,
                 'fullname' => $fullname,
                 'birthday' => $birthday,
                 'gender' => $gender,

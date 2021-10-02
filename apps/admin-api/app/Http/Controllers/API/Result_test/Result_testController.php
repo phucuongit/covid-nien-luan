@@ -25,7 +25,9 @@ class Result_testController extends BaseController
             $params = $request->all();
             $result_testQuery = Result_test::filter($params);
             $result_tests = 
-                new Result_testCollection($result_testQuery->paginate(20));
+                new Result_testCollection(
+                    $result_testQuery->paginate(20)->appends(request()->query())
+                );
             return $this->sendResponse($result_tests
                                     ->response()->getData(true));
         }
