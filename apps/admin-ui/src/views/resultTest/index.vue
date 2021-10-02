@@ -1,49 +1,80 @@
-<script>
+<script lang="ts">
 import { defineComponent, provide, ref } from "vue"
 import useResultTest from "./useResultTest"
 import moment from "moment"
-import AddUpdateResultTest from "./addUpdateResultTest"
+import AddUpdateResultTest from "./addUpdateResultTest/index.vue"
+import DeleteResultTest from "./deleteResultTest/index.vue"
 
 export default defineComponent({
   components: {
-    AddUpdateResultTest
+    AddUpdateResultTest,
+    DeleteResultTest
   },
   setup() {
     const {
       isLoadingResultTestList,
       resultTestList,
-      gettResultTestList,
-      totalPage
+      getResultTestList,
+      totalPage,
+      searchResultTest,
+      isLoadingSearch,
+      filterResultTest
     } = useResultTest()
+
     const currentPage = ref(1)
     const multipleSelection = ref([])
     const textSearch = ref("")
     const mode = ref("")
     const isVisibleAddUpdate = ref(false)
-    gettResultTestList(currentPage.value)
+    const isVisibleDelete = ref(false)
+    const filter = ref()
+    getResultTestList(currentPage.value)
 
-    const handleSelectionChange = (value) => {
+    const handleSelectionChange = (value: any) => {
       multipleSelection.value = value
     }
 
-    const handleChangePage = (value) => {
-      currentPage.value = value
-      gettResultTestList(currentPage.value)
+    const handleChangePage = (page: number) => {
+      currentPage.value = page
+      getResultTestList(currentPage.value)
     }
 
-    const handleSearch = () => {
-      console.log("Chưa làm tìm kiếm: " + textSearch.value)
-    }
-
-    const setMode = (value) => {
+    const setMode = (value: string) => {
       mode.value = value
     }
 
     const handleChangeVisibleAddUpdate = () => {
       isVisibleAddUpdate.value = !isVisibleAddUpdate.value
-      console.log(isVisibleAddUpdate.value)
     }
 
+    const handlechangeVisible = (modeValue: "add" | "update") => {
+      setMode(modeValue)
+      handleChangeVisibleAddUpdate()
+    }
+
+    const handleSearch = () => {
+      filter.value = ""
+      searchResultTest(textSearch.value)
+    }
+
+    const handleVisibleDelete = () => {
+      isVisibleDelete.value = !isVisibleDelete.value
+    }
+
+    const filterState = () => {
+      textSearch.value = ""
+      filterResultTest(filter.value)
+    }
+
+    const checkEmptyText = (value: string) => {
+      if (textSearch.value == "") {
+        getResultTestList(currentPage.value)
+      }
+    }
+
+    provide("closeDeleteResultTest", handleVisibleDelete)
+    provide("getResultTestList", getResultTestList)
+    provide("currentPage", currentPage)
     provide("handleChangeVisibleAddUpdate", handleChangeVisibleAddUpdate)
     provide("setMode", setMode)
 
@@ -59,15 +90,21 @@ export default defineComponent({
       textSearch,
       setMode,
       mode,
-      handleChangeVisibleAddUpdate,
-      isVisibleAddUpdate
+      handlechangeVisible,
+      isVisibleAddUpdate,
+      isVisibleDelete,
+      handleVisibleDelete,
+      isLoadingSearch,
+      filter,
+      filterState,
+      checkEmptyText
     }
   },
   methods: {
-    formatDateHour(date) {
-      return moment(date).format("hh:mm:ss a, DD/MM/YYYY")
+    formatDateHour(date: Date) {
+      return moment(date).format("hh:mm, DD/MM/YYYY")
     },
-    formatDate(date) {
+    formatDate(date: Date) {
       return moment(date).format("DD/MM/YYYY")
     }
   }
@@ -75,22 +112,52 @@ export default defineComponent({
 </script>
 
 <template>
-  <h3>Danh sách kết quả xét nghiệm</h3>
-  <el-row class="row-bg mb-10">
-    <el-col :span="12">
+  <h3 class="mt-0">Danh sách kết quả xét nghiệm</h3>
+  <el-row class="row-bg mb-10" :gutter="30">
+    <el-col :md="7" :sm="12" :xs="24" class="pt-5">
       <div class="grid-content">
         <el-input
+          size="small"
           placeholder="Tìm kiếm..."
           prefix-icon="el-icon-search"
           v-model="textSearch"
-          v-on:keyup.enter="handleSearch"
+          v-on:keyup="checkEmptyText"
         >
+          <template #append>
+            <el-button
+              size="small"
+              type="primary"
+              icon="el-icon-search"
+              class="btn-search"
+              @click="handleSearch"
+              :loading="isLoadingSearch"
+              :disabled="isLoadingSearch"
+            >
+            </el-button>
+          </template>
         </el-input>
       </div>
     </el-col>
-    <el-col :span="12">
-      <div class="grid-content text-right pt-10">
-        <el-button size="small" type="primary" class="text-white">
+    <el-col :md="5" :sm="12" :xs="24" class="pt-5">
+      <el-select
+        size="small"
+        v-model="filter"
+        @change="filterState"
+        placeholder="Lọc theo kết quả..."
+        style="width: 100%"
+      >
+        <el-option value="positive" label="Dương tính"></el-option>
+        <el-option value="negative" label="Âm tính"></el-option>
+      </el-select>
+    </el-col>
+    <el-col :md="12" :sm="24" :xs="24">
+      <div class="grid-content text-right">
+        <el-button
+          size="small"
+          type="primary"
+          class="text-white mt-5"
+          @click="handlechangeVisible('add')"
+        >
           <i class="el-icon-plus"></i>
           Thêm
         </el-button>
@@ -98,8 +165,9 @@ export default defineComponent({
         <el-button
           size="small"
           type="primary"
-          class="text-white"
+          class="text-white mt-5"
           v-if="multipleSelection.length == 1"
+          @click="handlechangeVisible('update')"
         >
           <i class="el-icon-edit"></i>
           Sửa
@@ -108,8 +176,9 @@ export default defineComponent({
         <el-button
           size="small"
           type="danger"
-          class="text-white"
+          class="text-white mt-5"
           v-if="multipleSelection.length > 0"
+          @click="handleVisibleDelete"
         >
           <i class="el-icon-delete"></i>
           Xóa
@@ -123,7 +192,6 @@ export default defineComponent({
     @selection-change="handleSelectionChange"
     :data="resultTestList"
     style="width: 100%"
-    max-height="480"
     stripe
     border
     v-loading="isLoadingResultTestList"
@@ -132,41 +200,28 @@ export default defineComponent({
     element-loading-background="rgba(0, 0, 0, 0.5)"
   >
     <el-table-column fixed type="selection" width="55"> </el-table-column>
-    <el-table-column label="Thời gian" width="180">
+    <el-table-column label="Thời gian">
       <template #default="scope">
         {{ formatDateHour(scope.row.created_at) }}
       </template>
     </el-table-column>
-
-    <el-table-column
-      label="Họ tên"
-      width="200"
-      property="user.fullname"
-    ></el-table-column>
-
-    <el-table-column label="Kết quả" width="120" property="status">
+    <el-table-column label="Họ tên" property="user.fullname"></el-table-column>
+    <el-table-column label="Kết quả">
       <template #default="scope">
-        {{ scope.row.status == "negative" ? "Âm tính" : "Dương tính" }}
+        <span v-if="scope.row.status == 'positive'" class="text-red"
+          >Dương tính</span
+        >
+        <span v-else>Âm tính</span>
+        <!-- {{ scope.row.status == "negative" ? "Âm tính" : "Dương tính" }} -->
       </template>
     </el-table-column>
 
     <el-table-column
-      label="CMND"
-      width="120"
-      property="user.identity_card"
-    ></el-table-column>
-    <el-table-column
-      label="Số bảo hiểm"
-      width="120"
-      property="user.social_insurance"
-    ></el-table-column>
-    <el-table-column
       label="Số điện thoại"
-      width="120"
       property="user.phone"
     ></el-table-column>
 
-    <el-table-column label="Ngày sinh" width="120">
+    <el-table-column label="Ngày sinh">
       <template #default="scope">
         {{ formatDate(scope.row.user.birthday) }}
       </template>
@@ -178,18 +233,12 @@ export default defineComponent({
       </template>
     </el-table-column>
 
-    <el-table-column label="Cập nhật lần cuối" width="180">
-      <template #default="scope">
-        {{ formatDateHour(scope.row.update_at) }}
-      </template>
-    </el-table-column>
-
     <el-table-column
       label="Người tạo"
-      width="180"
       property="user_create_by.fullname"
     ></el-table-column>
   </el-table>
+
   <el-pagination
     class="text-center mt-20"
     background
@@ -206,6 +255,11 @@ export default defineComponent({
     :multipleSelection="multipleSelection"
   >
   </AddUpdateResultTest>
+
+  <DeleteResultTest
+    :isVisible="isVisibleDelete"
+    :multipleSelection="multipleSelection"
+  ></DeleteResultTest>
 </template>
 
 <style scoped>

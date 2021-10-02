@@ -1,11 +1,18 @@
 <script>
 import { defineComponent, provide, ref } from "vue"
 import useUsers from "./useUsers.ts"
-import AddUpdateUser from "./addUpdateUser/index.vue"
+import AddUser from "./addUser/index.vue"
+import AddAdmin from "./addAdmin/index.vue"
+import DeleteUser from "./deleteUser/index.vue"
+import DetailUser from "./detailUser/index.vue"
+import moment from "moment"
 
 export default defineComponent({
   components: {
-    AddUpdateUser
+    AddUser,
+    DeleteUser,
+    AddAdmin,
+    DetailUser
   },
   setup() {
     const {
@@ -13,7 +20,8 @@ export default defineComponent({
       loadingListUser,
       getListUsers,
       getListUsersSearch,
-      totalPage
+      totalPage,
+      loadingSearch
     } = useUsers()
     const multipleSelection = ref([])
     const handleSelectionChange = (value) => {
@@ -23,37 +31,72 @@ export default defineComponent({
     const handleSearch = () => {
       getListUsersSearch(textSearch.value)
     }
-    getListUsers(1)
 
-    const isVisibleAddUpdate = ref(false)
-    const handleVisibleAddUpdate = () => {
-      isVisibleAddUpdate.value = !isVisibleAddUpdate.value
-    }
+    const isVisibleAddUser = ref(false)
+    const isVisibleAddAdmin = ref(false)
+    const isVisibleDelete = ref(false)
+    const isVisibleDetailUser = ref(false)
+    const mode = ref()
 
-    const mode = ref("")
-    const setMode = (str) => {
-      mode.value = str
-    }
     const currentPage = ref(1)
+    getListUsers(currentPage.value)
     const handleChangePage = (page) => {
       currentPage.value = page
       getListUsers(currentPage.value)
     }
 
-    const changeAdd = () => {
+    const setMode = (value) => {
+      mode.value = value
+    }
+
+    const changeDetailUser = () => {
+      isVisibleDetailUser.value = !isVisibleDetailUser.value
+    }
+
+    const changeAddUser = () => {
+      isVisibleAddUser.value = !isVisibleAddUser.value
+    }
+
+    const handleChangeAddUser = () => {
+      changeAddUser()
       setMode("add")
-      handleVisibleAddUpdate()
+    }
+
+    const handleChangeAddAdmin = () => {
+      changeAddAdmin()
+      setMode("add")
+    }
+
+    const changeAddAdmin = () => {
+      isVisibleAddAdmin.value = !isVisibleAddAdmin.value
     }
 
     const changeUpdate = () => {
       setMode("update")
-      handleVisibleAddUpdate()
+      if (multipleSelection.value[0].role.name == "admin") {
+        changeAddAdmin()
+      } else {
+        changeAddUser()
+      }
     }
 
-    provide("setMode", setMode)
+    const changeDelete = () => {
+      isVisibleDelete.value = !isVisibleDelete.value
+    }
+
+    const checkEmptyTextSearch = () => {
+      if (textSearch.value == "") {
+        getListUsers(currentPage.value)
+      }
+    }
+
     provide("currentPage", currentPage)
     provide("getListUsers", getListUsers)
-    provide("closeAddUpdateUserModal", handleVisibleAddUpdate)
+    provide("closeAddUserModal", changeAddUser)
+    provide("closeAddAdminModal", changeAddAdmin)
+    provide("closeUserDelete", changeDelete)
+    provide("setMode", setMode)
+    provide("closeDetailUser", changeDetailUser)
 
     return {
       data,
@@ -61,16 +104,27 @@ export default defineComponent({
       multipleSelection,
       handleSelectionChange,
       handleSearch,
+      handleChangePage,
       textSearch,
-      handleVisibleAddUpdate,
-      isVisibleAddUpdate,
-      setMode,
-      mode,
+      isVisibleDetailUser,
+      isVisibleAddAdmin,
+      isVisibleAddUser,
+      isVisibleDelete,
       totalPage,
       currentPage,
-      handleChangePage,
-      changeAdd,
-      changeUpdate
+      handleChangeAddUser,
+      handleChangeAddAdmin,
+      changeUpdate,
+      changeDelete,
+      changeDetailUser,
+      loadingSearch,
+      checkEmptyTextSearch,
+      mode
+    }
+  },
+  methods: {
+    formatDate(date) {
+      return moment(date).format("DD/MM/YYYY")
     }
   }
 })
@@ -78,35 +132,67 @@ export default defineComponent({
 
 <template>
   <div id="users-list">
-    <h3 class="mr-0">Danh sách các loại vắc-xin</h3>
-    <el-row class="row-bg mb-10">
-      <el-col :span="12">
+    <h3 class="mr-0 mt-0">Danh sách các người dùng</h3>
+    <el-row class="row-bg mb-10" :gutter="30">
+      <el-col :md="9" :sm="24" :xs="24" class="pt-5">
         <div class="grid-content">
           <el-input
-            placeholder="Tìm kiếm theo tên..."
+            size="small"
+            placeholder="Tìm kiếm..."
             prefix-icon="el-icon-search"
             v-model="textSearch"
-            v-on:keypress.enter="handleSearch"
+            v-on:keyup="checkEmptyTextSearch"
           >
+            <template #append>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                class="btn-search"
+                @click="handleSearch"
+                :loading="loadingSearch"
+                :disabled="loadingSearch"
+              >
+              </el-button>
+            </template>
           </el-input>
         </div>
       </el-col>
-      <el-col :span="12">
-        <div class="grid-content text-right pt-10">
+      <el-col :md="15" :sm="24" :xs="24">
+        <div class="grid-content text-right">
           <el-button
             size="small"
             type="primary"
-            class="text-white"
-            @click="changeUpdate"
+            class="text-white mt-5"
+            @click="changeDetailUser"
+            v-if="multipleSelection.length == 1"
+          >
+            <i class="el-icon-view"> </i>
+            Xem
+          </el-button>
+          <el-button
+            size="small"
+            type="primary"
+            class="text-white mt-5"
+            @click="handleChangeAddUser"
           >
             <i class="el-icon-plus"></i>
-            Thêm
+            Thêm User
           </el-button>
 
           <el-button
             size="small"
             type="primary"
-            class="text-white"
+            class="text-white mt-5"
+            @click="handleChangeAddAdmin"
+          >
+            <i class="el-icon-plus"></i>
+            Thêm Admin
+          </el-button>
+
+          <el-button
+            size="small"
+            type="primary"
+            class="text-white mt-5"
             v-if="multipleSelection.length == 1"
             @click="changeUpdate"
           >
@@ -117,8 +203,9 @@ export default defineComponent({
           <el-button
             size="small"
             type="danger"
-            class="text-white"
+            class="text-white mt-5"
             v-if="multipleSelection.length > 0"
+            @click="changeDelete"
           >
             <i class="el-icon-delete"></i>
             Xóa
@@ -131,7 +218,6 @@ export default defineComponent({
       :data="data"
       ref="multipleTable"
       style="width: 100%"
-      max-height="480"
       stripe
       border
       @selection-change="handleSelectionChange"
@@ -140,47 +226,40 @@ export default defineComponent({
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.5)"
     >
-      <el-table-column fixed type="selection" width="40"> </el-table-column>
+      <el-table-column fixed type="selection" width="55"> </el-table-column>
       <el-table-column
         property="fullname"
         label="Họ tên"
-        width="200"
+        width="250"
       ></el-table-column>
+
       <el-table-column
-        property="username"
-        label="Tên đăng nhập"
-        width="200"
+        property="identity_card"
+        label="CMND / CCCD"
       ></el-table-column>
-      <el-table-column
-        label="CMND"
-        width="200"
-        property="identify_card"
-      ></el-table-column>
-      <el-table-column
-        property="phone"
-        label="Số điện thoại"
-        width="150"
-      ></el-table-column>
+
+      <el-table-column property="phone" label="Số điện thoại"></el-table-column>
       <el-table-column
         property="social_insurance"
         label="Bảo hiểm y tế"
-        width="200"
       ></el-table-column>
-      <el-table-column label="Giới tính" width="100">
+      <el-table-column label="Giới tính">
         <template #default="scope">
           {{ scope.row.gender ? "Nam" : "Nữ" }}
         </template>
       </el-table-column>
-      <el-table-column
-        property="birthday"
-        label="Ngày sinh"
-        width="200"
-      ></el-table-column>
-      <el-table-column
-        property="address"
-        label="Địa chỉ"
-        width="200"
-      ></el-table-column>
+
+      <el-table-column label="Ngày sinh">
+        <template #default="scope">
+          {{ formatDate(scope.row.birthday) }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="Địa chỉ">
+        <template #default="scope">
+          {{ scope.row.address_full.province.name }}
+        </template>
+      </el-table-column>
     </el-table>
 
     <el-pagination
@@ -194,12 +273,23 @@ export default defineComponent({
     </el-pagination>
   </div>
 
-  <AddUpdateUser
+  <DetailUser :isVisible="isVisibleDetailUser" :selectUser="multipleSelection">
+  </DetailUser>
+
+  <AddUser
+    :isVisible="isVisibleAddUser"
     :mode="mode"
-    :isVisible="isVisibleAddUpdate"
     :selectUser="multipleSelection"
   >
-  </AddUpdateUser>
+  </AddUser>
+  <AddAdmin
+    :isVisible="isVisibleAddAdmin"
+    :mode="mode"
+    :selectUser="multipleSelection"
+  >
+  </AddAdmin>
+  <DeleteUser :isVisible="isVisibleDelete" :selectUser="multipleSelection">
+  </DeleteUser>
 </template>
 
 <style scoped>
