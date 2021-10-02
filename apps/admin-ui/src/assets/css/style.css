@@ -91,6 +91,11 @@ a { text-decoration: none; }
   width: calc(100% - 64px);
 }
 
+/* .wrapper {
+  position: absolute;
+  left: 200px;
+  width: calc(100% - 200px);
+} */
 .el-menu-item-group__title {
   padding: 0px;
 }

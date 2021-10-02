@@ -16,9 +16,21 @@ class CreateVaccinationsTable extends Migration
         Schema::create('vaccinations', function (Blueprint $table) {
             $table->id();
             
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('create_by')->constrained('users');
-            $table->foreignId('vaccine_type_id')->constrained();
+            $table->tinyInteger('time');
+            $table->foreignId('user_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreignId('create_by')
+                ->references('id')
+                ->on('users')
+                ->constrained()
+                ->onUpdate('cascade');
+                // ->onDelete('cascade');
+            $table->foreignId('vaccine_type_id')
+                ->constrained()
+                ->onUpdate('cascade');
+                // ->onDelete('cascade');
             //Default famework columns
             $table->timestamps();
         });

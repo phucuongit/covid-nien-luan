@@ -15,10 +15,11 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('relation_id');
-            $table->string('type');
-            $table->string('name');
-            $table->string('url');
+            $table->string('name')->nullable();
+            $table->string('type')->nullable();
+            $table->string('url')->nullable();
+            $table->unsignedBigInteger('imageable_id');
+            $table->string('imageable_type');
             //Default famework columns
             $table->timestamps();
         });

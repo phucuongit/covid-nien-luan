@@ -116,6 +116,8 @@ export default defineComponent({
           cancelForm()
           getResultTestList(currentPage.value)
         }
+        getResultTestList(currentPage.value)
+        cancelForm()
       }
     })
     const cancelForm = () => {

@@ -18,13 +18,11 @@ type userType = {
 
 function useAddUser() {
   const isLoadingAddUser = ref(false)
-  const user_new_id = ref(0)
   const createUser = async (params: userType) => {
     try {
       isLoadingAddUser.value = true
       const response = await API.post("user", params)
       if (response.data.success) {
-        user_new_id.value = response.data.data.id
         console.log(response.data.data)
         ElMessage.success({
           message: "Thêm người dùng thành công!",
@@ -75,8 +73,7 @@ function useAddUser() {
   return {
     isLoadingAddUser,
     createUser,
-    updateUser,
-    user_new_id
+    updateUser
   }
 }
 
