@@ -145,135 +145,140 @@ const Dashboard = defineComponent({
 export default Dashboard
 </script>
 <template>
-  <el-row v-if="!isLoading">
-    <el-col :span="6"
-      ><div class="grid-content bg-purple">
-        <el-card
-          class="box-card box_card"
-          shadow="hover"
-          body-style="{background: 'red'}"
-        >
-          <div class="icon">
-            <Icon icon="carbon:manage-protection" />
-          </div>
-          <div class="title_summary">
-            <p>Số mũi đã tiêm toàn quốc</p>
-            <div>
-              <b class="amount">{{
-                Number(dataStats.injected_total_time).toLocaleString()
-              }}</b>
-              <span class="unit">(mũi)</span>
-            </div>
-          </div>
-        </el-card>
-      </div>
-    </el-col>
-    <el-col :span="6"
-      ><div class="grid-content bg-purple">
-        <el-card
-          class="box-card box_card"
-          shadow="hover"
-          body-style="{background: 'red'}"
-        >
-          <div class="icon">
-            <Icon icon="carbon:manage-protection" />
-          </div>
-          <div class="title_summary">
-            <p>Số người chỉ tiêm được một mũi</p>
-            <div>
-              <b class="amount">{{
-                Number(dataStats.injected_first_time).toLocaleString()
-              }}</b>
-              <span class="unit">(mũi)</span>
-            </div>
-          </div>
-        </el-card>
-      </div>
-    </el-col>
-    <el-col :span="6"
-      ><div class="grid-content bg-purple">
-        <el-card
-          class="box-card box_card"
-          shadow="hover"
-          body-style="{background: 'red'}"
-        >
-          <div class="icon">
-            <Icon icon="carbon:manage-protection" />
-          </div>
-          <div class="title_summary">
-            <p>Số người đã được tiêm đủ hai mũi</p>
-            <div>
-              <b class="amount">{{
-                Number(dataStats.injected_second_time).toLocaleString()
-              }}</b>
-              <span class="unit">(mũi)</span>
-            </div>
-          </div>
-        </el-card>
-      </div>
-    </el-col>
-    <el-col :span="6"
-      ><div class="grid-content bg-purple">
-        <el-card
-          class="box-card box_card"
-          shadow="hover"
-          body-style="{background: 'red'}"
-        >
-          <div class="icon">
-            <Icon icon="carbon:manage-protection" />
-          </div>
-          <div class="title_summary">
-            <p>Số dân toàn quốc năm 2020</p>
-            <div>
-              <b class="amount">{{
-                Number(vietNamPopuplation).toLocaleString()
-              }}</b>
-              <span class="unit">(người)</span>
-            </div>
-          </div>
-        </el-card>
-      </div>
-    </el-col>
+  <el-row v-if="isLoading">
+    <el-skeleton :rows="6" animated />
   </el-row>
-  <el-row>
-    <el-col :span="12" class="chart">
-      <el-card
-        class="box-card char-box"
-        shadow="hover"
-        body-style="{background: 'red'}"
-      >
-        <div class="chart-wrap">
-          <p>Tỷ lệ đã tiêm ít nhất 1 mũi trên dân số</p>
-          <div id="chart">
-            <apexchart
-              type="donut"
-              width="550"
-              :options="chartOptions"
-              :series="series"
-            ></apexchart>
-          </div>
+  <div v-else>
+    <el-row>
+      <el-col :span="6"
+        ><div class="grid-content bg-purple">
+          <el-card
+            class="box-card box_card"
+            shadow="hover"
+            body-style="{background: 'red'}"
+          >
+            <div class="icon">
+              <Icon icon="carbon:manage-protection" />
+            </div>
+            <div class="title_summary">
+              <p>Số mũi đã tiêm toàn quốc</p>
+              <div>
+                <b class="amount">{{
+                  Number(dataStats.injected_total_time).toLocaleString()
+                }}</b>
+                <span class="unit">(mũi)</span>
+              </div>
+            </div>
+          </el-card>
         </div>
-      </el-card>
-    </el-col>
-    <el-col :span="12" class="chart">
-      <el-card
-        class="box-card char-box"
-        shadow="hover"
-        body-style="{background: 'red'}"
-      >
-        <div class="chart-wrap">
-          <div id="chart">
-            <apexchart
-              type="area"
-              height="350"
-              :options="dataInjectByDate.chartOptions"
-              :series="dataInjectByDate.series"
-            ></apexchart>
-          </div>
+      </el-col>
+      <el-col :span="6"
+        ><div class="grid-content bg-purple">
+          <el-card
+            class="box-card box_card"
+            shadow="hover"
+            body-style="{background: 'red'}"
+          >
+            <div class="icon">
+              <Icon icon="carbon:manage-protection" />
+            </div>
+            <div class="title_summary">
+              <p>Số người chỉ tiêm được một mũi</p>
+              <div>
+                <b class="amount">{{
+                  Number(dataStats.injected_first_time).toLocaleString()
+                }}</b>
+                <span class="unit">(mũi)</span>
+              </div>
+            </div>
+          </el-card>
         </div>
-      </el-card>
-    </el-col>
-  </el-row>
+      </el-col>
+      <el-col :span="6"
+        ><div class="grid-content bg-purple">
+          <el-card
+            class="box-card box_card"
+            shadow="hover"
+            body-style="{background: 'red'}"
+          >
+            <div class="icon">
+              <Icon icon="carbon:manage-protection" />
+            </div>
+            <div class="title_summary">
+              <p>Số người đã được tiêm đủ hai mũi</p>
+              <div>
+                <b class="amount">{{
+                  Number(dataStats.injected_second_time).toLocaleString()
+                }}</b>
+                <span class="unit">(mũi)</span>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+      <el-col :span="6"
+        ><div class="grid-content bg-purple">
+          <el-card
+            class="box-card box_card"
+            shadow="hover"
+            body-style="{background: 'red'}"
+          >
+            <div class="icon">
+              <Icon icon="carbon:manage-protection" />
+            </div>
+            <div class="title_summary">
+              <p>Số dân toàn quốc năm 2020</p>
+              <div>
+                <b class="amount">{{
+                  Number(vietNamPopuplation).toLocaleString()
+                }}</b>
+                <span class="unit">(người)</span>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12" class="chart">
+        <el-card
+          class="box-card char-box"
+          shadow="hover"
+          body-style="{background: 'red'}"
+        >
+          <div class="chart-wrap">
+            <p>Tỷ lệ đã tiêm ít nhất 1 mũi trên dân số</p>
+            <div id="chart">
+              <apexchart
+                type="donut"
+                width="550"
+                :options="chartOptions"
+                :series="series"
+              ></apexchart>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12" class="chart">
+        <el-card
+          class="box-card char-box"
+          shadow="hover"
+          body-style="{background: 'red'}"
+        >
+          <div class="chart-wrap">
+            <div id="chart">
+              <apexchart
+                type="area"
+                height="350"
+                :options="dataInjectByDate.chartOptions"
+                :series="dataInjectByDate.series"
+              ></apexchart>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <style lang="scss" scoped>
