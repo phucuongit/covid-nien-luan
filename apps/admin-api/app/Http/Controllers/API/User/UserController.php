@@ -32,7 +32,9 @@ class UserController extends BaseController
         try{
             $inputs = $request->all();
             $userQuery = User::filter($inputs);
-            $users = new UserCollection($userQuery->paginate(20));
+            $users = new UserCollection(
+                $userQuery->paginate(20)->appends(request()->query())
+            );
             return $this->sendResponse($users->response()->getData(true));
         }
         catch (Exception $e) {
