@@ -274,7 +274,7 @@ export default defineComponent({
       @current-change="handleChangePage"
     >
     </el-pagination>
-    <el-backtop style="color: #11385e" />
+    <el-backtop style="background: #11385e; color: #fff" bottom="70" />
   </div>
 
   <DetailUser :isVisible="isVisibleDetailUser" :selectUser="multipleSelection">

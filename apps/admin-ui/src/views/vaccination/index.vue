@@ -207,7 +207,7 @@ export default defineComponent({
       :total="totalPage * 10"
     >
     </el-pagination>
-    <el-backtop style="color: #11385e" />
+    <el-backtop style="background: #11385e; color: #fff" bottom="70" />
   </div>
 
   <addUpdateVaccination

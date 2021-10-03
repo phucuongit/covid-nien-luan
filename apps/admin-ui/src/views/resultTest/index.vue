@@ -222,13 +222,13 @@ export default defineComponent({
 
     <el-table-column label="Ngày sinh">
       <template #default="scope">
-        {{ formatDate(scope.row.user.birthday) }}
+        {{ formatDate(scope.row?.user?.birthday) }}
       </template>
     </el-table-column>
 
     <el-table-column label="Giới tính" width="80">
       <template #default="scope">
-        {{ scope.row.user.gender ? "Nam" : "Nữ" }}
+        {{ scope.row?.user?.gender ? "Nam" : "Nữ" }}
       </template>
     </el-table-column>
 
@@ -249,7 +249,7 @@ export default defineComponent({
     :total="totalPage * 10"
   >
   </el-pagination>
-  <el-backtop style="color: #11385e" />
+  <el-backtop style="background: #11385e; color: #fff" bottom="70" />
 
   <AddUpdateResultTest
     :isVisible="isVisibleAddUpdate"

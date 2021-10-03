@@ -137,3 +137,9 @@ a { text-decoration: none; }
   background: #f5f7fa;
   font-size: 20px;
 }
+
+/* Trang chủ */
+.container {
+  width: 90%;
+  margin: 0 auto;
+}
