@@ -28,6 +28,11 @@ pipeline {
                         sh 'npm run build'
                     }
                 }
+                
+            }
+        }
+        stage("Install dependency laravel") {
+            steps {
                 dir(workspace + '/apps/admin-api'){
                     script {
                         sh 'composer install'

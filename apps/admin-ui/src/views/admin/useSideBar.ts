@@ -12,7 +12,7 @@ export default function useConfigSideBar() {
   const sidebar = reactive<SideBarType[]>([
     {
       key: "1",
-      link: "ResultTest",
+      link: "Dashboard",
       icon: "carbon:dashboard",
       label: "Thống kê",
       children: []

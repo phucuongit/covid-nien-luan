@@ -18,7 +18,7 @@ function useLogin() {
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.data.token)
-        router.push({ name: "Admin" })
+        router.push({ name: "Dashboard" })
       } else {
         ElMessage.error({
           message: "Tên đăng nhập hoặc mật khẩu sai",
