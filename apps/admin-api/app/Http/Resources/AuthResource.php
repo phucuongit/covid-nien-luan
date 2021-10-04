@@ -9,7 +9,7 @@ use App\Http\Resources\Province as ProvinceResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\ImageResource;
 
-class LoginResource extends JsonResource
+class AuthResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -40,10 +40,7 @@ class LoginResource extends JsonResource
             'phone' => $this->phone,
             'role' => 
                 $this->role()->first('name'),
-            'images' => 
-                ImageResource::collection($this->images),
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
             'token' => $this->token
         ];
     }

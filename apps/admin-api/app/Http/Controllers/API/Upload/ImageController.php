@@ -31,38 +31,43 @@ class ImageController extends BaseController
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            "images" => "required|array|max:10",
-            "images.*" => "image|mimes:jpeg,jpg,png,gif|max:4096",
-            "imageable_id" => "required|numeric|min:0",
-            "imageable_type" => [
-                'required',
-                'string',
-                Rule::in(['user', 'result_test', 'vaccination']),
-            ]
-        ]);
-        if($validator->fails())
-            return $this->sendError('Validation Error.', $validator->errors(), 404);       
-        $imgResponse = [];
-        foreach($request->file('images') as $image)
-        {
-            if ($image->isValid()) {
-                $name = $image->hashName();
-                $path = 
-                    Storage::disk('public')->putFile('images', $image);
-                $url = Storage::url($path);
-                //Insert to DB
-                $image = [
-                    'name' => $name,
-                    'url' => $url,
-                    'imageable_id' => $request->input('imageable_id'),
-                    'imageable_type' => $request->input('imageable_type'),
-                    'type' => $request->input('type')
-                ];
-                $imgResponse[] = new ImageResource(Image::create($image));
-            } 
+        try{
+            $validator = Validator::make($request->all(), [
+                "images" => "required|array|max:10",
+                "images.*" => "image|mimes:jpeg,jpg,png,gif|max:4096",
+                "imageable_id" => "required|numeric|min:0",
+                "imageable_type" => [
+                    'required',
+                    'string',
+                    Rule::in(['user', 'result_test', 'vaccination']),
+                ]
+            ]);
+            if($validator->fails())
+                return $this->sendError('Validation Error.', $validator->errors(), 404);       
+            $imgResponse = [];
+            foreach($request->file('images') as $image)
+            {
+                if ($image->isValid()) {
+                    $name = $image->hashName();
+                    $path = 
+                        Storage::disk('public')->putFile('images', $image);
+                    $url = Storage::url($path);
+                    //Insert to DB
+                    $image = [
+                        'name' => $name,
+                        'url' => $url,
+                        'imageable_id' => $request->input('imageable_id'),
+                        'imageable_type' => $request->input('imageable_type'),
+                        'type' => $request->input('type')
+                    ];
+                    $imgResponse[] = new ImageResource(Image::create($image));
+                } 
+            }
+            return $this->sendResponse($imgResponse, 'Successfully. Your domain/url to access image');
         }
-        return $this->sendResponse($imgResponse, 'Successfully. Your domain/url to access image');
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
+        }
     }
 
     /**
