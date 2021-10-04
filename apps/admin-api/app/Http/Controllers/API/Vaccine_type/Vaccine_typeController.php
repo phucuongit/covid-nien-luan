@@ -26,7 +26,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($vaccine_types);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -45,7 +45,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -62,7 +62,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -82,7 +82,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -100,7 +100,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 }

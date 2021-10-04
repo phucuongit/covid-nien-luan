@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\API\Auth;
+
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\LoginResource;
+use App\Models\User;
+use Validator;
 
 class LoginController extends BaseController
 {
@@ -26,12 +27,5 @@ class LoginController extends BaseController
         else{
             return $this->sendError('Unauthorised.', 401);
         }
-    }
-
-    public function test(){
-        return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
-        ]);
     }
 }
