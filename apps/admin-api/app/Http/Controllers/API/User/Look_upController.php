@@ -52,12 +52,12 @@ class Look_upController extends BaseController
     public function show($keyword)
     {
         try{
-            $userFullResult = 
+            $user = 
                 User::where('identity_card', '=', $keyword)
                 ->orWhere('social_insurance', '=', $keyword)
                 ->orWhere('phone', '=', $keyword)
                 ->first();
-            return $this->sendResponse(new UserLook_upResource($userFullResult));
+            return $this->sendResponse(new UserLook_upResource($user));
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong');

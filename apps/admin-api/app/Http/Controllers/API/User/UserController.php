@@ -13,12 +13,12 @@ use App\Http\Controllers\API\BaseController;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
 use App\Http\Requests\UserRequest;
-use App\Http\Requests\UserUpdateRequest;
 use App\Models\Vaccination;
 use App\Models\Test_result;
 use App\Models\User;
 use App\Models\Image;
 use App\Rules\Is_identity;
+use App\Rules\Is_vnPhone;
 
 use Exception;
 
@@ -91,17 +91,45 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserUpdateRequest $request, User $user)
+    public function update(request $request, User $user)
     {
         try{
-            // Validate
-            $validated = 
-                $request->validated();
-            // Except username
-            if (isset($validated['username'])) unset($validated['username']);
+            $message = [
+                'unique' => 'Trường này đã tồn tại',
+                'date' => 'Định dạng ngày không đúng',
+                'numeric' => 'Trường này phải là kiểu số',
+                'same' => 'Mật khẩu nhập lại chưa đúng',
+                'social_insurance.size' => 'Mã bảo hiểm phải là 10 ký tự',
+                'username.min' => 'Tên đăng nhập ít nhất 6 ký tự',
+                'password.min' => 'Mật khẩu ít nhất 6 ký tự',
+                'exists' => 'Trường này không tồn tại'
+            ];
+    
+            $validator = Validator::make($request->except(['username']), [
+                'identity_card' => [new Is_identity, 'unique:users'],
+                'social_insurance' => ['string', 'size:10', 'unique:users'],
+                'username' => 'string|min:6|unique:users',
+                'password' => 'min:6',
+                'fullname' => 'string',
+                'birthday' => 'date',
+                'gender' => Rule::in([0,1]),
+                'address' => 'string',
+                'phone' => [new Is_vnPhone, 'unique:users'],
+                'role_id' => 'exists:roles,id',
+                'village_id' => 'exists:villages,id',
+            ], $message);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            // Retrieve the validated input...
+            $validated = $validator->validated();
+    
             // Hash password
             if (isset($validated['password']))
                 $validated['password'] = bcrypt($validated['password']);
+                
             $result = 
                 $user->update($validated);
             return $this->sendResponse($result, "Successfully");
