@@ -60,12 +60,12 @@ class Result_testTableSeeder extends Seeder
                 'status' => $status,
                 'user_id' => $userId,
                 'create_by' => $userCreate_by,
-                'created_at' => $created_at
+                'updated_at' => $updated_at
             ];
         }
 
         // Devide an array into arrays
-        $numElements = $count > 100 ? floor($count/100) : 1;
+        $numElements = $count > 500 ? floor($count/500) : 1;
         $chunks = array_chunk($result_testData, $numElements);
 
         // Insert to DB

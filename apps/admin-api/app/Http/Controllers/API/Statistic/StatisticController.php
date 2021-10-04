@@ -36,8 +36,7 @@ class StatisticController extends BaseController
             $last7Days = [];
             for($i = $begin; $i <= $end; $i->addDay(1)){
                 $dayQuantity= 
-                    Vaccination::whereDate('created_at', '=', $i)
-                    ->count();
+                    Vaccination::whereDate('created_at', '=', $i)->count();
                 $dateString = $i->isoFormat('DD-MM-YYYY');
                 $last7Days[] = 
                     (object) ['date' => $dateString,

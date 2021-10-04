@@ -26,9 +26,9 @@ class DatabaseSeeder extends Seeder
             Vaccine_typeTableSeeder::class,
         ]);
         // Order is important
-        $userQuantity = 100000;
+        $userQuantity = 250000;
         $this->call(UserTableSeeder::class, false, ['count' => $userQuantity]);
-        $this->call(VaccinationTableSeeder::class, false, ['count' => 150000, 'maxUserId' => $userQuantity]);
-        $this->call(Result_testTableSeeder::class, false, ['count' => 150000, 'maxUserId' => $userQuantity]);
+        $this->call(VaccinationTableSeeder::class, false, ['count' => 312331, 'maxUserId' => $userQuantity]);
+        $this->call(Result_testTableSeeder::class, false, ['count' => 312000, 'maxUserId' => $userQuantity]);
     }
 }
