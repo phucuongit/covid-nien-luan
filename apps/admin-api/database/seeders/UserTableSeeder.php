@@ -60,11 +60,13 @@ class UserTableSeeder extends Seeder
 
         // User seeding
         for ($i = 0; $i < $count; $i++) {
+            // Random number unique
+            $numUnique = $this->faker->unique()->randomNumber(9, true);
 
             // Create fake id card 
             $identity_card = 
                 '0' // 0xx
-                .$this->faker->unique()->randomNumber(9, true); // Random unique number
+                .$numUnique; // Random unique number
 
             $fullname =
                 rand(0,1) == 1 ? 
@@ -74,15 +76,8 @@ class UserTableSeeder extends Seeder
             $birthday = 
                 $this->faker->dateTime('-5 years'); // -5 year from now
 
-            // username = 'user' + last 6 numbers indetity card
-            // $username =
-            //     'user'.substr($identity_card, -6);
-
             $gender = 
                 rand(0,1);
-
-            // $password = 
-            //     Hash::make('123123');
 
             $village_id = 
                 rand(1, 10603);
@@ -102,7 +97,7 @@ class UserTableSeeder extends Seeder
             $social_insurance =
                 chr(rand(65,90))
                 .chr(rand(65,90))
-                .$this->faker->randomNumber(9, true);
+                .$this->faker->unique()->randomNumber(9, true);
 
             // Custom created_at
             $created_at = Carbon::now()->subDays(rand(60, 120));
@@ -126,7 +121,7 @@ class UserTableSeeder extends Seeder
         }
 
         // Devide an array into arrays
-        $numElements = $count > 100 ? floor($count/100) : 1;
+        $numElements = $count > 500 ? floor($count/500) : 1;
         $chunks = array_chunk($userData, $numElements);
 
         // Insert to DB
