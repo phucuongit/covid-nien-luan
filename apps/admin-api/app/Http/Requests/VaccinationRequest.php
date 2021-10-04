@@ -24,15 +24,9 @@ class VaccinationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric|min:0', 
-            'create_by' => 'required|numeric|min:0', 
-            'vaccine_type_id' => 'required|numeric|min:0',
+            'user_id' => 'numeric|min:0', 
+            'create_by' => 'numeric|min:0', 
+            'vaccine_type_id' => 'numeric|min:0',
         ];
     }
-    // public function messages()
-    // {
-    //     return [
-    //         'success.attribute' => 'false',
-    //     ];
-    // }
 }

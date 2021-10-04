@@ -31,7 +31,7 @@ class VaccinationController extends BaseController
             return $this->sendResponse($vaccinations->response()->getData(true));
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -53,7 +53,7 @@ class VaccinationController extends BaseController
             $vaccinationResult = new VaccinationResource(Vaccination::create($validatedData));
             return $this->sendResponse($vaccinationResult);
         } catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -69,7 +69,7 @@ class VaccinationController extends BaseController
             $vaccinationResult = new VaccinationResource($vaccination);
             return $this->sendResponse($vaccinationResult);
         } catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -88,7 +88,7 @@ class VaccinationController extends BaseController
             return $this->sendResponse($vaccinationResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -114,7 +114,7 @@ class VaccinationController extends BaseController
             return $this->sendResponse($vaccinationResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 }

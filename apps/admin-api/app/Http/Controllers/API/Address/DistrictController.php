@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API\Address;
 
-use App\Http\Controllers\Controller;
-use App\Models\District;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\District as DistrictResources;
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\District;
 use Exception;
 
 class DistrictController extends BaseController
@@ -25,7 +25,7 @@ class DistrictController extends BaseController
             return $this->sendResponse($districts);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 

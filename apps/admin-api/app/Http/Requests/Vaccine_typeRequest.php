@@ -24,8 +24,8 @@ class Vaccine_typeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'country' => 'required|string',
+            'name' => 'string',
+            'country' => 'string',
         ];
     }
 }

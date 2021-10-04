@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\API\Result_test;
 
-use App\Http\Controllers\Controller;
-use App\Models\Result_test;
-use Illuminate\Http\Request;
-use App\Http\Requests\Result_testRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Result_testRequest;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Resources\Result_testResource;
 use App\Http\Resources\Result_testCollection;
+use App\Models\Result_test;
 use Exception;
 
 class Result_testController extends BaseController
@@ -32,7 +32,7 @@ class Result_testController extends BaseController
                                     ->response()->getData(true));
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -50,7 +50,7 @@ class Result_testController extends BaseController
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -67,7 +67,7 @@ class Result_testController extends BaseController
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -86,7 +86,7 @@ class Result_testController extends BaseController
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -99,19 +99,20 @@ class Result_testController extends BaseController
     public function destroy(Result_test $result_test)
     {
         try{
-             // Delete result_test image's file
-             $imageNames = $result_test->images()->get('name');
-             foreach ($imageNames as $index => $row)
-             {
-                 Storage::disk('public')->delete('images/'.$row['name']);
-             }
-             // Delete images in DB
-             $imageResult = $result_test->images()->delete();
+            // Delete result_test image's file
+            $imageNames = $result_test->images()->get('name');
+            foreach ($imageNames as $index => $row)
+            {
+                Storage::disk('public')->delete('images/'.$row['name']);
+            }
+            // Delete images in DB
+            $imageResult = $result_test->images()->delete();
+            
             $result_testResult = $result_test->delete() && $imageResult;
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 }

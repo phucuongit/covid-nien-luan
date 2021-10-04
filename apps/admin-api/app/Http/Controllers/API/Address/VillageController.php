@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API\Address;
 
-use App\Http\Controllers\Controller;
-use App\Models\Village;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\Village as VillageResources;
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\Village;
 use Exception;
 
 class VillageController extends BaseController
@@ -25,7 +25,7 @@ class VillageController extends BaseController
             return $this->sendResponse($villages);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 

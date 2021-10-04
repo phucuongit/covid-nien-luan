@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\API\AdminProfile;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\UserResource as UserResource;
 use App\Http\Requests\UserRequest;
-use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 use App\Rules\Is_identity;
-use Illuminate\Validation\Rule;
 
 class AdminProfileController extends BaseController
 {
@@ -22,8 +22,13 @@ class AdminProfileController extends BaseController
      */
     public function index()
     {
-        $user = new UserResource(Auth::user());
-        return $this->sendResponse($user);
+        try{
+            $user = new UserResource(Auth::user());
+            return $this->sendResponse($user);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
+        }
     }
 
     /**

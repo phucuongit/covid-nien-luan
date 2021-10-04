@@ -60,7 +60,7 @@ class Look_upController extends BaseController
             return $this->sendResponse(new UserLook_upResource($userFullResult));
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong');
         }
     }
 

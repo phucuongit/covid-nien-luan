@@ -109,7 +109,7 @@ class ImageController extends BaseController
             return $this->sendResponse([], "Successfully");
          }
          catch (Exception $e) {
-             return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+             return $this->sendError('Something went wrong', [$e->getMessage()]);
          }
     }
 }

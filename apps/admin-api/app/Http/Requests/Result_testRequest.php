@@ -26,11 +26,11 @@ class Result_testRequest extends FormRequest
     {
         return [
             'status' => 
-                ['required', Rule::in(['positive', 'negative'])],
+                [Rule::in(['positive', 'negative'])],
             'user_id' => 
-                'required|numeric|min:0',
+                'numeric|min:0',
             'create_by' => 
-                'required|numeric|min:0',
+                'numeric|min:0',
         ];
     }
 }

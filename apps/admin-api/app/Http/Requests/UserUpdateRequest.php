@@ -7,7 +7,8 @@ use Illuminate\Validation\Rule;
 use App\Rules\Is_identity;
 use App\Rules\Is_vnPhone;
 
-class UserRequest extends FormRequest
+
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,17 +28,19 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'identity_card' => ['required', new Is_identity, 'unique:users'],
-            'social_insurance' => ['required', 'string', 'unique:users'],
-            'username' => 'min:6|string|unique:users',
+            'identity_card' => 
+                [new Is_identity, 'unique:users'],
+            'social_insurance' => 
+                ['string', 'unique:users'],
             'password' => 'min:6',
-            'fullname' => 'required|string',
-            'birthday' => 'required|date',
-            'gender' => ['required', Rule::in([0,1])],
-            'address' => 'required|string',
-            'phone' => ['required', new Is_vnPhone, 'unique:users'],
-            'role_id' => 'required|numeric|min:0',
-            'village_id' => 'required|numeric|min:0',
+            'fullname' => 'string',
+            'birthday' => 'date',
+            'gender' => [Rule::in([0,1])],
+            'address' => 'string',
+            'phone' => 
+                [new Is_vnPhone, 'unique:users'],
+            'role_id' => 'numeric|min:0',
+            'village_id' => 'numeric|min:0',
         ];
     }
     /**
