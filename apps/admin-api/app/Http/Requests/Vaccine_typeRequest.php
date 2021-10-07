@@ -24,8 +24,8 @@ class Vaccine_typeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string',
-            'country' => 'string',
+            'name' => 'required|string',
+            'country' => 'required|string',
         ];
     }
     /**
@@ -36,7 +36,8 @@ class Vaccine_typeRequest extends FormRequest
     public function messages()
     {
         return [
-            'string' => 'Trường này phải là chuỗi'
+            'string' => 'Trường này phải là chuỗi',
+            'required' => 'Yêu cầu nhập trường này'
         ];
     }
 }

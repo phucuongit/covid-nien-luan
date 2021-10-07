@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API\Result_test;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Result_testRequest;
 use App\Http\Controllers\API\BaseController;
@@ -78,12 +80,31 @@ class Result_testController extends BaseController
      * @param  \App\Models\Result_test  $result_test
      * @return \Illuminate\Http\Response
      */
-    public function update(Result_testRequest $request, Result_test $result_test)
+    public function update(Request $request, Result_test $result_test)
     {
         try{
-            $validatedData = $request->validated();
-            $result_testResult = $result_test->update($validatedData);
-            return $this->sendResponse($result_testResult);
+            $message = [
+                'exists' => 'Trường này đã tồn tại',
+                'in' => 'Trường này không hợp lệ',
+            ];
+    
+            $validator = Validator::make(
+                $request->all(), [
+                'user_id' => 'exists:users,id',
+                'create_by' => 'exists:users,id',
+                'status' => Rule::in(['positive', 'negative']),
+            ], $message);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            // Retrieve the validated input...
+            $validated = $validator->validated();
+            
+            $result_testResult = $result_test->update($validated);
+
+            return $this->sendResponse($result_testResult, "Successfully");
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', [$e->getMessage()]);

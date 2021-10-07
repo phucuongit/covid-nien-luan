@@ -59,14 +59,14 @@ class UserTableSeeder extends Seeder
         // User::factory()->count($count)->create();
 
         // User seeding
+        $password = 
+            Hash::make('123123');
+
         for ($i = 0; $i < $count; $i++) {
-            // Random number unique
-            $numUnique = $this->faker->unique()->randomNumber(9, true);
 
             // Create fake id card 
             $identity_card = 
-                '0' // 0xx
-                .$numUnique; // Random unique number
+                $this->faker->unique()->randomNumber(9, true);
 
             $fullname =
                 rand(0,1) == 1 ? 
@@ -78,6 +78,10 @@ class UserTableSeeder extends Seeder
 
             $gender = 
                 rand(0,1);
+
+            $username = 
+                'user'
+                .$identity_card;
 
             $village_id = 
                 rand(1, 10603);
@@ -97,7 +101,8 @@ class UserTableSeeder extends Seeder
             $social_insurance =
                 chr(rand(65,90))
                 .chr(rand(65,90))
-                .$this->faker->unique()->randomNumber(9, true);
+                .$identity_card
+                .$this->faker->randomNumber(4, true);
 
             // Custom created_at
             $created_at = Carbon::now()->subDays(rand(60, 120));
@@ -106,8 +111,8 @@ class UserTableSeeder extends Seeder
             $userData[] = [
                 'identity_card' => $identity_card,
                 'social_insurance' => $social_insurance,
-                // 'username' => $username,
-                // 'password' => $password,
+                'username' => $username,
+                'password' => $password,
                 'fullname' => $fullname,
                 'birthday' => $birthday,
                 'gender' => $gender,

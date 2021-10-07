@@ -59,7 +59,7 @@ class Result_testTableSeeder extends Seeder
             $result_testData[] = [
                 'status' => $status,
                 'user_id' => $userId,
-                'create_by' => $userCreate_by,
+                'created_by' => $userCreate_by,
                 'updated_at' => $updated_at
             ];
         }

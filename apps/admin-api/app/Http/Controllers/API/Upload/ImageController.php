@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API\Upload;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Resources\ImageResource as ImageResource;
 use App\Http\Controllers\API\BaseController;
 use App\Models\Image;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\ImageResource as ImageResource;
-use Illuminate\Validation\Rule;
 use Validator;
 use Exception;
 
