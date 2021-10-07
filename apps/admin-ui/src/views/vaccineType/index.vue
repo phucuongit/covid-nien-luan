@@ -15,7 +15,8 @@ export default defineComponent({
       getListVaccineType,
       dataVaccineType,
       isLoading,
-      getVaccineTypeSearch
+      getVaccineTypeSearch,
+      isLoadingSearchVaccineType
     } = useVaccineType()
     getListVaccineType()
 
@@ -70,7 +71,8 @@ export default defineComponent({
       mode,
       textSearch,
       handleSearch,
-      handleCheckSearch
+      handleCheckSearch,
+      isLoadingSearchVaccineType
     }
   },
   methods: {
@@ -83,21 +85,33 @@ export default defineComponent({
 
 <template>
   <div id="vaccine-list">
-    <h3 class="mr-0">Danh sách các loại vắc-xin</h3>
-    <el-row class="row-bg mb-10">
-      <el-col :span="12">
+    <h3 class="mr-0 mt-0">Danh sách các loại vắc-xin</h3>
+    <el-row class="row-bg mb-10" :gutter="30">
+      <el-col :md="9" :sm="12" :xs="24" class="pt-5">
         <div class="grid-content">
           <el-input
             placeholder="Tìm kiếm theo tên vắc-xin..."
             prefix-icon="el-icon-search"
+            size="small"
             v-model="textSearch"
-            v-on:keyup.enter="handleSearch"
             v-on:keyup="handleCheckSearch"
           >
+            <template #append>
+              <el-button
+                size="small"
+                type="primary"
+                icon="el-icon-search"
+                class="btn-search"
+                @click="handleSearch"
+                :loading="isLoadingSearchVaccineType"
+                :disabled="isLoadingSearchVaccineType"
+              >
+              </el-button>
+            </template>
           </el-input>
         </div>
       </el-col>
-      <el-col :span="12">
+      <el-col :md="15" :sm="12" :xs="24">
         <div class="grid-content text-right pt-10">
           <el-button
             size="small"

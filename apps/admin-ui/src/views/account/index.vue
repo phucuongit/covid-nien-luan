@@ -74,8 +74,6 @@ export default defineComponent({
             avatar.value = image
           }
           imageListShow.value.push(BASE_URL + image.url)
-        } else {
-          avatar.value = ""
         }
       })
 
@@ -315,7 +313,7 @@ export default defineComponent({
 
             <el-col :md="12" :sm="24">
               <el-form-item label="CMND:">
-                <el-input v-model="identity_card"></el-input>
+                <el-input v-model="identity_card" disabled></el-input>
                 <div class="text-red">{{ errors.identity_card }}</div>
               </el-form-item>
             </el-col>
@@ -362,7 +360,7 @@ export default defineComponent({
 
             <el-col :md="12" :sm="24">
               <el-form-item label="Số bảo hiểm:">
-                <el-input v-model="social_insurance"></el-input>
+                <el-input v-model="social_insurance" disabled></el-input>
                 <div class="text-red">{{ errors.social_insurance }}</div>
               </el-form-item>
             </el-col>

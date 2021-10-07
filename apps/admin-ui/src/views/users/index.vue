@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
 import { defineComponent, provide, ref } from "vue"
-import useUsers from "./useUsers.ts"
+import useUsers from "./useUsers"
+import { userType } from "./useUsers"
 import AddUser from "./addUser/index.vue"
 import AddAdmin from "./addAdmin/index.vue"
 import DeleteUser from "./deleteUser/index.vue"
@@ -20,16 +21,17 @@ export default defineComponent({
       loadingListUser,
       getListUsers,
       getListUsersSearch,
-      totalPage,
-      loadingSearch
+      loadingSearch,
+      statusSearchUser
     } = useUsers()
-    const multipleSelection = ref([])
-    const handleSelectionChange = (value) => {
+    const multipleSelection = ref<userType[]>([])
+    const handleSelectionChange = (value: any) => {
       multipleSelection.value = value
     }
     const textSearch = ref("")
     const handleSearch = () => {
-      getListUsersSearch(textSearch.value)
+      currentPage.value = 1
+      getListUsersSearch(textSearch.value, currentPage.value)
     }
 
     const isVisibleAddUser = ref(false)
@@ -40,12 +42,16 @@ export default defineComponent({
 
     const currentPage = ref(1)
     getListUsers(currentPage.value)
-    const handleChangePage = (page) => {
+    const handleChangePage = (page: number) => {
       currentPage.value = page
-      getListUsers(currentPage.value)
+      if (statusSearchUser.value) {
+        getListUsersSearch(textSearch.value, currentPage.value)
+      } else {
+        getListUsers(currentPage.value)
+      }
     }
 
-    const setMode = (value) => {
+    const setMode = (value: string) => {
       mode.value = value
     }
 
@@ -73,7 +79,7 @@ export default defineComponent({
 
     const changeUpdate = () => {
       setMode("update")
-      if (multipleSelection.value[0].role.name == "admin") {
+      if (multipleSelection.value[0]?.role?.name == "admin") {
         changeAddAdmin()
       } else {
         changeAddUser()
@@ -86,6 +92,7 @@ export default defineComponent({
 
     const checkEmptyTextSearch = () => {
       if (textSearch.value == "") {
+        currentPage.value = 1
         getListUsers(currentPage.value)
       }
     }
@@ -110,7 +117,6 @@ export default defineComponent({
       isVisibleAddAdmin,
       isVisibleAddUser,
       isVisibleDelete,
-      totalPage,
       currentPage,
       handleChangeAddUser,
       handleChangeAddAdmin,
@@ -123,7 +129,7 @@ export default defineComponent({
     }
   },
   methods: {
-    formatDate(date) {
+    formatDate(date: Date) {
       return moment(date).format("DD/MM/YYYY")
     }
   }
@@ -213,9 +219,8 @@ export default defineComponent({
         </div>
       </el-col>
     </el-row>
-
     <el-table
-      :data="data"
+      :data="data?.users"
       ref="multipleTable"
       style="width: 100%"
       stripe
@@ -266,11 +271,15 @@ export default defineComponent({
       background
       class="text-center mt-20"
       layout="prev, pager, next"
-      :total="totalPage * 10"
+      :total="data?.meta?.total"
+      :pager-count="4"
+      small
+      :page-size="data?.meta?.per_page"
       :current-page="currentPage"
       @current-change="handleChangePage"
     >
     </el-pagination>
+    <el-backtop style="background: #11385e; color: #fff" :bottom="70" />
   </div>
 
   <DetailUser :isVisible="isVisibleDetailUser" :selectUser="multipleSelection">

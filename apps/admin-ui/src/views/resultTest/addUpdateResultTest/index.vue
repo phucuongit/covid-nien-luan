@@ -5,6 +5,8 @@ import * as yup from "yup"
 import moment from "moment"
 import useAddUpdateResultTest from "./useAddUpdateResultTest.ts"
 import { useStore } from "vuex"
+import useUploadImage from "../../uploadImages/useUploadImage.ts"
+import useBaseUrl from "@/services/baseUrl.ts"
 
 export default defineComponent({
   name: "AddUpdateResultTest",
@@ -31,7 +33,8 @@ export default defineComponent({
       searchUser,
       isLoadingAddUpdateResultTest,
       addResultTest,
-      updateResultTest
+      updateResultTest,
+      newResultTestId
     } = useAddUpdateResultTest()
 
     const addUpdateResultTestSchema = yup.object({
@@ -41,6 +44,7 @@ export default defineComponent({
     })
 
     const store = useStore()
+    const { BASE_URL } = useBaseUrl()
     const { handleSubmit, errors, resetForm } = useForm({
       validationSchema: addUpdateResultTestSchema
     })
@@ -53,56 +57,154 @@ export default defineComponent({
     const setMode = inject("setMode")
     const currentPage = inject("currentPage")
     const getResultTestList = inject("getResultTestList")
+    const { uploadImage, updateImage } = useUploadImage()
 
     const visible = ref()
     const mode = ref("")
     const textSearchUser = ref("")
     const idResultTest = ref()
     const fullname = ref()
+    const resultImageUploadBefore = ref()
+    const resultImageUploadAfter = ref()
+    const resultImagePreview = ref([2])
+    const resultImageUploadError = ref()
+    const resultImageBeforeId = ref(0)
+    const resultImageAfterId = ref(0)
+    const resultTest = ref()
+
     watch(props, () => {
       visible.value = props.isVisible
       mode.value = props.isMode
       if (props.multipleSelection[0] && mode.value == "update") {
-        idResultTest.value = props.multipleSelection[0].id
+        resultTest.value = props.multipleSelection[0]
+        idResultTest.value = resultTest.value?.id
 
-        user_id.value = props.multipleSelection[0].user.id
-        status.value = props.multipleSelection[0].status
-        create_by.value = props.multipleSelection[0].user_create_by.id
-        fullname.value = props.multipleSelection[0].user.fullname
+        user_id.value = resultTest.value?.user.id
+        status.value = resultTest.value?.status
+        create_by.value = resultTest.value?.user_create_by.id
+        fullname.value = resultTest.value?.user.fullname
+
+        resultImagePreview.value = [2]
+        resultTest.value?.images.map((image) => {
+          if (image.type == "result_test_before") {
+            resultImageBeforeId.value = image.id
+            resultImagePreview.value.splice(0, 1, BASE_URL + image.url)
+          }
+          if (image.type == "result_test_after") {
+            resultImagePreview.value.splice(1, 1, BASE_URL + image.url)
+            resultImageAfterId.value = image.id
+          }
+        })
       } else {
         fullname.value = ""
       }
     })
-
     const onSubmitAddUpdate = handleSubmit(async (values) => {
       if (values) {
         if (mode.value == "add") {
-          await addResultTest(values)
+          if (resultImageUploadBefore.value && resultImageUploadAfter.value) {
+            await addResultTest(values)
+            await handleUploadResultImage("add")
+            cancelForm()
+            getResultTestList(currentPage.value)
+          } else {
+            resultImageUploadError.value = "Ảnh kết quả là bắt buộc!"
+          }
         } else {
+          await handleUploadResultImage("")
           await updateResultTest(idResultTest.value, values)
+          cancelForm()
+          getResultTestList(currentPage.value)
         }
         getResultTestList(currentPage.value)
         cancelForm()
       }
     })
-
     const cancelForm = () => {
       closeAddUpdateModal()
       setMode("")
       resetForm()
+      resultImageUploadBefore.value = ""
+      resultImageUploadAfter.value = ""
+      resultImagePreview.value = [2]
+      resultImageUploadError.value = ""
     }
-
     const querySearch = async (queryString, cb) => {
       if (queryString != "") {
         await searchUser(queryString)
         cb(dataSearchUser.value)
       }
     }
-
     const handleSelect = (item) => {
       fullname.value = item.fullname
       user_id.value = item.id
       create_by.value = store.state.user.id
+    }
+
+    const handleChangeImageBefore = (image) => {
+      if (image) {
+        resultImageUploadBefore.value = image.target.files[0]
+        resultImagePreview.value.splice(
+          0,
+          1,
+          URL.createObjectURL(image.target.files[0])
+        )
+      }
+    }
+
+    const handleChangeImageAfter = (image) => {
+      if (image) {
+        resultImageUploadAfter.value = image.target.files[0]
+        resultImagePreview.value.splice(
+          1,
+          1,
+          URL.createObjectURL(image.target.files[0])
+        )
+      }
+    }
+
+    const handleUploadResultImage = async (act) => {
+      const formDataBefore = new FormData()
+      formDataBefore.append("images[]", resultImageUploadBefore.value)
+      formDataBefore.append("imageable_type", "result_test")
+      formDataBefore.append("type", "result_test_before")
+
+      const formDataAfter = new FormData()
+      formDataAfter.append("images[]", resultImageUploadAfter.value)
+      formDataAfter.append("imageable_type", "result_test")
+      formDataAfter.append("type", "result_test_after")
+
+      if (act == "add") {
+        if (newResultTestId?.value > 0) {
+          formDataBefore.append("imageable_id", newResultTestId?.value)
+          formDataAfter.append("imageable_id", newResultTestId?.value)
+        }
+        if (resultImageUploadBefore.value) {
+          await uploadImage(formDataBefore)
+        }
+
+        if (resultImageUploadAfter.value) {
+          await uploadImage(formDataAfter)
+        }
+      } else {
+        formDataBefore.append("imageable_id", idResultTest?.value)
+        formDataAfter.append("imageable_id", idResultTest?.value)
+        if (resultImageUploadBefore.value) {
+          if (resultImageBeforeId.value) {
+            await updateImage(resultImageBeforeId.value, formDataBefore)
+          } else {
+            await uploadImage(formDataBefore)
+          }
+        }
+
+        if (resultImageUploadAfter.value) {
+          if (resultImageAfterId.value) {
+            await updateImage(resultImageAfterId.value, formDataAfter)
+          } else {
+            await uploadImage(formDataAfter)
+          }
+        }
+      }
     }
 
     return {
@@ -119,7 +221,11 @@ export default defineComponent({
       isLoadingAddUpdateResultTest,
       querySearch,
       handleSelect,
-      fullname
+      fullname,
+      resultImagePreview,
+      handleChangeImageBefore,
+      handleChangeImageAfter,
+      resultImageUploadError
     }
   },
   methods: {
@@ -140,7 +246,7 @@ export default defineComponent({
     center
     :show-close="false"
   >
-    <el-form label-position="left" label-width="100px">
+    <el-form label-position="left" label-width="110px">
       <el-form-item label="Tên:">
         <el-autocomplete
           style="width: 100%"
@@ -148,7 +254,7 @@ export default defineComponent({
           :fetch-suggestions="querySearch"
           popper-class="my-autocomplete"
           placeholder="Tìm kiếm người dùng..."
-          debounce="1500"
+          :debounce="1500"
           @select="handleSelect"
         >
           <template #default="{ item }">
@@ -165,6 +271,64 @@ export default defineComponent({
         </el-select>
         <div class="text-red">{{ errors.status }}</div>
       </el-form-item>
+
+      <el-form-item label="Ảnh mặt trước:">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="$refs.resultTestImageBefore.click()"
+          >Chọn ảnh</el-button
+        >
+
+        <input
+          type="file"
+          ref="resultTestImageBefore"
+          style="display: none"
+          @change="handleChangeImageBefore"
+        />
+        <div class="result-test-image">
+          <el-image
+            fit="cover"
+            :src="resultImagePreview[0]"
+            :preview-src-list="resultImagePreview"
+          >
+            <template #error>
+              <div class="image-slot">
+                <i class="el-icon-picture-outline"></i>
+              </div>
+            </template>
+          </el-image>
+        </div>
+      </el-form-item>
+
+      <el-form-item label="Ảnh mặt sau:">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="$refs.resultTestImageAfter.click()"
+          >Chọn ảnh</el-button
+        >
+        <input
+          type="file"
+          ref="resultTestImageAfter"
+          style="display: none"
+          @change="handleChangeImageAfter"
+        />
+        <div class="result-test-image">
+          <el-image
+            fit="cover"
+            :src="resultImagePreview[1]"
+            :preview-src-list="resultImagePreview"
+          >
+            <template #error>
+              <div class="image-slot">
+                <i class="el-icon-picture-outline"></i>
+              </div>
+            </template>
+          </el-image>
+        </div>
+        <div class="text-red">{{ resultImageUploadError }}</div>
+      </el-form-item>
     </el-form>
 
     <template #footer>
@@ -173,6 +337,7 @@ export default defineComponent({
           type="primary"
           @click="onSubmitAddUpdate"
           :loading="isLoadingAddUpdateResultTest"
+          :disabled="isLoadingAddUpdateResultTest"
           class="btn-11385e"
         >
           {{ mode == "add" ? "Thêm" : "Cập nhật" }}
@@ -182,3 +347,11 @@ export default defineComponent({
     </template>
   </el-dialog>
 </template>
+
+<style scoped>
+.result-test-image .el-image {
+  width: 150px;
+  height: 80px;
+  border: 1px solid #ddd;
+}
+</style>

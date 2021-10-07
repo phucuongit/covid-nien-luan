@@ -10,27 +10,29 @@ export type userType = {
   gender: number
   username: string
   address: string
+  address_full: []
   phone: string
   village_id: number
-  role_id: number
+  role: {
+    name: string
+  }
   created_at: null
   updated_at: null
+  images: []
 }
 
 function useUsers() {
-  const data = ref<userType[]>([])
+  const data = ref()
   const loadingListUser = ref(false)
   const loadingSearch = ref(false)
-  const totalPage = ref(0)
+  const statusSearchUser = ref(false)
   const getListUsers = async (page: number) => {
     try {
+      statusSearchUser.value = false
       loadingListUser.value = true
       const response = await API.get("user?page=" + page)
       if (response.data.success) {
-        data.value = response.data.data.users
-        console.log("hererere")
-        console.log(response.data.data.users)
-        totalPage.value = response.data.data.meta.last_page
+        data.value = response.data.data
       }
     } catch (e) {
       console.log(e)
@@ -40,13 +42,16 @@ function useUsers() {
     }
   }
 
-  const getListUsersSearch = async (text: string) => {
+  const getListUsersSearch = async (text: string, page: number) => {
     try {
+      statusSearchUser.value = true
       loadingListUser.value = true
       loadingSearch.value = true
-      const response = await API.get("user?search=" + text)
-      if (response.data.success) {
-        data.value = response.data.data.users
+      const responseSearch = await API.get(
+        "user?search=" + text + "&page=" + page
+      )
+      if (responseSearch.data.success) {
+        data.value = responseSearch.data.data
       }
     } catch (e) {
       console.log(e)
@@ -63,8 +68,8 @@ function useUsers() {
     loadingListUser,
     getListUsers,
     getListUsersSearch,
-    totalPage,
-    loadingSearch
+    loadingSearch,
+    statusSearchUser
   }
 }
 

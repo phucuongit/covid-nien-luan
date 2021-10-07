@@ -10,11 +10,14 @@ type vaccinationType = {
 
 function useAddUpdateVaccination() {
   const isLoadingAddVaccination = ref(false)
+  const vaccinationNewId = ref(0)
+  const dataSearchUser = ref()
   const addVaccination = async (params: vaccinationType) => {
     try {
       isLoadingAddVaccination.value = true
       const response = await API.post("vaccination", params)
       if (response.data.success) {
+        vaccinationNewId.value = response.data.data.id
         ElMessage.success({
           message: "Thêm lịch sử tiêm thành công",
           type: "success"
@@ -64,10 +67,24 @@ function useAddUpdateVaccination() {
     }
   }
 
+  const searchUser = async (str: string) => {
+    try {
+      const response = await API.get("user?search=" + str)
+      if (response.data.success) {
+        dataSearchUser.value = response.data.data.users
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return {
     addVaccination,
     isLoadingAddVaccination,
-    updateVaccination
+    updateVaccination,
+    vaccinationNewId,
+    dataSearchUser,
+    searchUser
   }
 }
 

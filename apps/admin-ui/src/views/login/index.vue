@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, onMounted } from "vue"
 import useLogin from "./useLogin"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
+import router from "../../router"
 
 export default defineComponent({
   setup() {
@@ -16,8 +17,13 @@ export default defineComponent({
     })
     const onSubmit = handleSubmit((values) => {
       if (values) {
-        console.log(values)
         login(values)
+      }
+    })
+
+    onMounted(async () => {
+      if (localStorage.getItem("token")) {
+        router.push("/admin")
       }
     })
 
