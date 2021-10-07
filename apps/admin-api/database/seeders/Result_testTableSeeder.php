@@ -66,7 +66,7 @@ class Result_testTableSeeder extends Seeder
         }
 
         // Devide an array into arrays
-        $numElements = $count > 500 ? floor($count/500) : 1;
+        $numElements = floor($count/10000) > 1 ? floor($count/10000) : 1;
         $chunks = array_chunk($result_testData, $numElements);
 
         // Insert to DB

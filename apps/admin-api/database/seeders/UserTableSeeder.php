@@ -126,7 +126,7 @@ class UserTableSeeder extends Seeder
         }
 
         // Devide an array into arrays
-        $numElements = $count > 500 ? floor($count/500) : 1;
+        $numElements = floor($count/15000) > 1 ? floor($count/15000) : 1;
         $chunks = array_chunk($userData, $numElements);
 
         // Insert to DB

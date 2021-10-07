@@ -43,6 +43,7 @@ class VaccinationTableSeeder extends Seeder
 
         // Seeding
         for ($i = 0; $i < $count ; $i++) {
+
             // Id from 1 to max user agrument
             $userId = rand(1, $maxUserId);
             $userCreateId = 1;
@@ -50,14 +51,14 @@ class VaccinationTableSeeder extends Seeder
             // > 40% vaccine type is Astra
             $vaccineTypeId = rand(1, 10) > 6 ? 2 : rand(1,7);
 
-            $time = array_reduce($vaccinationData, 
-                    function ($accumulator, $vaccination) use ($userId)
-                        {
-                            if ($vaccination['user_id'] == $userId) return $accumulator + 1;
-                            return $accumulator;
-                        }, 
-                    1);
-            // $time = rand(1, 2);
+            // $time = array_reduce($vaccinationData, 
+            //         function ($accumulator, $vaccination) use ($userId)
+            //             {
+            //                 if ($vaccination['user_id'] == $userId) return $accumulator + 1;
+            //                 return $accumulator;
+            //             }, 
+            //         1);
+            $time = rand(1, 3);
             
             // Custom created_at
             $created_at = Carbon::now()->subDays(rand(0, 60));
@@ -74,7 +75,7 @@ class VaccinationTableSeeder extends Seeder
         }
 
         // Devide an array into arrays
-        $numElements = $count > 500 ? floor($count/500) : 1;
+        $numElements = floor($count/10000) > 1 ? floor($count/10000) : 1;
         $chunks = array_chunk($vaccinationData, $numElements);
 
         // Insert to DB

@@ -89,9 +89,9 @@ class VaccinationController extends BaseController
             ];
     
             $validator = Validator::make(
-                $request->all(), [
-                'user_id' => 'exists:users,id',
-                'create_by' => 'exists:users,id',
+                $request->except(['user_id', 'create_by']), [
+                // 'user_id' => 'exists:users,id',
+                // 'create_by' => 'exists:users,id',
                 'vaccine_type_id' => 'exists:vaccine_types,id',
             ], $message);
 
