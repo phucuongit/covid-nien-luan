@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'identity_card' => $this->identity_card,
             'social_insurance' => $this->social_insurance,
-            'username' => $this->username,
+            // 'username' => $this->username,
             // 'password' => $this->password,
             'fullname' => $this->fullname,
             'birthday' => $this->birthday,

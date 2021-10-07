@@ -50,14 +50,14 @@ class VaccinationTableSeeder extends Seeder
             // > 40% vaccine type is Astra
             $vaccineTypeId = rand(1, 10) > 6 ? 2 : rand(1,7);
 
-            // $time = array_reduce($vaccinationData, 
-            //         function ($accumulator, $vaccination) use ($userId)
-            //             {
-            //                 if ($vaccination['user_id'] == $userId) return $accumulator + 1;
-            //                 return $accumulator;
-            //             }, 
-            //         1);
-            $time = rand(1, 2);
+            $time = array_reduce($vaccinationData, 
+                    function ($accumulator, $vaccination) use ($userId)
+                        {
+                            if ($vaccination['user_id'] == $userId) return $accumulator + 1;
+                            return $accumulator;
+                        }, 
+                    1);
+            // $time = rand(1, 2);
             
             // Custom created_at
             $created_at = Carbon::now()->subDays(rand(0, 60));

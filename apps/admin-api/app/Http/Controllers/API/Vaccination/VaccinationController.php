@@ -127,9 +127,10 @@ class VaccinationController extends BaseController
                 Storage::disk('public')->delete('images/'.$row['name']);
             }
             // Delete images in DB
-            $imageResult = $vaccination->images()->delete();
+            if ($vaccination->images)
+                $imageResult = $vaccination->images()->delete();
             $vaccinationResult = 
-                $vaccination->delete() && $imageResult;
+                $vaccination->delete();
             return $this->sendResponse($vaccinationResult);
         }
         catch (Exception $e) {
