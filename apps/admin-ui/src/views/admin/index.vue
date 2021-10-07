@@ -143,10 +143,12 @@ export default defineComponent({
 .el-footer {
   border-top: 1px solid #ddd;
   --el-footer-height: 50px;
+  position: sticky;
+  bottom: 0px;
+  background: #fff;
+  z-index: 10;
 }
-</style>
 
-<style scoped>
 .el-image {
   border: 1px solid #ddd;
   border-radius: 50%;
@@ -160,6 +162,10 @@ export default defineComponent({
   top: 0;
   z-index: 100;
   background: #f2f2f2;
+}
+
+.el-main {
+  min-height: 610px;
 }
 
 .header-ul {
