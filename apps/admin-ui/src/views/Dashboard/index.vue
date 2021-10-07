@@ -16,17 +16,18 @@ const Dashboard = defineComponent({
       if (!dataStats.value) {
         return 0
       }
+
       return (
-        Math.round(
-          (dataStats.value.injected_first_time / vietNamPopuplation +
-            Number.EPSILON) *
-            10000
-        ) / 100
-      )
+        dataStats.value.injected_first_time / vietNamPopuplation
+      ).toPrecision(4)
     })
+
     const dataBI = computed(() => {
       return {
-        series: [percentInjectedFirst.value, 100 - percentInjectedFirst.value],
+        series: [
+          Number(percentInjectedFirst.value),
+          100 - Number(percentInjectedFirst.value)
+        ],
         chartOptions: {
           chart: {
             width: 880,
@@ -47,6 +48,17 @@ const Dashboard = defineComponent({
               options: {
                 chart: {
                   width: 200
+                },
+                legend: {
+                  show: false
+                }
+              }
+            },
+            {
+              breakpoint: 767,
+              options: {
+                chart: {
+                  width: 300
                 },
                 legend: {
                   show: false
@@ -80,6 +92,7 @@ const Dashboard = defineComponent({
             )
           }
         ],
+
         chartOptions: {
           chart: {
             type: "area",
@@ -288,6 +301,10 @@ $primaryColor: #379d1a;
 }
 .char-box {
   margin: 0 16px;
+  @media screen and (max-width: 1199px) {
+    height: 405px;
+  }
+
   p {
     font-weight: bold;
     font-size: 14px;
@@ -310,9 +327,11 @@ $primaryColor: #379d1a;
   }
   .title_summary {
     padding-left: 10px;
+
     p {
       margin: 0;
       font-weight: bold;
+      min-height: 36px;
       font-size: 16px;
     }
     .amount {
