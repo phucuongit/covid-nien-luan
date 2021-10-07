@@ -18,11 +18,16 @@ type userType = {
 
 function useAddUser() {
   const isLoadingAddUser = ref(false)
+  const user_new_id = ref(0)
+  const errorCreate = ref()
   const createUser = async (params: userType) => {
+    errorCreate.value = ""
     try {
       isLoadingAddUser.value = true
       const response = await API.post("user", params)
+      console.log(response)
       if (response.data.success) {
+        user_new_id.value = response.data.data.id
         console.log(response.data.data)
         ElMessage.success({
           message: "Thêm người dùng thành công!",
@@ -30,25 +35,33 @@ function useAddUser() {
         })
       } else {
         ElMessage.error({
-          message: "Chưa được thực hiện.",
+          message: "Thêm người dùng không thành công.",
           type: "error"
         })
       }
-    } catch (e) {
+    } catch (error: any) {
       isLoadingAddUser.value = false
-      console.log(e)
+
+      errorCreate.value = error?.response?.data?.errors
+      console.log(errorCreate.value)
+
       ElMessage.error({
-        message: "Chưa được thực hiện. ",
+        message: "Thêm người dùng không thành công",
         type: "error"
       })
     } finally {
       isLoadingAddUser.value = false
+      setTimeout(function () {
+        errorCreate.value = ""
+      }, 5000)
     }
   }
 
   const updateUser = async (id: number, params: userType) => {
+    errorCreate.value = ""
     try {
       isLoadingAddUser.value = true
+
       const response = await API.put("user/" + id, params)
       if (response.data.success) {
         console.log(response.data.data)
@@ -62,18 +75,28 @@ function useAddUser() {
           type: "error"
         })
       }
-    } catch (e) {
-      console.log("Lỗi update user: " + e)
+    } catch (error: any) {
       isLoadingAddUser.value = false
+      errorCreate.value = error?.response?.data?.errors
+
+      ElMessage.error({
+        message: "Cập nhật người dùng không thành công",
+        type: "error"
+      })
     } finally {
       isLoadingAddUser.value = false
+      setTimeout(function () {
+        errorCreate.value = ""
+      }, 5000)
     }
   }
 
   return {
     isLoadingAddUser,
     createUser,
-    updateUser
+    updateUser,
+    user_new_id,
+    errorCreate
   }
 }
 

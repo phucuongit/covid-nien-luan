@@ -1,7 +1,6 @@
 <script>
 import { defineComponent, watch, ref, inject } from "vue"
 import useAddUpdateVaccination from "./useAddUpdateVaccination.ts"
-import useUsers from "../../users/useUsers.ts"
 import useVaccineType from "../../vaccineType/useVaccineType.ts"
 import * as yup from "yup"
 import { useForm, useField } from "vee-validate"
@@ -30,9 +29,10 @@ export default defineComponent({
       isLoadingAddVaccination,
       addVaccination,
       updateVaccination,
-      vaccinationNewId
+      vaccinationNewId,
+      searchUser,
+      dataSearchUser
     } = useAddUpdateVaccination()
-    const { getListUsersSearch, data } = useUsers()
     const { getListVaccineType, dataVaccineType } = useVaccineType()
     const { uploadImage, updateImage } = useUploadImage()
     const store = useStore()
@@ -132,8 +132,9 @@ export default defineComponent({
 
     const querySelectUser = async (queryString, cb) => {
       if (queryString != "") {
-        await getListUsersSearch(queryString)
-        cb(data.value)
+        await searchUser(queryString)
+        cb(dataSearchUser.value)
+        console.log(dataSearchUser.value)
       }
     }
 
@@ -219,7 +220,7 @@ export default defineComponent({
       fullname,
       handleSelectUser,
       querySelectUser,
-      data,
+      dataSearchUser,
       dataVaccineType,
       handleChangeImageBefore,
       handleChangeImageAfter,
@@ -241,7 +242,7 @@ export default defineComponent({
     :show-close="false"
   >
     <el-form label-position="left" label-width="100px">
-      <el-form-item label="Tên:">
+      <el-form-item label="Họ & Tên:">
         <el-autocomplete
           style="width: 100%"
           v-model="fullname"
