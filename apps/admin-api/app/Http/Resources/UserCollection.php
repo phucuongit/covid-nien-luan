@@ -2,12 +2,18 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class Result_test extends JsonResource
+class UserCollection extends ResourceCollection
 {
     /**
-     * Transform the resource into an array.
+     * The "data" wrapper that should be applied.
+     *
+     * @var string
+     */
+    public static $wrap = "users";
+    /**
+     * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable

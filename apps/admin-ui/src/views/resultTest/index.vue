@@ -15,7 +15,7 @@ export default defineComponent({
       isLoadingResultTestList,
       resultTestList,
       getResultTestList,
-      totalPage,
+      statusSearchResultTest,
       searchResultTest,
       isLoadingSearch,
       filterResultTest
@@ -28,6 +28,7 @@ export default defineComponent({
     const isVisibleAddUpdate = ref(false)
     const isVisibleDelete = ref(false)
     const filter = ref()
+    const checkFilterResultTest = ref(false)
     getResultTestList(currentPage.value)
 
     const handleSelectionChange = (value: any) => {
@@ -36,7 +37,16 @@ export default defineComponent({
 
     const handleChangePage = (page: number) => {
       currentPage.value = page
-      getResultTestList(currentPage.value)
+      if (checkFilterResultTest.value) {
+        filterResultTest(filter.value, currentPage.value)
+      } else {
+        if (statusSearchResultTest.value) {
+          searchResultTest(textSearch.value, currentPage.value)
+        } else {
+          getResultTestList(currentPage.value)
+        }
+        checkFilterResultTest.value = false
+      }
     }
 
     const setMode = (value: string) => {
@@ -54,7 +64,9 @@ export default defineComponent({
 
     const handleSearch = () => {
       filter.value = ""
-      searchResultTest(textSearch.value)
+      currentPage.value = 1
+      searchResultTest(textSearch.value, currentPage.value)
+      checkFilterResultTest.value = false
     }
 
     const handleVisibleDelete = () => {
@@ -63,11 +75,14 @@ export default defineComponent({
 
     const filterState = () => {
       textSearch.value = ""
-      filterResultTest(filter.value)
+      currentPage.value = 1
+      checkFilterResultTest.value = true
+      filterResultTest(filter.value, currentPage.value)
     }
 
     const checkEmptyText = (value: string) => {
       if (textSearch.value == "") {
+        currentPage.value = 1
         getResultTestList(currentPage.value)
       }
     }
@@ -83,7 +98,6 @@ export default defineComponent({
       resultTestList,
       multipleSelection,
       handleSelectionChange,
-      totalPage,
       currentPage,
       handleChangePage,
       handleSearch,
@@ -102,10 +116,10 @@ export default defineComponent({
   },
   methods: {
     formatDateHour(date: Date) {
-      return moment(date).format("hh:mm, DD/MM/YYYY")
+      return moment(date).format("HH:MM, DD-MM-YYYY")
     },
     formatDate(date: Date) {
-      return moment(date).format("DD/MM/YYYY")
+      return moment(date).format("DD-MM-YYYY")
     }
   }
 })
@@ -190,7 +204,7 @@ export default defineComponent({
   <el-table
     ref="multipleTable"
     @selection-change="handleSelectionChange"
-    :data="resultTestList"
+    :data="resultTestList?.result_tests"
     style="width: 100%"
     stripe
     border
@@ -212,7 +226,6 @@ export default defineComponent({
           >Dương tính</span
         >
         <span v-else>Âm tính</span>
-        <!-- {{ scope.row.status == "negative" ? "Âm tính" : "Dương tính" }} -->
       </template>
     </el-table-column>
 
@@ -223,13 +236,13 @@ export default defineComponent({
 
     <el-table-column label="Ngày sinh">
       <template #default="scope">
-        {{ formatDate(scope.row.user.birthday) }}
+        {{ formatDate(scope.row?.user?.birthday) }}
       </template>
     </el-table-column>
 
     <el-table-column label="Giới tính" width="80">
       <template #default="scope">
-        {{ scope.row.user.gender ? "Nam" : "Nữ" }}
+        {{ scope.row?.user?.gender ? "Nam" : "Nữ" }}
       </template>
     </el-table-column>
 
@@ -244,10 +257,14 @@ export default defineComponent({
     background
     layout="prev, pager, next"
     :current-page="currentPage"
+    :pager-count="4"
+    small
+    :page-size="resultTestList?.meta?.per_page"
     @current-change="handleChangePage"
-    :total="totalPage * 10"
+    :total="resultTestList?.meta?.total"
   >
   </el-pagination>
+  <el-backtop style="background: #11385e; color: #fff" :bottom="70" />
 
   <AddUpdateResultTest
     :isVisible="isVisibleAddUpdate"

@@ -5,16 +5,16 @@ function useResultTest() {
   const isLoadingResultTestList = ref(false)
   const isLoadingSearch = ref(false)
   const resultTestList = ref()
-  const totalPage = ref(1)
+  const statusSearchResultTest = ref(false)
   const getResultTestList = async (page: number) => {
     try {
+      statusSearchResultTest.value = false
       isLoadingResultTestList.value = true
       const response = await API.get("result_test?page=" + page)
       if (response.data.success) {
-        resultTestList.value = response.data.data.result_tests
+        resultTestList.value = response.data.data
         console.log("check")
         console.log(resultTestList.value)
-        totalPage.value = response.data.data.meta.last_page
       }
     } catch (e) {
       console.log(e)
@@ -24,14 +24,16 @@ function useResultTest() {
     }
   }
 
-  const searchResultTest = async (searchText: string) => {
+  const searchResultTest = async (searchText: string, page: number) => {
     try {
+      statusSearchResultTest.value = true
       isLoadingSearch.value = true
       isLoadingResultTestList.value = true
-      const response = await API.get("result_test?search=" + searchText)
+      const response = await API.get(
+        "result_test?search=" + searchText + "&page=" + page
+      )
       if (response.data.success) {
-        resultTestList.value = response.data.data.result_tests
-        totalPage.value = response.data.data.meta.last_page
+        resultTestList.value = response.data.data
       }
     } catch (e) {
       console.log(e)
@@ -43,13 +45,14 @@ function useResultTest() {
     }
   }
 
-  const filterResultTest = async (searchText: string) => {
+  const filterResultTest = async (searchText: string, page: number) => {
     try {
       isLoadingResultTestList.value = true
-      const response = await API.get("result_test?search=" + searchText)
+      const response = await API.get(
+        "result_test?search=" + searchText + "&page=" + page
+      )
       if (response.data.success) {
-        resultTestList.value = response.data.data.result_tests
-        totalPage.value = response.data.data.meta.last_page
+        resultTestList.value = response.data.data
       }
     } catch (e) {
       console.log(e)
@@ -63,10 +66,10 @@ function useResultTest() {
     isLoadingResultTestList,
     resultTestList,
     getResultTestList,
-    totalPage,
     searchResultTest,
     isLoadingSearch,
-    filterResultTest
+    filterResultTest,
+    statusSearchResultTest
   }
 }
 

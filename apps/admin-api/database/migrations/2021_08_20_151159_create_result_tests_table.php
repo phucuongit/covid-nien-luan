@@ -16,8 +16,18 @@ class CreateResultTestsTable extends Migration
         Schema::create('result_tests', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['positive', 'negative']);
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('create_by')->constrained('users');
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreignId('create_by')
+                ->references('id')
+                ->on('users')
+                ->constrained()
+                ->onUpdate('cascade');
+                // ->onDelete('cascade');
+                
             //Default famework columns
             $table->timestamps();
         });

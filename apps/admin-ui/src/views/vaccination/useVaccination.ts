@@ -10,31 +10,18 @@ type vaccineType = {
   updated_at: string
 }
 
-type resType = {
-  user: vaccineType
-  data: {
-    create_by: number
-    created_at: string
-    id: number
-    updated_at: string
-    user_id: number
-    vaccine_type_id: number
-  }
-}
-
 function useVaccination() {
   const vaccinationList = ref()
   const isLoadingVaccination = ref(false)
-  const totalPage = ref(1)
   const isLoadingSearch = ref(false)
-
+  const statusSearchVaccination = ref(false)
   const getVaccinationList = async (page: number) => {
     try {
+      statusSearchVaccination.value = false
       isLoadingVaccination.value = true
       const response = await API.get("vaccination?page=" + page)
       if (response.data.success) {
-        totalPage.value = response.data.data.meta.last_page
-        vaccinationList.value = response.data.data.vaccinations
+        vaccinationList.value = response.data.data
       }
     } catch (e) {
       console.log(e)
@@ -44,14 +31,16 @@ function useVaccination() {
     }
   }
 
-  const searchVaccineType = async (text: string) => {
+  const searchVaccineType = async (text: string, page: number) => {
     try {
+      statusSearchVaccination.value = true
       isLoadingSearch.value = true
       isLoadingVaccination.value = true
-      const response = await API.get("vaccination?search=" + text)
+      const response = await API.get(
+        "vaccination?search=" + text + "&page=" + page
+      )
       if (response.data.success) {
-        vaccinationList.value = response.data.data.vaccinations
-        totalPage.value = response.data.data.meta.last_page
+        vaccinationList.value = response.data.data
       }
     } catch (e) {
       console.log(e)
@@ -67,9 +56,9 @@ function useVaccination() {
     isLoadingVaccination,
     getVaccinationList,
     vaccinationList,
-    totalPage,
     searchVaccineType,
-    isLoadingSearch
+    isLoadingSearch,
+    statusSearchVaccination
   }
 }
 

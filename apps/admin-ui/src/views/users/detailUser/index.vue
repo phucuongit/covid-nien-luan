@@ -1,6 +1,7 @@
 <script>
 import { defineComponent, ref, watch, inject } from "vue"
 import userType from "../useUsers"
+import useBaseUrl from "@/services/baseUrl.ts"
 
 const AddUser = defineComponent({
   name: "DetailUser",
@@ -17,10 +18,13 @@ const AddUser = defineComponent({
   setup(props) {
     const visible = ref()
     const user = ref()
+    const imagePreview = ref([])
+    const { BASE_URL } = useBaseUrl()
     watch(props, () => {
       visible.value = props.isVisible
       if (props.selectUser[0]) {
         user.value = props.selectUser[0]
+        imagePreview.value.push(BASE_URL + user.value?.images[0]?.url)
       }
     })
 
@@ -33,7 +37,9 @@ const AddUser = defineComponent({
     return {
       visible,
       cancelForm,
-      user
+      user,
+      BASE_URL,
+      imagePreview
     }
   }
 })
@@ -54,10 +60,11 @@ export default AddUser
     <el-form label-position="left" label-width="120px">
       <el-row :gutter="30">
         <el-col :md="5" :sm="5" :xs="24">
-          <div class="demo-image__preview text-center">
+          <div class="user-details-avt text-center">
             <el-image
-              style="width: 150px; height: 150px"
-              src="https://kenh14cdn.com/203336854389633024/2021/9/3/photo-1-16306417221131994914891.jpg"
+              fit="cover"
+              :src="BASE_URL + user?.images[0]?.url"
+              :preview-src-list="imagePreview"
             >
             </el-image>
           </div>
@@ -153,7 +160,7 @@ export default AddUser
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Giới tính:">
                 <el-radio-group v-model="user.gender">
-                  <el-radio :label="1">Nam</el-radio>
+                  <el-radio :label="1" disabled>Nam</el-radio>
                   <el-radio :label="0" disabled>Nữ</el-radio>
                 </el-radio-group>
               </el-form-item>
@@ -169,3 +176,12 @@ export default AddUser
     </template>
   </el-dialog>
 </template>
+
+<style scoped>
+.user-details-avt .el-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+}
+</style>

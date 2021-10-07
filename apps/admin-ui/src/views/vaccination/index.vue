@@ -14,9 +14,9 @@ export default defineComponent({
       isLoadingVaccination,
       getVaccinationList,
       vaccinationList,
-      totalPage,
       isLoadingSearch,
-      searchVaccineType
+      searchVaccineType,
+      statusSearchVaccination
     } = useVaccination()
 
     const currentPage = ref(1)
@@ -30,7 +30,11 @@ export default defineComponent({
 
     const handleChangePage = (page: number) => {
       currentPage.value = page
-      getVaccinationList(currentPage.value)
+      if (statusSearchVaccination.value) {
+        searchVaccineType(textSearch.value, currentPage.value)
+      } else {
+        getVaccinationList(currentPage.value)
+      }
     }
 
     const handleSelectionChange = (value: any) => {
@@ -44,7 +48,8 @@ export default defineComponent({
     }
 
     const handleSearch = () => {
-      searchVaccineType(textSearch.value)
+      currentPage.value = 1
+      searchVaccineType(textSearch.value, currentPage.value)
     }
 
     const setMode = (act: string) => {
@@ -72,7 +77,6 @@ export default defineComponent({
     return {
       vaccinationList,
       isLoadingVaccination,
-      totalPage,
       currentPage,
       handleChangePage,
       handleSelectionChange,
@@ -90,7 +94,7 @@ export default defineComponent({
   },
   methods: {
     formatDate(date: Date) {
-      return moment(date).format("hh:mm DD-MM-YYYY")
+      return moment(date).format("HH:MM, DD-MM-YYYY")
     }
   }
 })
@@ -98,7 +102,7 @@ export default defineComponent({
 
 <template>
   <div id="vaccine-list">
-    <h3 class="mr-0">Danh sách tiêm chủng vắc-xin</h3>
+    <h3 class="mr-0 mt-0">Danh sách tiêm chủng vắc-xin</h3>
     <el-row class="row-bg mb-10" :gutter="30">
       <el-col :md="9" :sm="12" :xs="24" class="pt-5">
         <div class="grid-content">
@@ -164,7 +168,7 @@ export default defineComponent({
     <el-table
       ref="multipleTable"
       @selection-change="handleSelectionChange"
-      :data="vaccinationList"
+      :data="vaccinationList?.vaccinations"
       style="width: 100%"
       stripe
       border
@@ -200,11 +204,15 @@ export default defineComponent({
       class="text-center mt-20"
       background
       layout="prev, pager, next"
+      :pager-count="4"
+      small
+      :page-size="vaccinationList?.meta?.per_page"
       :current-page="currentPage"
       @current-change="handleChangePage"
-      :total="totalPage * 10"
+      :total="vaccinationList?.meta?.total"
     >
     </el-pagination>
+    <el-backtop style="background: #11385e; color: #fff" :bottom="70" />
   </div>
 
   <addUpdateVaccination

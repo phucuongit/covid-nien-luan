@@ -4,6 +4,10 @@
     padding: 0px 10px;
   }
 
+  .container {
+    width: 100%;
+  }
+
   .account-left-avt img {
     width: 150px !important;
     height: 150px !important;

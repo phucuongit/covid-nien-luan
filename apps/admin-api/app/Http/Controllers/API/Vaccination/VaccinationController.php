@@ -5,9 +5,12 @@ namespace App\Http\Controllers\API\Vaccination;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Vaccination;
-use App\Http\Resources\Vaccination as VaccinationResources;
+use App\Http\Resources\VaccinationResource as VaccinationResource;
+use App\Http\Resources\VaccinationCollection as VaccinationCollection;
 use App\Http\Requests\VaccinationRequest;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+Use Exception;
 
 class VaccinationController extends BaseController
 {
@@ -16,10 +19,20 @@ class VaccinationController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vaccinationResults = VaccinationResources::collection(Vaccination::all());
-        return $this->sendResponse($vaccinationResults);
+        try{
+            $params = $request->all();
+            $vaccinationQuery = Vaccination::filter($params);
+            $vaccinations = 
+                new VaccinationCollection(
+                    $vaccinationQuery->paginate(20)->appends(request()->query())
+                );           
+            return $this->sendResponse($vaccinations->response()->getData(true));
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -30,9 +43,18 @@ class VaccinationController extends BaseController
      */
     public function store(VaccinationRequest $request)
     {
-        $validatedData = $request->validated();
-        $vaccinationResult = new VaccinationResources(Vaccination::create($validatedData));
-        return $this->sendResponse($vaccinationResult);
+        try {
+            $validatedData = $request->validated();
+            // Set injection's time
+            $currentTime = 
+                Vaccination::where('user_id', $validatedData['user_id'])->count();
+            $validatedData['time'] = $currentTime + 1;
+            
+            $vaccinationResult = new VaccinationResource(Vaccination::create($validatedData));
+            return $this->sendResponse($vaccinationResult);
+        } catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -43,8 +65,12 @@ class VaccinationController extends BaseController
      */
     public function show(Vaccination $vaccination)
     {
-        $vaccinationResult = new VaccinationResources($vaccination);
-        return $this->sendResponse($vaccinationResult);
+        try {
+            $vaccinationResult = new VaccinationResource($vaccination);
+            return $this->sendResponse($vaccinationResult);
+        } catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -56,10 +82,14 @@ class VaccinationController extends BaseController
      */
     public function update(VaccinationRequest $request, Vaccination $vaccination)
     {
-        $validatedData = $request->validated();
-        $vaccinationResult = tap($vaccination)
-                        ->update($validatedData);
-        return $this->sendResponse($vaccinationResult);
+        try {
+            $validatedData = $request->validated();
+            $vaccinationResult = $vaccination->update($validatedData);
+            return $this->sendResponse($vaccinationResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -70,8 +100,21 @@ class VaccinationController extends BaseController
      */
     public function destroy(Vaccination $vaccination)
     {
-        $vaccinationResult = $vaccination
-                        ->delete();
-        return $this->sendResponse($vaccination);
+        try {
+            // Delete vaccination image's file
+            $imageNames = $vaccination->images()->get('name');
+            foreach ($imageNames as $index => $row)
+            {
+                Storage::disk('public')->delete('images/'.$row['name']);
+            }
+            // Delete images in DB
+            $imageResult = $vaccination->images()->delete();
+            $vaccinationResult = 
+                $vaccination->delete() && $imageResult;
+            return $this->sendResponse($vaccinationResult);
+        }
+        catch (Exception $e) {
+            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+        }
     }
 }
