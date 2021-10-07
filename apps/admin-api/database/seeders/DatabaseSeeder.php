@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Vaccine_type;
 use App\Models\Vaccination;
 use App\Models\Result_test;
+use App\Models\Statistic;
 use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
@@ -21,14 +22,23 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         Schema::disableForeignKeyConstraints();
+
         $this->call([
+            StatisticSeeder::class,
             RoleTableSeeder::class,
             Vaccine_typeTableSeeder::class,
         ]);
         // Order is important
-        $userQuantity = 150000;
+        $userQuantity = 300000;
         $this->call(UserTableSeeder::class, false, ['count' => $userQuantity]);
-        $this->call(VaccinationTableSeeder::class, false, ['count' => 200000, 'maxUserId' => $userQuantity]);
-        $this->call(Result_testTableSeeder::class, false, ['count' => 200000, 'maxUserId' => $userQuantity]);
+        $this->call(VaccinationTableSeeder::class, false, ['count' => 320000, 'maxUserId' => $userQuantity]);
+        $this->call(Result_testTableSeeder::class, false, ['count' => 320000, 'maxUserId' => $userQuantity]);
+
+        // Update statistic
+        $statistic = Statistic::first();
+        $statistic->injected_first_time = Vaccination::where('time', 1)->count();
+        $statistic->injected_second_time = Vaccination::where('time', 2)->count();
+        $statistic->injected_total_time = Vaccination::all()->count();
+        $statistic->save();
     }
 }

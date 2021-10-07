@@ -157,9 +157,10 @@ class UserController extends BaseController
                 Storage::disk('public')->delete('images/'.$row['name']);
             }
             // Delete images in DB
-            $imageResult = $user->images()->delete();
+            if ($user->images)
+                $imageResult = $user->images()->delete();
             // Delete user
-            $userResult = $user->delete() && $imageResult;
+            $userResult = $user->delete();
             return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {

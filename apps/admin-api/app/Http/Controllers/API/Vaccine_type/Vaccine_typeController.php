@@ -96,8 +96,7 @@ class Vaccine_typeController extends BaseController
     public function destroy(Vaccine_type $vaccine_type)
     {
         try{
-            $Vaccine_typeResult = tap($vaccine_type)
-                            ->delete();
+            $Vaccine_typeResult = $vaccine_type->delete();
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {

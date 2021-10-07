@@ -127,9 +127,10 @@ class Result_testController extends BaseController
                 Storage::disk('public')->delete('images/'.$row['name']);
             }
             // Delete images in DB
-            $imageResult = $result_test->images()->delete();
+            if ($result_test->images)
+                $imageResult = $result_test->images()->delete();
             
-            $result_testResult = $result_test->delete() && $imageResult;
+            $result_testResult = $result_test->delete();
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
