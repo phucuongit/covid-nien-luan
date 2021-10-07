@@ -150,7 +150,7 @@ export default Dashboard
   </el-row>
   <div v-else>
     <el-row>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -172,7 +172,7 @@ export default Dashboard
           </el-card>
         </div>
       </el-col>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -194,7 +194,7 @@ export default Dashboard
           </el-card>
         </div>
       </el-col>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -216,7 +216,7 @@ export default Dashboard
           </el-card>
         </div>
       </el-col>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -240,7 +240,7 @@ export default Dashboard
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="12" class="chart">
+      <el-col :sm="24" :lg="12" :span="24" class="chart">
         <el-card
           class="box-card char-box"
           shadow="hover"
@@ -259,7 +259,7 @@ export default Dashboard
           </div>
         </el-card>
       </el-col>
-      <el-col :span="12" class="chart">
+      <el-col :sm="24" :lg="12" :span="24" class="chart">
         <el-card
           class="box-card char-box"
           shadow="hover"
@@ -300,7 +300,9 @@ $primaryColor: #379d1a;
 }
 .box_card {
   margin: 0 16px;
-
+  @media screen and (max-width: 1199px) {
+    margin-bottom: 20px;
+  }
   .icon svg {
     width: 30px;
     height: 30px;
