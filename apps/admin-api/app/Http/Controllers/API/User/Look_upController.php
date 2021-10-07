@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API\User;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\UserLook_upResource;
+use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\User;
 use Exception;
 
 class Look_upController extends BaseController

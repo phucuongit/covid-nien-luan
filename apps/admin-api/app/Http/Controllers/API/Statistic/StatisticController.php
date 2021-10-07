@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API\Statistic;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Statistic;
-use Illuminate\Http\Request;
 use App\Models\Vaccination;
 use App\Models\Test_result;
 use App\Models\User;

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\API\Vaccine_type;
 
-use App\Http\Controllers\Controller;
-use App\Models\Vaccine_type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\Vaccine_typeResource;
 use App\Http\Requests\Vaccine_typeRequest;
+use App\Models\Vaccine_type;
 use Exception;
 
 class Vaccine_typeController extends BaseController

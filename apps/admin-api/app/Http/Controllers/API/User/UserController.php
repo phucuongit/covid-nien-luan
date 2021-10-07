@@ -105,16 +105,18 @@ class UserController extends BaseController
                 'exists' => 'Trường này không tồn tại'
             ];
     
-            $validator = Validator::make($request->except(['username']), [
-                'identity_card' => [new Is_identity, 'unique:users'],
-                'social_insurance' => ['string', 'size:10', 'unique:users'],
-                'username' => 'string|min:6|unique:users',
+            $validator = Validator::make(
+                $request->except(['username', 'social_insurance', 'identity_card', 'phone']), 
+                [
+                // 'identity_card' => [new Is_identity, 'unique:users'],
+                // 'social_insurance' => ['string', 'size:10','unique:users'],
+                // 'username' => 'string|min:6|unique:users',
                 'password' => 'min:6',
                 'fullname' => 'string',
                 'birthday' => 'date',
                 'gender' => Rule::in([0,1]),
                 'address' => 'string',
-                'phone' => [new Is_vnPhone, 'unique:users'],
+                // 'phone' => [new Is_vnPhone, 'unique:users'],
                 'role_id' => 'exists:roles,id',
                 'village_id' => 'exists:villages,id',
             ], $message);
@@ -130,9 +132,9 @@ class UserController extends BaseController
             if (isset($validated['password']))
                 $validated['password'] = bcrypt($validated['password']);
                 
-            $result = 
+            $userResult = 
                 $user->update($validated);
-            return $this->sendResponse($result, "Successfully");
+            return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {
             return $this->sendError('Something went wrong', [$e->getMessage()]);
