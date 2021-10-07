@@ -7,7 +7,6 @@ import useAddAdmin from "../addUser/useAddUser.ts"
 import useGetAddress from "../useGetAddress.ts"
 import useUploadImage from "../../uploadImages/useUploadImage.ts"
 import useBaseUrl from "@/services/baseUrl.ts"
-
 const AddUser = defineComponent({
   name: "AddAdmin",
   props: {
@@ -34,26 +33,35 @@ const AddUser = defineComponent({
         .required("Chứng minh nhân dân là bắt buộc!")
         .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD không hợp lệ"),
       birthday: yup.date().required("Ngày sinh là bắt buộc!"),
-      social_insurance: yup.string().required("Bảo hiểm y tế là bắt buộc!"),
+      social_insurance: yup
+        .string()
+        .required("Bảo hiểm y tế là bắt buộc!")
+        .matches("^[a-zA-Z0-9]{10}$", "Mã bảo hiểm phải 10 ký tự"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
       phone: yup
         .string()
         .required("Số điện thoại là bắt buộc!")
-        .matches("^0[1-9]{9}$", "Số điện thoại không hợp lệ"),
+        .matches(
+          "^03[2-9]{1}[0-9]{7}$|^05[6|8|9]{1}[0-9]{7}$|^07[6|7|8|9|0]{1}[0-9]{7}$|^08[1,5]{1}[0-9]{7}$",
+          "Số điện thoại không hợp lệ"
+        ),
       province_id: yup.number().required("Tỉnh / TP là bắt buộc"),
       district_id: yup.number().required("Huyện / Phường là bắt buộc"),
       village_id: yup.number().required("Xã là bắt buộc!"),
       address: yup.string().required("Địa chỉ là bắt buộc!"),
       role_id: yup.number().required("Vai trò người dùng là bắt buộc!")
     })
-
     const closeAddAdminModal = inject("closeAddAdminModal")
     const getListUsers = inject("getListUsers")
     const currentPage = inject("currentPage")
     const setMode = inject("setMode")
-
-    const { isLoadingAddUser, createUser, updateUser, user_new_id } =
-      useAddAdmin()
+    const {
+      isLoadingAddUser,
+      createUser,
+      updateUser,
+      user_new_id,
+      errorCreate
+    } = useAddAdmin()
     const {
       provinceList,
       getProvinceList,
@@ -62,9 +70,7 @@ const AddUser = defineComponent({
       getVillageList,
       villageList
     } = useGetAddress()
-
     getProvinceList()
-
     const isLoadingAdd = ref(false)
     const isShow = ref()
     const isMode = ref()
@@ -76,6 +82,7 @@ const AddUser = defineComponent({
     watch(props, () => {
       isShow.value = props.isVisible
       isMode.value = props.mode
+      role_id.value = 1
       if (
         isMode.value == "update" &&
         props.selectUser[0]?.role.name == "admin"
@@ -85,7 +92,6 @@ const AddUser = defineComponent({
         if (user?.value?.images[0]) {
           avatarPreview.value.push(BASE_URL + user?.value?.images[0].url)
         }
-
         // Truyền giá trị lên form
         fullname.value = user.value.fullname
         username.value = user.value.username
@@ -94,7 +100,6 @@ const AddUser = defineComponent({
         social_insurance.value = user.value.social_insurance
         gender.value = user.value.gender
         province_id.value = user.value.address_full.province.id
-
         // Lấy huyện
         getDistrictList(province_id.value)
         district_id.value = user.value.address_full.district.id
@@ -103,24 +108,23 @@ const AddUser = defineComponent({
         village_id.value = user.value.address_full.village.id
         address.value = user.value.address
         phone.value = user.value.phone
-
-        role_id.value = 1
       }
     })
-
     const { handleSubmit, errors, resetForm } = useForm({
       validationSchema: addUserSchema
     })
-
     const { uploadImage, updateImage } = useUploadImage()
     const { BASE_URL } = useBaseUrl()
-
     const onSubmitAdd = handleSubmit(async (values) => {
       if (values) {
         if (password?.value?.length > 0 && password?.value?.length < 6) {
           checkErrorPassword.value = "Mật khẩu phải ít nhất 6 kí tự"
         } else {
           if (isMode.value == "update") {
+            delete values.identity_card
+            delete values.social_insurance
+            delete values.phone
+            delete values.username
             if (password.value == undefined) {
               delete values.password
             }
@@ -136,22 +140,30 @@ const AddUser = defineComponent({
             }
             getListUsers(currentPage.value)
           }
-          cancelForm()
+          if (!errorCreate.value) {
+            cancelForm()
+          }
         }
       }
     })
+
+    const handleCheckPassword = () => {
+      if (password?.value?.length > 0 && password?.value?.length < 6) {
+        checkErrorPassword.value = "Mật khẩu phải ít nhất 6 kí tự"
+      } else {
+        checkErrorPassword.value = ""
+      }
+    }
 
     const handleChangeProvince = () => {
       getDistrictList(province_id.value)
       district_id.value = ref()
       village_id.value = ref()
     }
-
     const handleChangeDistrict = () => {
       getVillageList(district_id.value)
       village_id.value = ref()
     }
-
     const cancelForm = () => {
       resetForm()
       closeAddAdminModal()
@@ -160,7 +172,6 @@ const AddUser = defineComponent({
       avatar.value = ""
       checkErrorPassword.value = ""
     }
-
     const addAvatar = (image) => {
       if (image.target.files[0]) {
         avatarPreview.value = []
@@ -168,13 +179,11 @@ const AddUser = defineComponent({
         avatarPreview.value.push(URL.createObjectURL(image.target.files[0]))
       }
     }
-
     const handleUploadAvatar = () => {
       const formData = new FormData()
       formData.append("images[]", avatar.value)
       formData.append("imageable_type", "user")
       formData.append("type", "avatar")
-
       if (isMode.value == "add") {
         if (user_new_id.value > 0) {
           formData.append("imageable_id", user_new_id.value)
@@ -193,7 +202,6 @@ const AddUser = defineComponent({
         }
       }
     }
-
     const { value: fullname } = useField("fullname")
     const { value: username } = useField("username")
     const { value: password } = useField("password")
@@ -207,7 +215,6 @@ const AddUser = defineComponent({
     const { value: village_id } = useField("village_id")
     const { value: province_id } = useField("province_id")
     const { value: district_id } = useField("district_id")
-
     return {
       isShow,
       cancelForm,
@@ -221,7 +228,6 @@ const AddUser = defineComponent({
       gender,
       address,
       phone,
-      role_id,
       village_id,
       social_insurance,
       province_id,
@@ -236,14 +242,14 @@ const AddUser = defineComponent({
       isMode,
       checkErrorPassword,
       addAvatar,
-      avatarPreview
+      avatarPreview,
+      errorCreate,
+      handleCheckPassword
     }
   }
 })
-
 export default AddUser
 </script>
-
 <template>
   <el-dialog
     title="Người quản trị"
@@ -272,7 +278,6 @@ export default AddUser
               ref="userAddAvatarInput"
               style="display: none"
             />
-
             <el-button
               type="primary"
               size="mini"
@@ -283,7 +288,6 @@ export default AddUser
             </el-button>
           </div>
         </el-col>
-
         <el-col :md="19" :sm="19" :xs="24">
           <el-row :gutter="30">
             <el-col :md="12" :sm="12" :xs="24">
@@ -292,7 +296,6 @@ export default AddUser
                 <div class="text-red">{{ errors.fullname }}</div>
               </el-form-item>
             </el-col>
-
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Tên đăng nhập:">
                 <el-input
@@ -300,33 +303,20 @@ export default AddUser
                   :disabled="isMode == 'update' ? true : false"
                 ></el-input>
                 <div class="text-red">{{ errors.username }}</div>
+                <div class="text-red">{{ errorCreate?.username }}</div>
               </el-form-item>
             </el-col>
-
             <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Mật khẩu:">
                 <el-input
                   type="password"
                   show-password
                   v-model="password"
+                  v-on:keyup="handleCheckPassword"
                 ></el-input>
                 <div class="text-red">
                   {{ errors.password }} {{ checkErrorPassword }}
                 </div>
-              </el-form-item>
-            </el-col>
-
-            <el-col :md="12" :sm="12" :xs="24">
-              <el-form-item label="Số điện thoại:">
-                <el-input v-model="phone"></el-input>
-                <div class="text-red">{{ errors.phone }}</div>
-              </el-form-item>
-            </el-col>
-
-            <el-col :md="12" :sm="12" :xs="24">
-              <el-form-item label="CMND:">
-                <el-input v-model="identity_card"></el-input>
-                <div class="text-red">{{ errors.identity_card }}</div>
               </el-form-item>
             </el-col>
 
@@ -351,6 +341,17 @@ export default AddUser
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
+              <el-form-item label="Số điện thoại:">
+                <el-input
+                  v-model="phone"
+                  :disabled="isMode == 'update' ? true : false"
+                ></el-input>
+                <div class="text-red">{{ errors.phone }}</div>
+                <div class="text-red">{{ errorCreate?.phone }}</div>
+              </el-form-item>
+            </el-col>
+
+            <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Huyện / Phường:">
                 <el-select
                   style="width: 100%"
@@ -371,9 +372,13 @@ export default AddUser
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
-              <el-form-item label="Số bảo hiểm:">
-                <el-input v-model="social_insurance"></el-input>
-                <div class="text-red">{{ errors.social_insurance }}</div>
+              <el-form-item label="CMND:">
+                <el-input
+                  v-model="identity_card"
+                  :disabled="isMode == 'update' ? true : false"
+                ></el-input>
+                <div class="text-red">{{ errors.identity_card }}</div>
+                <div class="text-red">{{ errorCreate?.identity_card }}</div>
               </el-form-item>
             </el-col>
 
@@ -397,6 +402,24 @@ export default AddUser
             </el-col>
 
             <el-col :md="12" :sm="12" :xs="24">
+              <el-form-item label="Số bảo hiểm:">
+                <el-input
+                  v-model="social_insurance"
+                  :disabled="isMode == 'update' ? true : false"
+                ></el-input>
+                <div class="text-red">{{ errors.social_insurance }}</div>
+                <div class="text-red">{{ errorCreate?.social_insurance }}</div>
+              </el-form-item>
+            </el-col>
+
+            <el-col :md="12" :sm="12" :xs="24">
+              <el-form-item label="Địa chỉ:">
+                <el-input v-model="address"></el-input>
+                <div class="text-red">{{ errors.address }}</div>
+              </el-form-item>
+            </el-col>
+
+            <el-col :md="12" :sm="12" :xs="24">
               <el-form-item label="Ngày sinh:">
                 <el-date-picker
                   style="width: 100%"
@@ -406,26 +429,6 @@ export default AddUser
                   v-model="birthday"
                 ></el-date-picker>
                 <div class="text-red">{{ errors.birthday }}</div>
-              </el-form-item>
-            </el-col>
-
-            <el-col :md="12" :sm="12" :xs="24">
-              <el-form-item label="Vai trò:">
-                <el-select
-                  style="width: 100%"
-                  placeholder="Chọn vai trò người dùng"
-                  v-model="role_id"
-                >
-                  <el-option label="Admin" :value="1"></el-option>
-                </el-select>
-                <div class="text-red">{{ errors.role_id }}</div>
-              </el-form-item>
-            </el-col>
-
-            <el-col :md="12" :sm="12" :xs="24">
-              <el-form-item label="Địa chỉ:">
-                <el-input v-model="address"></el-input>
-                <div class="text-red">{{ errors.address }}</div>
               </el-form-item>
             </el-col>
 
@@ -442,7 +445,6 @@ export default AddUser
         </el-col>
       </el-row>
     </el-form>
-
     <template #footer>
       <span class="dialog-footer">
         <el-button
@@ -459,12 +461,10 @@ export default AddUser
     </template>
   </el-dialog>
 </template>
-
 <style scoped>
 .el-form--inline .el-form-item {
   margin-left: 15px;
 }
-
 .admin-add-avt .el-image {
   width: 150px;
   height: 150px;

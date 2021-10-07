@@ -11,6 +11,7 @@ type vaccinationType = {
 function useAddUpdateVaccination() {
   const isLoadingAddVaccination = ref(false)
   const vaccinationNewId = ref(0)
+  const dataSearchUser = ref()
   const addVaccination = async (params: vaccinationType) => {
     try {
       isLoadingAddVaccination.value = true
@@ -66,11 +67,24 @@ function useAddUpdateVaccination() {
     }
   }
 
+  const searchUser = async (str: string) => {
+    try {
+      const response = await API.get("user?search=" + str)
+      if (response.data.success) {
+        dataSearchUser.value = response.data.data.users
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return {
     addVaccination,
     isLoadingAddVaccination,
     updateVaccination,
-    vaccinationNewId
+    vaccinationNewId,
+    dataSearchUser,
+    searchUser
   }
 }
 

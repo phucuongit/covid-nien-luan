@@ -5,7 +5,7 @@ body {
 }
 
 a { text-decoration: none; }
-
+.text-11385e { color: #11385e }
 .bg-11385e { background-color: #11385e; }
 .btn-11385e,
 .btn-11385e:focus { background-color: #11385e; }
@@ -14,17 +14,21 @@ a { text-decoration: none; }
 .pd-0 { padding: 0px }
 .pd-10 { padding: 10px}
 .pd-25 { padding: 25px}
+.pl-15 { padding-left: 15px; }
 .pt-5 { padding-top: 5px }
 .pt-10 { padding-top: 10px }
 .pt-15 { padding-top: 15px }
+.pt-20 { padding-top: 20px }
 .pr-20 { padding-right: 20px; }
 .pr-5 { padding-right: 5px }
 .mt-20 { margin-top: 20px }
 .mt-0 { margin-top: 0px }
+.mb-0 { margin-bottom: 0px }
 .mt-5 { margin-top: 5px }
 .mt-10 { margin-top: 10px }
 .mr-5 { margin-right: 5px }
 .mb-30 { margin-bottom: 30px; }
+.mb-20 { margin-bottom: 20px; }
 .mb-25 { margin-bottom: 25px; }
 .mb-10 { margin-bottom: 10px; }
 .text-right { text-align: right; }
@@ -131,4 +135,10 @@ a { text-decoration: none; }
   height: 100%;
   background: #f5f7fa;
   font-size: 20px;
+}
+
+/* Trang chủ */
+.container {
+  width: 90%;
+  margin: 0 auto;
 }
