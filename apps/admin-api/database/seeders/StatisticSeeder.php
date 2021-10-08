@@ -16,6 +16,7 @@ class StatisticSeeder extends Seeder
     {
         // Remove all current data
         Statistic::truncate();
+        
         // Setup for statistic
         Statistic::create(
             [
