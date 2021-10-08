@@ -44,8 +44,6 @@ class Result_testTableSeeder extends Seeder
         // Remove all current data
         Result_test::truncate();
 
-        // Result_test::factory()->count($count)->create();
-
         // Seeding
         for ( $i=0; $i < $count ; $i++) {
 

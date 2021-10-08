@@ -20,25 +20,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
         Schema::disableForeignKeyConstraints();
+        
+        $userQuantity = 2132142;
+        $vaccinationQuantity = 2332142;
+        $result_testQuantity = 2392182;
 
+        /* -----------Order is important-----------*/
         $this->call([
             StatisticSeeder::class,
             RoleTableSeeder::class,
             Vaccine_typeTableSeeder::class,
         ]);
-        // Order is important
-        $userQuantity = 1332142;
-        $this->call(UserTableSeeder::class, false, ['count' => $userQuantity]);
-        $this->call(VaccinationTableSeeder::class, false, ['count' => 1432142, 'maxUserId' => $userQuantity]);
-        $this->call(Result_testTableSeeder::class, false, ['count' => 1492182, 'maxUserId' => $userQuantity]);
 
-        // Update statistic
+        /* -----------At least 5gb ram-----------*/
+        $this->call(UserTableSeeder::class, false, ['count' => $userQuantity]);
+        $this->call(VaccinationTableSeeder::class, false, ['count' => $vaccinationQuantity, 'maxUserId' => $userQuantity]);
+        $this->call(Result_testTableSeeder::class, false, ['count' => $result_testQuantity, 'maxUserId' => $userQuantity]);
+
+        /* -----------Update statistic-----------*/
         $statistic = Statistic::first();
         $statistic->injected_first_time = Vaccination::where('time', 1)->count();
         $statistic->injected_second_time = Vaccination::where('time', 2)->count();
         $statistic->injected_total_time = Vaccination::all()->count();
         $statistic->save();
+
+        /* -----------Image seeder-----------*/
+        // $maxImageableId = $userQuantity;
+        // if ($vaccinationQuantity > $maxImageableId) 
+        //     $maxImageableId = $vaccinationQuantity;
+        // if ($result_testQuantity > $maxImageableId) 
+        //     $maxImageableId = $result_testQuantity;
+        // $this->call(ImageTableSeeder::class, false, ['maxImageableId' => $maxImageableId]);
     }
 }

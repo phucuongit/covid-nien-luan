@@ -17,6 +17,7 @@ class RoleTableSeeder extends Seeder
     {
         // Remove all current
         Role::truncate();
+        
         $data = [
             [
                 'name' => 'admin',

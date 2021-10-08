@@ -17,6 +17,7 @@ class Vaccine_typeTableSeeder extends Seeder
     {
         // Remove all current data
         Vaccine_type::truncate();
+        
         $data = [
             [
                 'name' => 'Pfizer',

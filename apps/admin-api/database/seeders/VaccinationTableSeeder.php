@@ -51,6 +51,7 @@ class VaccinationTableSeeder extends Seeder
             // > 40% vaccine type is Astra
             $vaccineTypeId = rand(1, 10) > 6 ? 2 : rand(1,7);
 
+            /* Use array_reduce for correct tỉme */
             // $time = array_reduce($vaccinationData, 
             //         function ($accumulator, $vaccination) use ($userId)
             //             {

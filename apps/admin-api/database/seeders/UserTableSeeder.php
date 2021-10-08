@@ -56,8 +56,6 @@ class UserTableSeeder extends Seeder
         ];
         User::create($data);
 
-        // User::factory()->count($count)->create();
-
         // User seeding
         for ($i = 0; $i < $count; $i++) {
             
