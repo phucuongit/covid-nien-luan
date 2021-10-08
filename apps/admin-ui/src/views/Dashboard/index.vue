@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent } from "vue"
+import { computed, defineComponent, watch, ref, reactive } from "vue"
 import { Icon } from "@iconify/vue"
 import useStats from "./hooks/useStats"
 
@@ -11,75 +11,69 @@ const Dashboard = defineComponent({
   setup() {
     const { data: dataStats, isLoading } = useStats()
     let vietNamPopuplation = 97580000
+    const dataBI = reactive({
+      series: [0, 100],
+      chartOptions: {
+        chart: {
+          width: 880,
+          type: "donut"
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val: number) {
+            return val.toPrecision(6) + "%"
+          }
+        },
+        colors: ["#56cc34", "#e43232"],
 
-    const percentInjectedFirst = computed(() => {
-      if (!dataStats.value) {
-        return 0
-      }
-
-      return (
-        dataStats.value.injected_first_time / vietNamPopuplation
-      ).toPrecision(4)
-    })
-
-    const dataBI = computed(() => {
-      return {
-        series: [
-          Number(percentInjectedFirst.value),
-          100 - Number(percentInjectedFirst.value)
+        labels: ["Đã được tiêm ít nhất một mũi", "Chưa được tiêm"],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                show: false
+              }
+            }
+          },
+          {
+            breakpoint: 767,
+            options: {
+              chart: {
+                width: 300
+              },
+              legend: {
+                show: false
+              }
+            }
+          }
         ],
-        chartOptions: {
-          chart: {
-            width: 880,
-            type: "donut"
-          },
-          dataLabels: {
-            enabled: true,
-            formatter: function (val: number) {
-              return val + "%"
-            }
-          },
-          colors: ["#56cc34", "#e43232"],
-
-          labels: ["Đã được tiêm ít nhất một mũi", "Chưa được tiêm"],
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                chart: {
-                  width: 200
-                },
-                legend: {
-                  show: false
-                }
-              }
-            },
-            {
-              breakpoint: 767,
-              options: {
-                chart: {
-                  width: 300
-                },
-                legend: {
-                  show: false
-                }
-              }
-            }
-          ],
-          legend: {
-            position: "right",
-            offsetY: 0,
-            height: 230
-          },
-          plotOptions: {
-            pie: {
-              donut: {
-                size: "70%"
-              }
+        legend: {
+          position: "right",
+          offsetY: 0,
+          height: 230
+        },
+        plotOptions: {
+          pie: {
+            donut: {
+              size: "70%"
             }
           }
         }
       }
+    })
+
+    watch(dataStats, () => {
+      const percentInjectedFirst = Number(
+        (dataStats.value.injected_first_time / vietNamPopuplation).toPrecision(
+          4
+        )
+      )
+
+      dataBI.series = [percentInjectedFirst, 100 - percentInjectedFirst]
     })
 
     const dataInjectByDate = computed(() => {
@@ -148,7 +142,7 @@ const Dashboard = defineComponent({
     })
     return {
       dataStats,
-      ...dataBI.value,
+      dataBI,
       dataInjectByDate,
       isLoading,
       vietNamPopuplation
@@ -265,8 +259,8 @@ export default Dashboard
               <apexchart
                 type="donut"
                 width="550"
-                :options="chartOptions"
-                :series="series"
+                :options="dataBI.chartOptions"
+                :series="dataBI.series"
               ></apexchart>
             </div>
           </div>
