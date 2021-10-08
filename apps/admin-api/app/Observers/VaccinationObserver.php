@@ -17,7 +17,7 @@ class VaccinationObserver
     {
         $statistic = Statistic::first();
         $time = 
-            $vaccination->time;
+            Vaccination::where('user_id', $vaccination->user_id)->count();
         if ($time == 1)
             $statistic->injected_first_time += 1;
         else if ($time == 2)
@@ -50,7 +50,7 @@ class VaccinationObserver
         $statistic = Statistic::first();
 
         $time = 
-            $vaccination->time;
+            Vaccination::where('user_id', $vaccination->user_id)->count();
         if ($time == 1) 
             $statistic->injected_first_time -= 1;
         else if ($time == 2)

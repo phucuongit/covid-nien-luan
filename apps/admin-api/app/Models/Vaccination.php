@@ -76,10 +76,12 @@ class Vaccination extends Model
         return $query
             ->where('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon type
             ->orWhereHas('user' , function($query) use ($value) {
-                $query->where('fullname', 'LIKE', '%' . $value . '%');
+                $query->where('fullname', 'LIKE', '%' . $value . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $value . '%');
              })
             ->orWhereHas('user_create_by' , function($query) use ($value) {
-                $query->where('fullname', 'LIKE', '%' . $value . '%');
+                $query->where('fullname', 'LIKE', '%' . $value . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $value . '%');
              })
             ->orWhereHas('vaccine_type' , function($query) use ($value) {
                 $query->where('name', 'LIKE', '%' . $value . '%');

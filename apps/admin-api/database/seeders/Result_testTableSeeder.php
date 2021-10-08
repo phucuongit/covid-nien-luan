@@ -48,29 +48,30 @@ class Result_testTableSeeder extends Seeder
 
         // Seeding
         for ( $i=0; $i < $count ; $i++) {
+
             $status = rand(0, 10) == 1 ? 'positive' : 'negative';
+
             $userId = rand(1, $maxUserId);
+
             $userCreate_by = 1;
 
             // Custom created_at data
             $created_at = Carbon::now()->subDays(rand(0, 60));
-            $updated_at = $created_at;
 
             $result_testData[] = [
                 'status' => $status,
                 'user_id' => $userId,
                 'create_by' => $userCreate_by,
                 'created_at' => $created_at,
-                'updated_at' => $updated_at
+                'updated_at' => $created_at
             ];
         }
 
         // Devide an array into arrays
-        $numElements = $count > 500 ? floor($count/500) : 1;
-        $chunks = array_chunk($result_testData, $numElements);
+        $numElements = floor($count/1000) > 1 ? floor($count/1000) : 1;
 
         // Insert to DB
-        foreach ($chunks as $chunk) {
+        foreach (array_chunk($result_testData, $numElements) as $chunk) {
             Result_test::insert($chunk);
         }
     }
