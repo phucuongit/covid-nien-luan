@@ -1,10 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue"
-import Dashboard from "./Dashboard/index.vue"
 import { Icon } from "@iconify/vue"
 export default defineComponent({
   components: {
-    Dashboard,
     Icon
   }
 })
@@ -18,12 +16,14 @@ export default defineComponent({
           <el-row :gutter="20">
             <el-col :md="18" :sm="12" :xs="24">
               <div class="header-left">
-                <router-link :to="{ name: 'Home' }">
+                <router-link :to="{ name: 'HomeChart' }">
                   <span title="Trang chủ">
                     <Icon icon="fa-solid:home" color="white" width="25" />
+                    <b class="pl-15 text-white"
+                      >Quản lý xét nghiệm & tiêm phòng Covid-19</b
+                    >
                   </span>
                 </router-link>
-                <b class="pl-15">Quản lý xét nghiệm & tiêm phòng Covid-19</b>
               </div>
             </el-col>
             <el-col :md="6" :sm="12" :xs="24">
@@ -49,7 +49,6 @@ export default defineComponent({
           <div v-else>
             <div class="container">
               <router-view />
-              <Dashboard />
             </div>
           </div>
         </div>

@@ -304,7 +304,7 @@ export default defineComponent({
 
             <el-col :md="12" :sm="24">
               <el-form-item label="Số điện thoại:">
-                <el-input v-model="phone"></el-input>
+                <el-input v-model="phone" disabled></el-input>
                 <div class="text-red">{{ errors.phone }}</div>
               </el-form-item>
             </el-col>

@@ -15,15 +15,25 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
-    meta: {
-      title: "Thống kê"
-    },
-    component: Home
-  },
-  {
-    path: "/search",
-    name: "Search",
-    component: Search
+    component: Home,
+    children: [
+      {
+        path: "",
+        name: "HomeChart",
+        meta: {
+          title: "Thống kê"
+        },
+        component: Dashboard
+      },
+      {
+        path: "/search",
+        name: "Search",
+        meta: {
+          title: "Tra cứu"
+        },
+        component: Search
+      }
+    ]
   },
   {
     path: "/admin",

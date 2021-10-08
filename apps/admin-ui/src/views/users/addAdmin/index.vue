@@ -34,7 +34,7 @@ const AddUser = defineComponent({
       identity_card: yup
         .string()
         .required("Chứng minh nhân dân là bắt buộc!")
-        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD không hợp lệ"),
+        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD có 10 hoặc 12 số"),
       birthday: yup.string().required("Ngày sinh là bắt buộc!").nullable(),
       social_insurance: yup
         .string()
