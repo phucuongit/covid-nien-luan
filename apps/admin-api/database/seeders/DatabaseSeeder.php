@@ -29,10 +29,10 @@ class DatabaseSeeder extends Seeder
             Vaccine_typeTableSeeder::class,
         ]);
         // Order is important
-        $userQuantity = 1532142;
+        $userQuantity = 1332142;
         $this->call(UserTableSeeder::class, false, ['count' => $userQuantity]);
-        $this->call(VaccinationTableSeeder::class, false, ['count' => 1732142, 'maxUserId' => $userQuantity]);
-        $this->call(Result_testTableSeeder::class, false, ['count' => 1792182, 'maxUserId' => $userQuantity]);
+        $this->call(VaccinationTableSeeder::class, false, ['count' => 1432142, 'maxUserId' => $userQuantity]);
+        $this->call(Result_testTableSeeder::class, false, ['count' => 1492182, 'maxUserId' => $userQuantity]);
 
         // Update statistic
         $statistic = Statistic::first();

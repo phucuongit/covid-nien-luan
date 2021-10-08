@@ -58,11 +58,10 @@ class VaccinationTableSeeder extends Seeder
             //                 return $accumulator;
             //             }, 
             //         1);
-            $time = rand(1, 3);
+            $time = rand(1, 10) > 3 ? 1 : rand(2,3);
             
             // Custom created_at
             $created_at = Carbon::now()->subDays(rand(0, 60));
-            $updated_at = $created_at;
 
             $vaccinationData[] = [
                 'user_id' => $userId,
@@ -70,16 +69,15 @@ class VaccinationTableSeeder extends Seeder
                 'vaccine_type_id' => $vaccineTypeId,
                 'time' => $time,
                 'created_at' => $created_at,
-                'updated_at' => $updated_at
+                'updated_at' => $created_at
             ];
         }
 
         // Devide an array into arrays
-        $numElements = floor($count/10000) > 1 ? floor($count/10000) : 1;
-        $chunks = array_chunk($vaccinationData, $numElements);
+        $numElements = floor($count/1000) > 1 ? floor($count/1000) : 1;
 
         // Insert to DB
-        foreach ($chunks as $chunk) {
+        foreach (array_chunk($vaccinationData, $numElements) as $chunk) {
             Vaccination::insert($chunk);
         }
     }
