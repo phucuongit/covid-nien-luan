@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         
-        $userQuantity = 1332142;
-        $vaccinationQuantity = 1432142;
-        $result_testQuantity = 1492182;
+        $userQuantity = 2132142;
+        $vaccinationQuantity = 2332142;
+        $result_testQuantity = 2392182;
 
         /* -----------Order is important-----------*/
         $this->call([
@@ -46,11 +46,11 @@ class DatabaseSeeder extends Seeder
         $statistic->save();
 
         /* -----------Image seeder-----------*/
-        $maxImageableId = $userQuantity;
-        if ($vaccinationQuantity > $maxImageableId) 
-            $maxImageableId = $vaccinationQuantity;
-        if ($result_testQuantity > $maxImageableId) 
-            $maxImageableId = $result_testQuantity;
-        $this->call(ImageTableSeeder::class, false, ['maxImageableId' => $maxImageableId]);
+        // $maxImageableId = $userQuantity;
+        // if ($vaccinationQuantity > $maxImageableId) 
+        //     $maxImageableId = $vaccinationQuantity;
+        // if ($result_testQuantity > $maxImageableId) 
+        //     $maxImageableId = $result_testQuantity;
+        // $this->call(ImageTableSeeder::class, false, ['maxImageableId' => $maxImageableId]);
     }
 }
