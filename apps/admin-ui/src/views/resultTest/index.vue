@@ -27,7 +27,7 @@ export default defineComponent({
     const mode = ref("")
     const isVisibleAddUpdate = ref(false)
     const isVisibleDelete = ref(false)
-    const { BASE_URL } = useBaseUrl()
+    const { BASE_URL, BASE_RESULT_TEST } = useBaseUrl()
     getResultTestList(currentPage.value)
 
     const handleSelectionChange = (value: any) => {
@@ -91,7 +91,8 @@ export default defineComponent({
       isVisibleDelete,
       handleVisibleDelete,
       isLoadingSearch,
-      BASE_URL
+      BASE_URL,
+      BASE_RESULT_TEST
     }
   },
   methods: {
@@ -199,13 +200,29 @@ export default defineComponent({
 
     <el-table-column label="Hình ảnh" width="130">
       <template #default="scope">
-        <div class="table-img">
+        <div class="table-img" v-if="scope.row.images[0]?.url">
           <el-image
             v-for="img in scope.row.images"
             :key="img.id"
             fit="cover"
             :src="BASE_URL + img?.url"
-            :preview-src-list="[BASE_URL + img?.url]"
+            :preview-src-list="[
+              BASE_URL + scope.row.images[0]?.url,
+              BASE_URL + scope.row.images[1]?.url
+            ]"
+          >
+            <template #error>
+              <div class="image-slot">
+                <i class="el-icon-picture-outline"></i>
+              </div>
+            </template>
+          </el-image>
+        </div>
+        <div class="table-img" v-else>
+          <el-image
+            fit="cover"
+            :src="BASE_RESULT_TEST"
+            :preview-src-list="[BASE_RESULT_TEST]"
           >
             <template #error>
               <div class="image-slot">
