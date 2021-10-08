@@ -102,7 +102,7 @@ export default defineComponent({
     const onSubmitAddUpdate = handleSubmit(async (values) => {
       if (values) {
         if (mode.value == "add") {
-          if (resultImageUploadBefore.value && resultImageUploadAfter.value) {
+          if (resultImageUploadBefore.value) {
             await addResultTest(values)
             await handleUploadResultImage("add")
             cancelForm()
@@ -116,8 +116,6 @@ export default defineComponent({
           cancelForm()
           getResultTestList(currentPage.value)
         }
-        getResultTestList(currentPage.value)
-        cancelForm()
       }
     })
     const cancelForm = () => {
@@ -247,7 +245,7 @@ export default defineComponent({
     :show-close="false"
   >
     <el-form label-position="left" label-width="110px">
-      <el-form-item label="Tên:">
+      <el-form-item label="Họ & Tên:">
         <el-autocomplete
           style="width: 100%"
           v-model="fullname"
@@ -256,6 +254,7 @@ export default defineComponent({
           placeholder="Tìm kiếm người dùng..."
           :debounce="1500"
           @select="handleSelect"
+          :disabled="mode == 'update' ? true : false"
         >
           <template #default="{ item }">
             <div class="value">{{ item.fullname }}</div>
