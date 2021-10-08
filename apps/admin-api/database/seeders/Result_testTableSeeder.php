@@ -39,7 +39,7 @@ class Result_testTableSeeder extends Seeder
         $this->faker = Faker::create();
     }
     
-    public function run($count = 10, $maxUserId)
+    public function run($count = 2392182, $maxUserId = 2132142)
     {
         // Remove all current data
         Result_test::truncate();
