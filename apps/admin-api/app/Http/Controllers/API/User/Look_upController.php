@@ -57,6 +57,10 @@ class Look_upController extends BaseController
                 ->orWhere('social_insurance', '=', $keyword)
                 ->orWhere('phone', '=', $keyword)
                 ->first();
+            if (!$user)
+            {
+                return $this->sendError([], 'Không tìm thấy thông tin');
+            }
             return $this->sendResponse(new UserLook_upResource($user));
         }
         catch (Exception $e) {

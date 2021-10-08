@@ -44,7 +44,7 @@ export default defineComponent({
     })
 
     const store = useStore()
-    const { BASE_URL } = useBaseUrl()
+    const { BASE_URL, BASE_RESULT_TEST } = useBaseUrl()
     const { handleSubmit, errors, resetForm } = useForm({
       validationSchema: addUpdateResultTestSchema
     })
@@ -66,7 +66,7 @@ export default defineComponent({
     const fullname = ref()
     const resultImageUploadBefore = ref()
     const resultImageUploadAfter = ref()
-    const resultImagePreview = ref([2])
+    const resultImagePreview = ref([BASE_RESULT_TEST, BASE_RESULT_TEST])
     const resultImageUploadError = ref()
     const resultImageBeforeId = ref(0)
     const resultImageAfterId = ref(0)
@@ -84,7 +84,7 @@ export default defineComponent({
         create_by.value = resultTest.value?.user_create_by.id
         fullname.value = resultTest.value?.user.fullname
 
-        resultImagePreview.value = [2]
+        resultImagePreview.value = [BASE_RESULT_TEST, BASE_RESULT_TEST]
         resultTest.value?.images.map((image) => {
           if (image.type == "result_test_before") {
             resultImageBeforeId.value = image.id
@@ -102,7 +102,7 @@ export default defineComponent({
     const onSubmitAddUpdate = handleSubmit(async (values) => {
       if (values) {
         if (mode.value == "add") {
-          if (resultImageUploadBefore.value && resultImageUploadAfter.value) {
+          if (resultImageUploadBefore.value) {
             await addResultTest(values)
             await handleUploadResultImage("add")
             cancelForm()
@@ -124,7 +124,7 @@ export default defineComponent({
       resetForm()
       resultImageUploadBefore.value = ""
       resultImageUploadAfter.value = ""
-      resultImagePreview.value = [2]
+      resultImagePreview.value = [BASE_RESULT_TEST, BASE_RESULT_TEST]
       resultImageUploadError.value = ""
     }
     const querySearch = async (queryString, cb) => {
@@ -245,15 +245,16 @@ export default defineComponent({
     :show-close="false"
   >
     <el-form label-position="left" label-width="110px">
-      <el-form-item label="Tên:">
+      <el-form-item label="Họ & Tên:">
         <el-autocomplete
           style="width: 100%"
           v-model="fullname"
           :fetch-suggestions="querySearch"
           popper-class="my-autocomplete"
-          placeholder="Tìm kiếm người dùng..."
+          placeholder="Nhập họ và tên..."
           :debounce="1500"
           @select="handleSelect"
+          :disabled="mode == 'update' ? true : false"
         >
           <template #default="{ item }">
             <div class="value">{{ item.fullname }}</div>

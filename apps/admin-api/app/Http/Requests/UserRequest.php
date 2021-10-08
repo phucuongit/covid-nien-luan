@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
     {
         return [
             'identity_card' => ['required', new Is_identity, 'unique:users'],
-            'social_insurance' => ['required', 'string', 'size:10', 'unique:users'],
+            'social_insurance' => ['required', 'string', 'size:15', 'unique:users'],
             'username' => 'string|min:6|unique:users',
             'password' => 'min:6',
             'fullname' => 'required|string',
@@ -53,10 +53,10 @@ class UserRequest extends FormRequest
             'date' => 'Định dạng ngày không đúng',
             'numeric' => 'Trường này phải là kiểu số',
             'same' => 'Mật khẩu nhập lại chưa đúng',
-            'social_insurance.size' => 'Mã bảo hiểm phải là 10 ký tự',
             'username.min' => 'Tên đăng nhập ít nhất 6 ký tự',
             'password.min' => 'Mật khẩu ít nhất 6 ký tự',
-            'exists' => 'Trường này không tồn tại'
+            'exists' => 'Trường này không tồn tại',
+            'social_insurance.size' => 'Mã bảo hiểm phải là 15 ký tự'
         ];
     }
 }

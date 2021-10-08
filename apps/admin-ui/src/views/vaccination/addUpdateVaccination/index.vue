@@ -36,7 +36,7 @@ export default defineComponent({
     const { getListVaccineType, dataVaccineType } = useVaccineType()
     const { uploadImage, updateImage } = useUploadImage()
     const store = useStore()
-    const { BASE_URL } = useBaseUrl()
+    const { BASE_URL, BASE_RESULT_TEST } = useBaseUrl()
     const closeModalAddUpdate = inject("handleVisibleAddUpdate")
     const setMode = inject("setMode")
     const getVaccinationList = inject("getVaccinationList")
@@ -46,7 +46,7 @@ export default defineComponent({
     const mode = ref("")
     const fullname = ref()
     const vaccinationID = ref(0)
-    const vaccinationImagePreview = ref([2])
+    const vaccinationImagePreview = ref([BASE_RESULT_TEST, BASE_RESULT_TEST])
     const vaccinationImageUploadBefore = ref()
     const vaccinationImageUploadAfter = ref()
     const vaccinationImageBeforeId = ref(0)
@@ -80,7 +80,7 @@ export default defineComponent({
         fullname.value = props.selectVaccineType[0].user.fullname
         vaccinationID.value = props.selectVaccineType[0].id
 
-        vaccinationImagePreview.value = [2]
+        vaccinationImagePreview.value = [BASE_RESULT_TEST, BASE_RESULT_TEST]
         props.selectVaccineType[0].images.map((image) => {
           if (image.type == "vaccination_before") {
             vaccinationImageBeforeId.value = image.id
@@ -98,10 +98,7 @@ export default defineComponent({
       if (values) {
         console.log(values)
         if (mode.value == "add") {
-          if (
-            vaccinationImageUploadBefore.value &&
-            vaccinationImageUploadAfter.value
-          ) {
+          if (vaccinationImageUploadBefore.value) {
             await addVaccination(values)
             await handleUploadVaccinationImage("add")
             cancelForm()
@@ -124,7 +121,7 @@ export default defineComponent({
       resetForm()
       fullname.value = ""
 
-      vaccinationImagePreview.value = [2]
+      vaccinationImagePreview.value = [BASE_RESULT_TEST, BASE_RESULT_TEST]
       vaccinationImageUploadBefore.value = ""
       vaccinationImageUploadAfter.value = ""
       vaccinationImageUploadError.value = ""
@@ -251,6 +248,7 @@ export default defineComponent({
           placeholder="Tìm kiếm người dùng..."
           :debounce="1500"
           @select="handleSelectUser"
+          :disabled="mode == 'update' ? true : false"
         >
           <template #default="{ item }">
             <div class="value">{{ item.fullname }}</div>

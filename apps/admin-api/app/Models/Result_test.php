@@ -52,13 +52,15 @@ class Result_test extends Model
             ->where('status', 'LIKE', '%'.$value.'%')
             ->orWhere('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon
             ->orWhereHas('user' , function($query) use ($value) {
-                $query->where('fullname', 'LIKE', '%' . $value . '%');
+                $query->where('fullname', 'LIKE', '%' . $value . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $value . '%');
              })
-            ->orWhereHas('user_create_by' , function($query) use ($value) {
-                $query->where('fullname', 'LIKE', '%' . $value . '%');
+             ->orWhereHas('user_create_by' , function($query) use ($value) {
+                $query->where('fullname', 'LIKE', '%' . $value . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $value . '%');
              });
     }
-
+    
     /**
      * Get all of the result_test's image.
      */

@@ -29,20 +29,18 @@ const AddUser = defineComponent({
       identity_card: yup
         .string()
         .required("Chứng minh nhân dân là bắt buộc!")
-        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD không hợp lệ"),
-      birthday: yup.string().required("Ngày sinh là bắt buộc!"),
+        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD có 10 hoặc 12 số"),
+      birthday: yup.string().nullable().required("Ngày sinh là bắt buộc!"),
       social_insurance: yup
         .string()
         .required("Bảo hiểm y tế là bắt buộc!")
-        .matches("^[a-zA-Z0-9]{10}$", "Mã bảo hiểm phải 10 ký tự"),
+        .matches("^[a-zA-Z0-9]{15}$", "Mã bảo hiểm phải 15 ký tự"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
       phone: yup
         .string()
         .required("Số điện thoại là bắt buộc!")
-        .matches(
-          "^03[2-9]{1}[0-9]{7}$|^05[6|8|9]{1}[0-9]{7}$|^07[6|7|8|9|0]{1}[0-9]{7}$|^08[1,5]{1}[0-9]{7}$",
-          "Số điện thoại không hợp lệ"
-        ),
+        .nullable()
+        .matches("^0[3|5|7|8|9]{1}[0-9]{8}$", "Số điện thoại không hợp lệ"),
       province_id: yup.number().required("Tỉnh / TP là bắt buộc"),
       district_id: yup.number().required("Huyện / Phường là bắt buộc"),
       village_id: yup.number().required("Xã là bắt buộc!"),
@@ -70,27 +68,29 @@ const AddUser = defineComponent({
     } = useGetAddress()
     getProvinceList()
     const { uploadImage, updateImage } = useUploadImage()
-    const { BASE_URL } = useBaseUrl()
+    const { BASE_URL, BASE_IMAGE } = useBaseUrl()
     const isLoadingAdd = ref(false)
     const isShow = ref()
     const isMode = ref()
     const user = ref()
     const idUserSelect = ref()
     const avatar = ref()
-    const avatarPreview = ref([])
+    const avatarPreview = ref(BASE_IMAGE)
     watch(props, () => {
       isShow.value = props.isVisible
       isMode.value = props.mode
       role_id.value = 2
+      avatarPreview.value = BASE_IMAGE
       if (
         isMode.value == "update" &&
         props.selectUser[0]?.role.name == "user"
       ) {
         user.value = props.selectUser[0]
         idUserSelect.value = user.value.id
-        if (user?.value?.images[0]) {
-          avatarPreview.value.push(BASE_URL + user?.value?.images[0].url)
+        if (user?.value?.images[0]?.url) {
+          avatarPreview.value = BASE_URL + user?.value?.images[0]?.url
         }
+
         fullname.value = user.value.fullname
         identity_card.value = user.value.identity_card
         birthday.value = user.value.birthday
@@ -147,15 +147,15 @@ const AddUser = defineComponent({
     const cancelForm = () => {
       setMode("")
       resetForm()
-      avatarPreview.value = []
+      avatarPreview.value = ""
       avatar.value = ""
       closeAddUserModal()
     }
     const addAvatar = (image) => {
       if (image.target.files[0]) {
-        avatarPreview.value = []
+        avatarPreview.value = ""
         avatar.value = image.target.files[0]
-        avatarPreview.value.push(URL.createObjectURL(image.target.files[0]))
+        avatarPreview.value = URL.createObjectURL(image.target.files[0])
       }
     }
     const handleUploadAvatar = () => {
@@ -239,9 +239,14 @@ export default AddUser
           <div class="user-add-avt text-center">
             <el-image
               fit="cover"
-              :src="avatarPreview[0]"
-              :preview-src-list="avatarPreview"
+              :src="avatarPreview"
+              :preview-src-list="[avatarPreview]"
             >
+              <template #error>
+                <div class="image-slot">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </template>
             </el-image>
           </div>
           <div class="text-center mt-10">
