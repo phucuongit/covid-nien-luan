@@ -16,17 +16,18 @@ const Dashboard = defineComponent({
       if (!dataStats.value) {
         return 0
       }
+
       return (
-        Math.round(
-          (dataStats.value.injected_first_time / vietNamPopuplation +
-            Number.EPSILON) *
-            10000
-        ) / 100
-      )
+        dataStats.value.injected_first_time / vietNamPopuplation
+      ).toPrecision(4)
     })
+
     const dataBI = computed(() => {
       return {
-        series: [percentInjectedFirst.value, 100 - percentInjectedFirst.value],
+        series: [
+          Number(percentInjectedFirst.value),
+          100 - Number(percentInjectedFirst.value)
+        ],
         chartOptions: {
           chart: {
             width: 880,
@@ -47,6 +48,17 @@ const Dashboard = defineComponent({
               options: {
                 chart: {
                   width: 200
+                },
+                legend: {
+                  show: false
+                }
+              }
+            },
+            {
+              breakpoint: 767,
+              options: {
+                chart: {
+                  width: 300
                 },
                 legend: {
                   show: false
@@ -80,6 +92,7 @@ const Dashboard = defineComponent({
             )
           }
         ],
+
         chartOptions: {
           chart: {
             type: "area",
@@ -150,7 +163,7 @@ export default Dashboard
   </el-row>
   <div v-else>
     <el-row>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -172,7 +185,7 @@ export default Dashboard
           </el-card>
         </div>
       </el-col>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -194,7 +207,7 @@ export default Dashboard
           </el-card>
         </div>
       </el-col>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -216,7 +229,7 @@ export default Dashboard
           </el-card>
         </div>
       </el-col>
-      <el-col :span="6"
+      <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
             class="box-card box_card"
@@ -240,7 +253,7 @@ export default Dashboard
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="12" class="chart">
+      <el-col :sm="24" :lg="12" :span="24" class="chart">
         <el-card
           class="box-card char-box"
           shadow="hover"
@@ -259,7 +272,7 @@ export default Dashboard
           </div>
         </el-card>
       </el-col>
-      <el-col :span="12" class="chart">
+      <el-col :sm="24" :lg="12" :span="24" class="chart">
         <el-card
           class="box-card char-box"
           shadow="hover"
@@ -288,6 +301,10 @@ $primaryColor: #379d1a;
 }
 .char-box {
   margin: 0 16px;
+  @media screen and (max-width: 1199px) {
+    height: 405px;
+  }
+
   p {
     font-weight: bold;
     font-size: 14px;
@@ -300,7 +317,9 @@ $primaryColor: #379d1a;
 }
 .box_card {
   margin: 0 16px;
-
+  @media screen and (max-width: 1199px) {
+    margin-bottom: 20px;
+  }
   .icon svg {
     width: 30px;
     height: 30px;
@@ -308,9 +327,11 @@ $primaryColor: #379d1a;
   }
   .title_summary {
     padding-left: 10px;
+
     p {
       margin: 0;
       font-weight: bold;
+      min-height: 36px;
       font-size: 16px;
     }
     .amount {
