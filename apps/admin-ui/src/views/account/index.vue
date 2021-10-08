@@ -27,7 +27,7 @@ export default defineComponent({
       phone: yup
         .string()
         .required("Số điện thoại là bắt buộc!")
-        .matches("^0[1-9]{9}$", "Số điện thoại không hợp lệ")
+        .matches("^0[3|5|7|8|9]{1}[0-9]{8}$", "Số điện thoại không hợp lệ")
         .nullable(),
       province_id: yup.number().required("Tỉnh / TP là bắt buộc"),
       district_id: yup.number().required("Huyện / Phường là bắt buộc"),
@@ -39,7 +39,7 @@ export default defineComponent({
     })
 
     const store = useStore()
-    const { BASE_URL } = useBaseUrl() // domain name
+    const { BASE_URL, BASE_IMAGE } = useBaseUrl() // domain name
     const { getAccount, isLoadingUpdateAccount, updateAccount } = useAccount()
     const {
       uploadImage,
@@ -66,21 +66,15 @@ export default defineComponent({
     const checkErrorAvatar = ref()
     const avatar = ref()
     const avatarUpload = ref()
-    const imageListShow = ref([]) // Show hình ảnh lớn
 
     watch(store.state, async () => {
       user.value = store.state.user
-      imageListShow.value = []
-      user.value.images.map((image) => {
-        if (image) {
-          if (image.type == "avatar") {
-            avatar.value = image
-          }
-          imageListShow.value.push(BASE_URL + image.url)
-        }
-      })
-
-      console.log(user?.value)
+      if (user.value?.images[0]?.url) {
+        avatar.value = BASE_URL + user.value.images[0].url
+      } else {
+        avatar.value = BASE_IMAGE
+      }
+      console.log("avatar " + avatar.value)
 
       textFullname.value = user?.value?.fullname
       fullname.value = user?.value?.fullname
@@ -133,6 +127,7 @@ export default defineComponent({
         checkErrorPassword.value = ""
       }
     }
+
     const addAvatar = async (event) => {
       avatarUpload.value = event.target.files[0]
       const dataForm = new FormData()
@@ -141,8 +136,8 @@ export default defineComponent({
       dataForm.append("imageable_type", "user")
       dataForm.append("type", "avatar")
 
-      if (avatar.value) {
-        await updateImage(avatar?.value?.id, dataForm)
+      if (user.value?.images[0]?.url) {
+        await updateImage(user.value?.images[0]?.id, dataForm)
       } else {
         if (avatarUpload.value.name != "") {
           await uploadImage(dataForm)
@@ -152,22 +147,22 @@ export default defineComponent({
       checkErrorAvatar.value = ""
     }
     const removeAvatar = async () => {
-      await ElMessageBox({
-        type: "warning",
-        title: "Thông báo",
-        message: "Bạn muốn xóa ảnh đại diện?",
-        confirmButtonText: "Xóa",
-        showCancelButton: true,
-        cancelButtonText: "Hủy"
-      }).then(async () => {
-        if (avatar.value) {
-          await deleteImage(avatar.value.id)
+      if (user.value?.images[0]?.id) {
+        await ElMessageBox({
+          type: "warning",
+          title: "Thông báo",
+          message: "Bạn muốn xóa ảnh đại diện?",
+          confirmButtonText: "Xóa",
+          showCancelButton: true,
+          cancelButtonText: "Hủy"
+        }).then(async () => {
+          await deleteImage(user.value?.images[0]?.id)
           await getAccount()
-          avatar.value = ""
-        } else {
-          checkErrorAvatar.value = "Chưa có ảnh đại diện"
-        }
-      })
+          avatar.value = BASE_IMAGE
+        })
+      } else {
+        checkErrorAvatar.value = "Chưa có ảnh đại diện"
+      }
     }
 
     const { value: fullname } = useField("fullname")
@@ -216,7 +211,6 @@ export default defineComponent({
       checkErrorAvatar,
       isLoadingRemoveImage,
       isLoadingUpdateImage,
-      imageListShow,
       BASE_URL,
       percent,
       format
@@ -229,11 +223,12 @@ export default defineComponent({
   <el-row :gutter="30">
     <el-col :lg="5" :md="6" :sm="8" :xs="24" class="text-center">
       <div class="account-left-avt">
-        <el-image
-          fit="cover"
-          :src="BASE_URL + avatar?.url"
-          :preview-src-list="imageListShow"
-        >
+        <el-image fit="cover" :src="avatar" :preview-src-list="[avatar]">
+          <template #error>
+            <div class="image-slot">
+              <i class="el-icon-picture-outline"></i>
+            </div>
+          </template>
         </el-image>
 
         <div class="text-red mt-10">{{ checkErrorAvatar }}</div>
