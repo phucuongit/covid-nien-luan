@@ -13,8 +13,6 @@ function useResultTest() {
       const response = await API.get("result_test?page=" + page)
       if (response.data.success) {
         resultTestList.value = response.data.data
-        console.log("check")
-        console.log(resultTestList.value)
       }
     } catch (e) {
       console.log(e)
@@ -45,30 +43,12 @@ function useResultTest() {
     }
   }
 
-  const filterResultTest = async (searchText: string, page: number) => {
-    try {
-      isLoadingResultTestList.value = true
-      const response = await API.get(
-        "result_test?search=" + searchText + "&page=" + page
-      )
-      if (response.data.success) {
-        resultTestList.value = response.data.data
-      }
-    } catch (e) {
-      console.log(e)
-      isLoadingResultTestList.value = false
-    } finally {
-      isLoadingResultTestList.value = false
-    }
-  }
-
   return {
     isLoadingResultTestList,
     resultTestList,
     getResultTestList,
     searchResultTest,
     isLoadingSearch,
-    filterResultTest,
     statusSearchResultTest
   }
 }

@@ -4,6 +4,7 @@ import useResultTest from "./useResultTest"
 import moment from "moment"
 import AddUpdateResultTest from "./addUpdateResultTest/index.vue"
 import DeleteResultTest from "./deleteResultTest/index.vue"
+import useBaseUrl from "../../services/baseUrl"
 
 export default defineComponent({
   components: {
@@ -17,8 +18,7 @@ export default defineComponent({
       getResultTestList,
       statusSearchResultTest,
       searchResultTest,
-      isLoadingSearch,
-      filterResultTest
+      isLoadingSearch
     } = useResultTest()
 
     const currentPage = ref(1)
@@ -27,8 +27,7 @@ export default defineComponent({
     const mode = ref("")
     const isVisibleAddUpdate = ref(false)
     const isVisibleDelete = ref(false)
-    const filter = ref()
-    const checkFilterResultTest = ref(false)
+    const { BASE_URL } = useBaseUrl()
     getResultTestList(currentPage.value)
 
     const handleSelectionChange = (value: any) => {
@@ -37,15 +36,10 @@ export default defineComponent({
 
     const handleChangePage = (page: number) => {
       currentPage.value = page
-      if (checkFilterResultTest.value) {
-        filterResultTest(filter.value, currentPage.value)
+      if (statusSearchResultTest.value) {
+        searchResultTest(textSearch.value, currentPage.value)
       } else {
-        if (statusSearchResultTest.value) {
-          searchResultTest(textSearch.value, currentPage.value)
-        } else {
-          getResultTestList(currentPage.value)
-        }
-        checkFilterResultTest.value = false
+        getResultTestList(currentPage.value)
       }
     }
 
@@ -63,28 +57,16 @@ export default defineComponent({
     }
 
     const handleSearch = () => {
-      filter.value = ""
       currentPage.value = 1
-      searchResultTest(textSearch.value, currentPage.value)
-      checkFilterResultTest.value = false
+      if (textSearch.value == "") {
+        getResultTestList(currentPage.value)
+      } else {
+        searchResultTest(textSearch.value, currentPage.value)
+      }
     }
 
     const handleVisibleDelete = () => {
       isVisibleDelete.value = !isVisibleDelete.value
-    }
-
-    const filterState = () => {
-      textSearch.value = ""
-      currentPage.value = 1
-      checkFilterResultTest.value = true
-      filterResultTest(filter.value, currentPage.value)
-    }
-
-    const checkEmptyText = (value: string) => {
-      if (textSearch.value == "") {
-        currentPage.value = 1
-        getResultTestList(currentPage.value)
-      }
     }
 
     provide("closeDeleteResultTest", handleVisibleDelete)
@@ -109,9 +91,7 @@ export default defineComponent({
       isVisibleDelete,
       handleVisibleDelete,
       isLoadingSearch,
-      filter,
-      filterState,
-      checkEmptyText
+      BASE_URL
     }
   },
   methods: {
@@ -128,14 +108,14 @@ export default defineComponent({
 <template>
   <h3 class="mt-0">Danh sách kết quả xét nghiệm</h3>
   <el-row class="row-bg mb-10" :gutter="30">
-    <el-col :md="7" :sm="12" :xs="24" class="pt-5">
+    <el-col :md="9" :sm="12" :xs="24" class="pt-5">
       <div class="grid-content">
         <el-input
           size="small"
-          placeholder="Tìm kiếm..."
+          placeholder="Tìm kiếm theo họ tên, ngày..."
           prefix-icon="el-icon-search"
           v-model="textSearch"
-          v-on:keyup="checkEmptyText"
+          v-on:keyup.enter="handleSearch"
         >
           <template #append>
             <el-button
@@ -152,19 +132,7 @@ export default defineComponent({
         </el-input>
       </div>
     </el-col>
-    <el-col :md="5" :sm="12" :xs="24" class="pt-5">
-      <el-select
-        size="small"
-        v-model="filter"
-        @change="filterState"
-        placeholder="Lọc theo kết quả..."
-        style="width: 100%"
-      >
-        <el-option value="positive" label="Dương tính"></el-option>
-        <el-option value="negative" label="Âm tính"></el-option>
-      </el-select>
-    </el-col>
-    <el-col :md="12" :sm="24" :xs="24">
+    <el-col :md="15" :sm="24" :xs="24">
       <div class="grid-content text-right">
         <el-button
           size="small"
@@ -229,6 +197,26 @@ export default defineComponent({
       </template>
     </el-table-column>
 
+    <el-table-column label="Hình ảnh" width="130">
+      <template #default="scope">
+        <div class="table-img">
+          <el-image
+            v-for="img in scope.row.images"
+            :key="img.id"
+            fit="cover"
+            :src="BASE_URL + img?.url"
+            :preview-src-list="[BASE_URL + img?.url]"
+          >
+            <template #error>
+              <div class="image-slot">
+                <i class="el-icon-picture-outline"></i>
+              </div>
+            </template>
+          </el-image>
+        </div>
+      </template>
+    </el-table-column>
+
     <el-table-column
       label="Số điện thoại"
       property="user.phone"
@@ -283,5 +271,12 @@ export default defineComponent({
 .el-table {
   --el-table-header-background-color: #11385e;
   --el-table-header-font-color: #fff;
+}
+
+.table-img .el-image {
+  width: 40px;
+  height: 25px;
+  border: 1px solid #ddd;
+  margin-right: 5px;
 }
 </style>

@@ -29,16 +29,17 @@ const AddUser = defineComponent({
       identity_card: yup
         .string()
         .required("Chứng minh nhân dân là bắt buộc!")
-        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD không hợp lệ"),
-      birthday: yup.string().required("Ngày sinh là bắt buộc!"),
+        .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD có 10 hoặc 12 số"),
+      birthday: yup.string().nullable().required("Ngày sinh là bắt buộc!"),
       social_insurance: yup
         .string()
         .required("Bảo hiểm y tế là bắt buộc!")
-        .matches("^[a-zA-Z0-9]{10}$", "Mã bảo hiểm phải 10 ký tự"),
+        .matches("^[a-zA-Z0-9]{15}$", "Mã bảo hiểm phải 15 ký tự"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
       phone: yup
         .string()
         .required("Số điện thoại là bắt buộc!")
+        .nullable()
         .matches(
           "^03[2-9]{1}[0-9]{7}$|^05[6|8|9]{1}[0-9]{7}$|^07[6|7|8|9|0]{1}[0-9]{7}$|^08[1,5]{1}[0-9]{7}$",
           "Số điện thoại không hợp lệ"

@@ -13,19 +13,22 @@ export default defineComponent({
   setup() {
     const accountSchema = yup.object({
       fullname: yup.string().required("Họ tên là bắt buộc!"),
-      username: yup.string().required("Tên đăng nhập là bắt buộc!").min(6),
       password: yup.string(),
       identity_card: yup
         .string()
         .required("Chứng minh nhân dân là bắt buộc!")
         .matches("^[0-9]{9}$|^[0-9]{12}$", "CMND/CCCD không hợp lệ"),
-      birthday: yup.date().required("Ngày sinh là bắt buộc!"),
-      social_insurance: yup.string().required("Bảo hiểm y tế là bắt buộc!"),
+      birthday: yup.date().required("Ngày sinh là bắt buộc!").nullable(),
+      social_insurance: yup
+        .string()
+        .required("Bảo hiểm y tế là bắt buộc!")
+        .matches("^[a-zA-Z0-9]{15}$", "Mã bảo hiểm phải 15 ký tự"),
       gender: yup.number().required("Giới tính là bắt buộc!"),
       phone: yup
         .string()
         .required("Số điện thoại là bắt buộc!")
-        .matches("^0[1-9]{9}$", "Số điện thoại không hợp lệ"),
+        .matches("^0[1-9]{9}$", "Số điện thoại không hợp lệ")
+        .nullable(),
       province_id: yup.number().required("Tỉnh / TP là bắt buộc"),
       district_id: yup.number().required("Huyện / Phường là bắt buộc"),
       village_id: yup.number().required("Xã là bắt buộc!"),
@@ -77,9 +80,10 @@ export default defineComponent({
         }
       })
 
+      console.log(user?.value)
+
       textFullname.value = user?.value?.fullname
       fullname.value = user?.value?.fullname
-      username.value = user?.value?.username
       password.value = user?.value?.password
       identity_card.value = user?.value?.identity_card
       birthday.value = moment(user?.value?.birthday).format("YYYY-MM-DD")
@@ -114,6 +118,9 @@ export default defineComponent({
           if (password.value == undefined) {
             delete values.password
           }
+          delete values.phone
+          delete values.identity_card
+          delete values.social_insurance
           await updateAccount(values)
           getAccount()
         }
@@ -164,7 +171,6 @@ export default defineComponent({
     }
 
     const { value: fullname } = useField("fullname")
-    const { value: username } = useField("username")
     const { value: password } = useField("password")
     const { value: identity_card } = useField("identity_card")
     const { value: birthday } = useField("birthday")
@@ -186,7 +192,6 @@ export default defineComponent({
       cancelForm,
       textFullname,
       fullname,
-      username,
       password,
       identity_card,
       birthday,
@@ -284,13 +289,6 @@ export default defineComponent({
             </el-col>
 
             <el-col :md="12" :sm="24">
-              <el-form-item label="Tên đăng nhập:">
-                <el-input disabled v-model="username"></el-input>
-                <div class="text-red">{{ errors.username }}</div>
-              </el-form-item>
-            </el-col>
-
-            <el-col :md="12" :sm="24">
               <el-form-item label="Mật khẩu:">
                 <el-input
                   type="password"
@@ -306,7 +304,7 @@ export default defineComponent({
 
             <el-col :md="12" :sm="24">
               <el-form-item label="Số điện thoại:">
-                <el-input v-model="phone"></el-input>
+                <el-input v-model="phone" disabled></el-input>
                 <div class="text-red">{{ errors.phone }}</div>
               </el-form-item>
             </el-col>

@@ -251,6 +251,7 @@ export default defineComponent({
           placeholder="Tìm kiếm người dùng..."
           :debounce="1500"
           @select="handleSelectUser"
+          :disabled="mode == 'update' ? true : false"
         >
           <template #default="{ item }">
             <div class="value">{{ item.fullname }}</div>
