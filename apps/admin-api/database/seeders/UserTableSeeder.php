@@ -56,33 +56,26 @@ class UserTableSeeder extends Seeder
         ];
         User::create($data);
 
-        // User::factory()->count($count)->create();
-
         // User seeding
         for ($i = 0; $i < $count; $i++) {
+            
+            // Rand unique number
+            $numRand = $this->faker->unique()->randomNumber(7, true);
 
             // Create fake id card 
             $identity_card = 
-                '0' // 0xx
-                .$this->faker->unique()->randomNumber(9, true); // Random unique number
+                $numRand.$this->faker->randomNumber(2, true);
 
             $fullname =
-                rand(0,1) == 1 ? 
+                $i % 2 == 0 ? 
                 vnfaker()->fullname($word = 3)
                 : vnfaker()->fullname($word = 4);
 
             $birthday = 
                 $this->faker->dateTime('-5 years'); // -5 year from now
 
-            // username = 'user' + last 6 numbers indetity card
-            // $username =
-            //     'user'.substr($identity_card, -6);
-
             $gender = 
                 rand(0,1);
-
-            // $password = 
-            //     Hash::make('123123');
 
             $village_id = 
                 rand(1, 10603);
@@ -95,24 +88,22 @@ class UserTableSeeder extends Seeder
 
             $phone = 
                 substr(vnfaker()->mobilephone($numbers = 10), 0, 3)
-                .$this->faker->unique()->randomNumber(7, true);
+                .$numRand;
 
             $role_id = 2;
 
             $social_insurance =
                 chr(rand(65,90))
                 .chr(rand(65,90))
-                .$this->faker->randomNumber(9, true);
+                .$numRand
+                .substr($numRand, 0, 6);
 
             // Custom created_at
             $created_at = Carbon::now()->subDays(rand(60, 120));
-            $updated_at = $created_at;
 
             $userData[] = [
                 'identity_card' => $identity_card,
                 'social_insurance' => $social_insurance,
-                // 'username' => $username,
-                // 'password' => $password,
                 'fullname' => $fullname,
                 'birthday' => $birthday,
                 'gender' => $gender,
@@ -121,16 +112,15 @@ class UserTableSeeder extends Seeder
                 'village_id' => $village_id,
                 'role_id' => $role_id,
                 'created_at' => $created_at,
-                'updated_at' => $updated_at
+                'updated_at' => $created_at
             ];
         }
 
         // Devide an array into arrays
-        $numElements = $count > 100 ? floor($count/100) : 1;
-        $chunks = array_chunk($userData, $numElements);
+        $numElements = floor($count/100) > 1 ? floor($count/100) : 1;
 
         // Insert to DB
-        foreach ($chunks as $chunk) {
+        foreach (array_chunk($userData, $numElements) as $chunk) {
             User::insert($chunk);
         }
     }

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\API\Vaccine_type;
 
-use App\Http\Controllers\Controller;
-use App\Models\Vaccine_type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\Vaccine_typeResource;
 use App\Http\Requests\Vaccine_typeRequest;
+use App\Models\Vaccine_type;
 use Exception;
 
 class Vaccine_typeController extends BaseController
@@ -26,7 +27,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($vaccine_types);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -45,7 +46,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -62,7 +63,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -82,7 +83,7 @@ class Vaccine_typeController extends BaseController
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -95,12 +96,11 @@ class Vaccine_typeController extends BaseController
     public function destroy(Vaccine_type $vaccine_type)
     {
         try{
-            $Vaccine_typeResult = tap($vaccine_type)
-                            ->delete();
+            $Vaccine_typeResult = $vaccine_type->delete();
             return $this->sendResponse($Vaccine_typeResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API\Address;
 
-use App\Http\Controllers\Controller;
-use App\Models\Province;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\Province as ProvinceResources;
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\Province;
 use Exception;
 
 class ProvinceController extends BaseController
@@ -23,7 +23,7 @@ class ProvinceController extends BaseController
             return $this->sendResponse($provinces);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 

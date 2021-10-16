@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\API\Result_test;
 
-use App\Http\Controllers\Controller;
-use App\Models\Result_test;
-use Illuminate\Http\Request;
-use App\Http\Requests\Result_testRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Result_testRequest;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Resources\Result_testResource;
 use App\Http\Resources\Result_testCollection;
+use App\Models\Result_test;
 use Exception;
 
 class Result_testController extends BaseController
@@ -32,7 +34,7 @@ class Result_testController extends BaseController
                                     ->response()->getData(true));
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -50,7 +52,7 @@ class Result_testController extends BaseController
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -67,7 +69,7 @@ class Result_testController extends BaseController
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -78,15 +80,34 @@ class Result_testController extends BaseController
      * @param  \App\Models\Result_test  $result_test
      * @return \Illuminate\Http\Response
      */
-    public function update(Result_testRequest $request, Result_test $result_test)
+    public function update(Request $request, Result_test $result_test)
     {
         try{
-            $validatedData = $request->validated();
-            $result_testResult = $result_test->update($validatedData);
-            return $this->sendResponse($result_testResult);
+            $message = [
+                'exists' => 'Trường này đã tồn tại',
+                'in' => 'Trường này không hợp lệ',
+            ];
+    
+            $validator = Validator::make(
+                $request->except(['user_id', 'create_by']), [
+                // 'user_id' => 'exists:users,id',
+                // 'create_by' => 'exists:users,id',
+                'status' => Rule::in(['positive', 'negative']),
+            ], $message);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            // Retrieve the validated input...
+            $validated = $validator->validated();
+            
+            $result_testResult = $result_test->update($validated);
+
+            return $this->sendResponse($result_testResult, "Successfully");
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -99,19 +120,21 @@ class Result_testController extends BaseController
     public function destroy(Result_test $result_test)
     {
         try{
-             // Delete result_test image's file
-             $imageNames = $result_test->images()->get('name');
-             foreach ($imageNames as $index => $row)
-             {
-                 Storage::disk('public')->delete('images/'.$row['name']);
-             }
-             // Delete images in DB
-             $imageResult = $result_test->images()->delete();
-            $result_testResult = $result_test->delete() && $imageResult;
+            // Delete result_test image's file
+            $imageNames = $result_test->images()->get('name');
+            foreach ($imageNames as $index => $row)
+            {
+                Storage::disk('public')->delete('images/'.$row['name']);
+            }
+            // Delete images in DB
+            if ($result_test->images)
+                $imageResult = $result_test->images()->delete();
+            
+            $result_testResult = $result_test->delete();
             return $this->sendResponse($result_testResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 }

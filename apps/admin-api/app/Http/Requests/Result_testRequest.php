@@ -28,9 +28,21 @@ class Result_testRequest extends FormRequest
             'status' => 
                 ['required', Rule::in(['positive', 'negative'])],
             'user_id' => 
-                'required|numeric|min:0',
+                'required|exists:users,id',
             'create_by' => 
-                'required|numeric|min:0',
+                'required|exists:users,id',
+        ];
+    }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'required' => 'Yêu cầu nhập trường này',
+            'exists' => 'Trường này không tồn tại'
         ];
     }
 }

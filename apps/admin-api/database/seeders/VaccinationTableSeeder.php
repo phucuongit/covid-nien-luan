@@ -16,14 +16,6 @@ use Faker\Factory as Faker;
 class VaccinationTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    
-    private $vaccinationData = [];
-
-    /**
      * The current Faker instance.
      *
      * @var Faker\Factory
@@ -45,39 +37,48 @@ class VaccinationTableSeeder extends Seeder
         // Remove all current data
         Vaccination::truncate();
 
+        $vaccinationData = [];
+
         // Vaccination::factory()->count($count)->create();
 
         // Seeding
-        for ( $i=0; $i < $count ; $i++) {
+        for ($i = 0; $i < $count ; $i++) {
+
             // Id from 1 to max user agrument
-            $userIds = rand(1, $maxUserId);
-            $userCreateIds = 1;
+            $userId = rand(1, $maxUserId);
+            $userCreateId = 1;
 
             // > 40% vaccine type is Astra
-            $vaccineTypeIds = rand(1, 10) > 6 ? 2 : rand(1,7);
+            $vaccineTypeId = rand(1, 10) > 6 ? 2 : rand(1,7);
 
-            $time = rand(1,2);
-
+            /* Use array_reduce for correct tỉme */
+            // $time = array_reduce($vaccinationData, 
+            //         function ($accumulator, $vaccination) use ($userId)
+            //             {
+            //                 if ($vaccination['user_id'] == $userId) return $accumulator + 1;
+            //                 return $accumulator;
+            //             }, 
+            //         1);
+            $time = rand(1, 10) > 3 ? 1 : 2;
+            
             // Custom created_at
             $created_at = Carbon::now()->subDays(rand(0, 60));
-            $updated_at = $created_at;
 
             $vaccinationData[] = [
-                'user_id' => $userIds,
-                'create_by' => $userCreateIds,
-                'vaccine_type_id' => $vaccineTypeIds,
+                'user_id' => $userId,
+                'create_by' => $userCreateId,
+                'vaccine_type_id' => $vaccineTypeId,
                 'time' => $time,
                 'created_at' => $created_at,
-                'updated_at' => $updated_at
+                'updated_at' => $created_at
             ];
         }
 
         // Devide an array into arrays
-        $numElements = $count > 100 ? floor($count/100) : 1;
-        $chunks = array_chunk($vaccinationData, $numElements);
+        $numElements = floor($count/100) > 1 ? floor($count/100) : 1;
 
         // Insert to DB
-        foreach ($chunks as $chunk) {
+        foreach (array_chunk($vaccinationData, $numElements) as $chunk) {
             Vaccination::insert($chunk);
         }
     }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API\User;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\UserLook_upResource;
+use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\User;
 use Exception;
 
 class Look_upController extends BaseController
@@ -52,15 +52,19 @@ class Look_upController extends BaseController
     public function show($keyword)
     {
         try{
-            $userFullResult = 
+            $user = 
                 User::where('identity_card', '=', $keyword)
                 ->orWhere('social_insurance', '=', $keyword)
                 ->orWhere('phone', '=', $keyword)
                 ->first();
-            return $this->sendResponse(new UserLook_upResource($userFullResult));
+            if (!$user)
+            {
+                return $this->sendError([], 'Không tìm thấy thông tin');
+            }
+            return $this->sendResponse(new UserLook_upResource($user));
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong');
         }
     }
 

@@ -24,15 +24,21 @@ class VaccinationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric|min:0', 
-            'create_by' => 'required|numeric|min:0', 
-            'vaccine_type_id' => 'required|numeric|min:0',
+            'user_id' => 'required|exists:users,id', 
+            'create_by' => 'required|exists:users,id', 
+            'vaccine_type_id' => 'required|exists:vaccine_types,id',
         ];
     }
-    // public function messages()
-    // {
-    //     return [
-    //         'success.attribute' => 'false',
-    //     ];
-    // }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'required' => 'Yêu cầu nhập trường này',
+            'exists' => 'Trường này không tồn tại'
+        ];
+    }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API\Statistic;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Statistic;
-use Illuminate\Http\Request;
 use App\Models\Vaccination;
 use App\Models\Test_result;
 use App\Models\User;
@@ -23,21 +23,17 @@ class StatisticController extends BaseController
     public function index()
     {
         try{
-            $data = [];
 
             // injected statistic
-            $data['injected_first_time'] = Vaccination::where('time', 1)->count();
-            $data['injected_second_time'] = Vaccination::where('time', 2)->count();
-            $data['injected_total_time'] = Vaccination::all()->count();
-            
+            $data = Statistic::first();
+
             // injected in last 7 days
             $begin = Carbon::today()->subDays(6);
             $end   = Carbon::today();
             $last7Days = [];
             for($i = $begin; $i <= $end; $i->addDay(1)){
-                $dayQuantity= 
-                    Vaccination::whereDate('created_at', '=', $i)
-                    ->count();
+                $dayQuantity = 
+                    Vaccination::whereDate('created_at', '=', $i)->count();
                 $dateString = $i->isoFormat('DD-MM-YYYY');
                 $last7Days[] = 
                     (object) ['date' => $dateString,

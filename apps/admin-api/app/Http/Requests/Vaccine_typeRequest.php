@@ -28,4 +28,16 @@ class Vaccine_typeRequest extends FormRequest
             'country' => 'required|string',
         ];
     }
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'string' => 'Trường này phải là chuỗi',
+            'required' => 'Yêu cầu nhập trường này'
+        ];
+    }
 }

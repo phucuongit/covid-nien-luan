@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\API\Vaccination;
 
-use App\Http\Controllers\API\BaseController as BaseController;
-use App\Http\Controllers\Controller;
-use App\Models\Vaccination;
-use App\Http\Resources\VaccinationResource as VaccinationResource;
-use App\Http\Resources\VaccinationCollection as VaccinationCollection;
-use App\Http\Requests\VaccinationRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\VaccinationResource;
+use App\Http\Resources\VaccinationCollection;
+use App\Http\Requests\VaccinationRequest;
+use App\Models\Vaccination;
 Use Exception;
 
 class VaccinationController extends BaseController
@@ -31,7 +32,7 @@ class VaccinationController extends BaseController
             return $this->sendResponse($vaccinations->response()->getData(true));
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -53,7 +54,7 @@ class VaccinationController extends BaseController
             $vaccinationResult = new VaccinationResource(Vaccination::create($validatedData));
             return $this->sendResponse($vaccinationResult);
         } catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -69,7 +70,7 @@ class VaccinationController extends BaseController
             $vaccinationResult = new VaccinationResource($vaccination);
             return $this->sendResponse($vaccinationResult);
         } catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -80,15 +81,33 @@ class VaccinationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(VaccinationRequest $request, Vaccination $vaccination)
+    public function update(Request $request, Vaccination $vaccination)
     {
         try {
-            $validatedData = $request->validated();
-            $vaccinationResult = $vaccination->update($validatedData);
-            return $this->sendResponse($vaccinationResult);
+            $message = [
+                'exists' => 'Trường này không tồn tại',
+            ];
+    
+            $validator = Validator::make(
+                $request->except(['user_id', 'create_by']), [
+                // 'user_id' => 'exists:users,id',
+                // 'create_by' => 'exists:users,id',
+                'vaccine_type_id' => 'exists:vaccine_types,id',
+            ], $message);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            // Retrieve the validated input...
+            $validated = $validator->validated();
+            
+            $vaccinationResult = $vaccination->update($validated);
+
+            return $this->sendResponse($vaccinationResult, "Successfully");
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -108,13 +127,14 @@ class VaccinationController extends BaseController
                 Storage::disk('public')->delete('images/'.$row['name']);
             }
             // Delete images in DB
-            $imageResult = $vaccination->images()->delete();
+            if ($vaccination->images)
+                $imageResult = $vaccination->images()->delete();
             $vaccinationResult = 
-                $vaccination->delete() && $imageResult;
+                $vaccination->delete();
             return $this->sendResponse($vaccinationResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class Is_identity implements Rule
+class Is_vnPhone implements Rule
 {
     /**
      * Create a new rule instance.
@@ -25,9 +25,8 @@ class Is_identity implements Rule
      */
     public function passes($attribute, $value)
     {
-        return strlen((string)$value) == 9 
-            || strlen((string)$value) == 12
-            && is_numeric($value);
+        $regex = '/^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/';
+        return preg_match($regex, $value);
     }
 
     /**
@@ -37,6 +36,6 @@ class Is_identity implements Rule
      */
     public function message()
     {
-        return "Số chứng minh thư không hợp lệ";
+        return 'Số điện thoại không hợp lệ';
     }
 }

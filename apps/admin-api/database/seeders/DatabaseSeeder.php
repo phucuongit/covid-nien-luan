@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Vaccine_type;
 use App\Models\Vaccination;
 use App\Models\Result_test;
+use App\Models\Statistic;
 use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
@@ -19,16 +20,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
         Schema::disableForeignKeyConstraints();
+        
+        $userQuantity = 124985;
+        $vaccinationQuantity = 154985;
+        $result_testQuantity = 154985;
+
+        /* -----------Order is important-----------*/
         $this->call([
+            StatisticSeeder::class,
             RoleTableSeeder::class,
             Vaccine_typeTableSeeder::class,
         ]);
-        // Order is important
-        $userQuantity = 100000;
+
+        /* -----------At least 4gb ram-----------*/
         $this->call(UserTableSeeder::class, false, ['count' => $userQuantity]);
-        $this->call(VaccinationTableSeeder::class, false, ['count' => 150000, 'maxUserId' => $userQuantity]);
-        $this->call(Result_testTableSeeder::class, false, ['count' => 150000, 'maxUserId' => $userQuantity]);
+        $this->call(VaccinationTableSeeder::class, false, ['count' => $vaccinationQuantity, 'maxUserId' => $userQuantity]);
+        $this->call(Result_testTableSeeder::class, false, ['count' => $result_testQuantity, 'maxUserId' => $userQuantity]);
+
+        /* -----------Update statistic-----------*/
+        $statistic = Statistic::first();
+        $statistic->injected_first_time = Vaccination::where('time', 1)->count();
+        $statistic->injected_second_time = Vaccination::where('time', 2)->count();
+        $statistic->injected_total_time = Vaccination::all()->count();
+        $statistic->save();
+
+        /* -----------Image seeder-----------*/
+        // $maxImageableId = $userQuantity;
+        // if ($vaccinationQuantity > $maxImageableId) 
+        //     $maxImageableId = $vaccinationQuantity;
+        // if ($result_testQuantity > $maxImageableId) 
+        //     $maxImageableId = $result_testQuantity;
+        // $this->call(ImageTableSeeder::class, false, ['maxImageableId' => $maxImageableId]);
     }
 }

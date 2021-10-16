@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\API\User;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\BaseController;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\UserCollection;
+use App\Http\Requests\UserRequest;
 use App\Models\Vaccination;
 use App\Models\Test_result;
 use App\Models\User;
 use App\Models\Image;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\API\BaseController as BaseController;
-use App\Http\Resources\UserResource as UserResource;
-use App\Http\Resources\UserCollection as UserCollection;
-use App\Http\Requests\UserRequest;
-use Illuminate\Support\Facades\Validator;
 use App\Rules\Is_identity;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use App\Rules\Is_vnPhone;
+
 use Exception;
 
 class UserController extends BaseController
@@ -38,7 +40,7 @@ class UserController extends BaseController
             return $this->sendResponse($users->response()->getData(true));
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -51,12 +53,17 @@ class UserController extends BaseController
     public function store(UserRequest $request)
     {
         try{
+            // Validate
             $validated = $request->validated();
+            // Hash password
+            if (isset($validated['password']))
+                $validated['password'] = bcrypt($validated['password']);
+            // Create
             $userResult = new UserResource(User::create($validated));
             return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -73,7 +80,7 @@ class UserController extends BaseController
             return $this->sendResponse($userResult);
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -84,33 +91,53 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(request $request, User $user)
     {
         try{
+            $message = [
+                'unique' => 'Trường này đã tồn tại',
+                'date' => 'Định dạng ngày không đúng',
+                'numeric' => 'Trường này phải là kiểu số',
+                'same' => 'Mật khẩu nhập lại chưa đúng',
+                'social_insurance.size' => 'Mã bảo hiểm phải là 15 ký tự',
+                'username.min' => 'Tên đăng nhập ít nhất 6 ký tự',
+                'password.min' => 'Mật khẩu ít nhất 6 ký tự',
+                'exists' => 'Trường này không tồn tại'
+            ];
+    
             $validator = Validator::make(
-                $request->except(['username']), [
-                    'identity_card' => 
-                        ['numeric', new Is_identity],
-                    'social_insurance' => 'string',
-                    'password' => 'min:6',
-                    'fullname' => 'string',
-                    'birthday' => 'date',
-                    'gender' => [Rule::in([0,1])],
-                    'address' => 'string',
-                    'phone' => 'string',
-                    'role_id' => 'numeric|min:0',
-                    'village_id' => 'numeric|min:0',
-            ]);
+                $request->except(['username', 'social_insurance', 'identity_card', 'phone']), 
+                [
+                // 'identity_card' => [new Is_identity, 'unique:users'],
+                // 'social_insurance' => ['string', 'size:10','unique:users'],
+                // 'username' => 'string|min:6|unique:users',
+                'password' => 'min:6',
+                'fullname' => 'string',
+                'birthday' => 'date',
+                'gender' => Rule::in([0,1]),
+                'address' => 'string',
+                // 'phone' => [new Is_vnPhone, 'unique:users'],
+                'role_id' => 'exists:roles,id',
+                'village_id' => 'exists:villages,id',
+            ], $message);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            // Retrieve the validated input...
             $validated = $validator->validated();
+    
             // Hash password
             if (isset($validated['password']))
                 $validated['password'] = bcrypt($validated['password']);
-            $result = 
+                
+            $userResult = 
                 $user->update($validated);
-            return $this->sendResponse($result, "Successfully");
+            return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
     }
 
@@ -130,29 +157,14 @@ class UserController extends BaseController
                 Storage::disk('public')->delete('images/'.$row['name']);
             }
             // Delete images in DB
-            $imageResult = $user->images()->delete();
+            if ($user->images)
+                $imageResult = $user->images()->delete();
             // Delete user
-            $userResult = $user->delete() && $imageResult;
+            $userResult = $user->delete();
             return $this->sendResponse($userResult, "Successfully");
         }
         catch (Exception $e) {
-            return $this->sendError('Something went wrong', ['error' => $e->getMessage()]);
+            return $this->sendError('Something went wrong', [$e->getMessage()]);
         }
-    }
-
-    public function ViewProfile($username){
-        return DB::select("select * from covid_nienluan.users where covid_nienluan.users.username like concat('%',?,'%')",[$username]);
-    }
-
-    public function UserTestResult($username){
-        return DB::select ("select a.username,b.id,b.status,b.updated_at,b.user_id,b.create_by,b.created_at from covid_nienluan.users as a join covid_nienluan.result_tests as b on a.id = b.user_id where a.username like concat('%',?,'%');;",[$username]);
-        
-    }
-
-    public function UserVaccina($username){
-        return DB::select ("select a.username,b.id,b.create_by,b.created_at,b.updated_at,b.user_id,b.vaccine_type_id,c.country,c.name from covid_nienluan.users as a join covid_nienluan.vaccinations as b on a.id = b.user_id 
-        join covid_nienluan.vaccine_types as c on b.vaccine_type_id = c.id
-        where a.username like concat('%',?,'%');",[$username]);
-        
     }
 }
