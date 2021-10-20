@@ -18,7 +18,8 @@ const Dashboard = defineComponent({
       }
 
       return (
-        dataStats.value.injected_first_time / vietNamPopuplation
+        (dataStats.value.injected_first_time / vietNamPopuplation) *
+        100
       ).toPrecision(4)
     })
 
@@ -148,7 +149,7 @@ const Dashboard = defineComponent({
     })
     return {
       dataStats,
-      ...dataBI.value,
+      dataBI,
       dataInjectByDate,
       isLoading,
       vietNamPopuplation
@@ -229,6 +230,7 @@ export default Dashboard
           </el-card>
         </div>
       </el-col>
+
       <el-col :sm="12" :md="12" :lg="6"
         ><div class="grid-content bg-purple">
           <el-card
@@ -265,13 +267,14 @@ export default Dashboard
               <apexchart
                 type="donut"
                 width="550"
-                :options="chartOptions"
-                :series="series"
+                :options="dataBI.chartOptions"
+                :series="dataBI.series"
               ></apexchart>
             </div>
           </div>
         </el-card>
       </el-col>
+
       <el-col :sm="24" :lg="12" :span="24" class="chart">
         <el-card
           class="box-card char-box"
