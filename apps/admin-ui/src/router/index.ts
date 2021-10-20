@@ -9,15 +9,31 @@ import Vaccination from "../views/vaccination/index.vue"
 import NotFound from "../views/notFound/index.vue"
 import Dashboard from "../views/Dashboard/index.vue"
 import Account from "../views/account/index.vue"
+import Search from "../views/searchInfo/index.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
-    meta: {
-      title: "Thống kê"
-    },
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: "",
+        name: "HomeChart",
+        meta: {
+          title: "Thống kê"
+        },
+        component: Dashboard
+      },
+      {
+        path: "/search",
+        name: "Search",
+        meta: {
+          title: "Tra cứu"
+        },
+        component: Search
+      }
+    ]
   },
   {
     path: "/admin",

@@ -15,8 +15,8 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const dataUser = ref()
-    const avatar = ref([])
-    const { BASE_URL } = useBaseUrl()
+    const avatar = ref()
+    const { BASE_URL, BASE_IMAGE } = useBaseUrl()
     onMounted(async () => {
       try {
         const response = await API.get("profile") // Call api get account login
@@ -25,16 +25,17 @@ export default defineComponent({
           dataUser.value = response.data.data
         }
       } catch (e) {
-        console.log(e)
         router.push("/admin/login")
         localStorage.setItem("token", "")
       }
     })
 
     watch(store.state, () => {
-      avatar.value = []
+      avatar.value = ""
       if (store.state.user?.images[0]?.url) {
-        avatar.value.push(BASE_URL + store.state.user.images[0].url)
+        avatar.value = BASE_URL + store.state.user.images[0]?.url
+      } else {
+        avatar.value = BASE_IMAGE
       }
     })
 
@@ -77,7 +78,7 @@ export default defineComponent({
                 <el-image
                   style="width: 55px; height: 55px"
                   fit="cover"
-                  :src="avatar[0]"
+                  :src="avatar"
                 >
                   <template #error>
                     <div class="image-slot">
@@ -114,7 +115,7 @@ export default defineComponent({
                 <el-image
                   style="width: 45px; height: 45px"
                   fit="cover"
-                  :src="avatar[0]"
+                  :src="avatar"
                 >
                   <template #error>
                     <div class="image-slot">
@@ -142,11 +143,14 @@ export default defineComponent({
 <style scoped>
 .el-footer {
   border-top: 1px solid #ddd;
-  --el-footer-height: 50px;
+  --el-footer-height: auto;
   position: sticky;
   bottom: 0px;
   background: #fff;
   z-index: 10;
+  padding: 0px 10px 15px;
+  color: #11385e;
+  font-weight: bold;
 }
 
 .el-image {

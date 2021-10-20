@@ -81,6 +81,7 @@ export default defineComponent({
                     show-password
                     v-model="password"
                     :disabled="isLoading"
+                    @keyup.enter="onSubmit"
                   ></el-input>
                   <div class="login-error">
                     {{ errors.password }}

@@ -4,6 +4,8 @@ import useVaccination from "./useVaccination"
 import moment from "moment"
 import AddUpdateVaccination from "./addUpdateVaccination/index.vue"
 import DeleteVaccination from "./deleteVaccination/index.vue"
+import useBaseUrl from "../../services/baseUrl"
+
 export default defineComponent({
   components: {
     AddUpdateVaccination,
@@ -23,6 +25,7 @@ export default defineComponent({
     const isVisibleAddUpdate = ref(false)
     const isVisibleDelete = ref(false)
     const mode = ref("")
+    const { BASE_URL, BASE_RESULT_TEST } = useBaseUrl()
     getVaccinationList(currentPage.value)
 
     const multipleSelection = ref([])
@@ -41,15 +44,13 @@ export default defineComponent({
       multipleSelection.value = value
     }
 
-    const checkEmptyText = () => {
-      if (textSearch.value == "") {
-        getVaccinationList(currentPage.value)
-      }
-    }
-
     const handleSearch = () => {
       currentPage.value = 1
-      searchVaccineType(textSearch.value, currentPage.value)
+      if (textSearch.value == "") {
+        getVaccinationList(currentPage.value)
+      } else {
+        searchVaccineType(textSearch.value, currentPage.value)
+      }
     }
 
     const setMode = (act: string) => {
@@ -82,14 +83,15 @@ export default defineComponent({
       handleSelectionChange,
       multipleSelection,
       textSearch,
-      checkEmptyText,
       isLoadingSearch,
       handleSearch,
       isVisibleAddUpdate,
       handleChangeVisible,
       mode,
       handleVisisbleDelete,
-      isVisibleDelete
+      isVisibleDelete,
+      BASE_URL,
+      BASE_RESULT_TEST
     }
   },
   methods: {
@@ -108,10 +110,10 @@ export default defineComponent({
         <div class="grid-content">
           <el-input
             size="small"
-            placeholder="Tìm kiếm..."
+            placeholder="Tìm kiếm theo họ tên, vắc-xin, ngày..."
             prefix-icon="el-icon-search"
             v-model="textSearch"
-            v-on:keyup="checkEmptyText"
+            v-on:keyup.enter="handleSearch"
           >
             <template #append>
               <el-button
@@ -191,6 +193,43 @@ export default defineComponent({
         label="Vắc-xin"
         property="vaccine_type.name"
       ></el-table-column>
+
+      <el-table-column label="Hình ảnh" width="130">
+        <template #default="scope">
+          <div class="table-img" v-if="scope.row.images[0]?.url">
+            <el-image
+              v-for="img in scope.row.images"
+              :key="img.id"
+              fit="cover"
+              :src="BASE_URL + img?.url"
+              :preview-src-list="[
+                BASE_URL + scope.row.images[0]?.url,
+                BASE_URL + scope.row.images[1]?.url
+              ]"
+            >
+              <template #error>
+                <div class="image-slot">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </template>
+            </el-image>
+          </div>
+          <div class="table-img" v-else>
+            <el-image
+              fit="cover"
+              :src="BASE_RESULT_TEST"
+              :preview-src-list="[BASE_RESULT_TEST]"
+            >
+              <template #error>
+                <div class="image-slot">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </template>
+            </el-image>
+          </div>
+        </template>
+      </el-table-column>
+
       <el-table-column
         label="Số điện thoại"
         property="user.phone"
@@ -232,5 +271,12 @@ export default defineComponent({
 .el-table {
   --el-table-header-background-color: #11385e;
   --el-table-header-font-color: #fff;
+}
+
+.table-img .el-image {
+  width: 40px;
+  height: 25px;
+  border: 1px solid #ddd;
+  margin-right: 5px;
 }
 </style>
