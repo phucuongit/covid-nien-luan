@@ -35,10 +35,7 @@ const Dashboard = defineComponent({
             type: "donut"
           },
           dataLabels: {
-            enabled: true,
-            formatter: function (val: number) {
-              return val + "%"
-            }
+            enabled: true
           },
           colors: ["#56cc34", "#e43232"],
 
