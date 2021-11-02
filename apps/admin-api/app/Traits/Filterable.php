@@ -10,6 +10,16 @@ trait Filterable
         foreach ($param as $field => $value) {
             $method = 'filter' . Str::studly($field); //Convert to stydly case
 
+            if ($field == 'search')
+            {
+                foreach ($value as $i => $subVal) {
+                    if (method_exists($this, $method)) {
+                        $this->{$method}($query, $subVal);
+                    }
+                }
+                continue;
+            }
+
             if ($value === '') {
                 continue;
             }
