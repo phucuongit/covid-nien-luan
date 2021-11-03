@@ -8,9 +8,10 @@ trait Filterable
     public function scopeFilter($query, $param)
     {
         foreach ($param as $field => $value) {
-            $method = 'filter' . Str::studly($field); //Convert to stydly case
 
-            if ($field == 'search')
+            $method = 'filter' . Str::studly($field); // Convert to stydly case
+
+            if ($field == 'search' && is_array($value))
             {
                 foreach ($value as $i => $subVal) {
                     if (method_exists($this, $method)) {
