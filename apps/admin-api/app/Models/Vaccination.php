@@ -72,9 +72,9 @@ class Vaccination extends Model
      */
     public function filterSearch($query, $value)
     {
-        $date = date("y-m-d", strtotime($value));
+        $date = date("Y-m-d", strtotime($value));
         return $query
-            ->where('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon type
+            ->orWhere('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon type
             ->orWhereHas('user' , function($query) use ($value) {
                 $query->where('fullname', 'LIKE', '%' . $value . '%')
                         ->orWhere('phone', 'LIKE', '%' . $value . '%');

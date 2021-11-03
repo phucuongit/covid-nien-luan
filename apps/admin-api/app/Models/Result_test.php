@@ -49,16 +49,22 @@ class Result_test extends Model
     {
         $date = date("y-m-d", strtotime($value));
         return $query
-            ->where('status', 'LIKE', '%'.$value.'%')
+            ->orWhere('status', 'LIKE', '%'.$value.'%')
             ->orWhere('created_at', 'LIKE', '%'.$date.'%') // Cant use wheredate, cause it will convert to carbon
             ->orWhereHas('user' , function($query) use ($value) {
                 $query->where('fullname', 'LIKE', '%' . $value . '%')
                         ->orWhere('phone', 'LIKE', '%' . $value . '%');
-             })
-             ->orWhereHas('user_create_by' , function($query) use ($value) {
+            })
+            ->orWhereHas('user_create_by' , function($query) use ($value) {
                 $query->where('fullname', 'LIKE', '%' . $value . '%')
                         ->orWhere('phone', 'LIKE', '%' . $value . '%');
-             });
+            });
+    }
+
+    public function filterStatus($query, $value)
+    {
+        return $query
+            ->where('status', 'LIKE', '%'.$value.'%');
     }
     
     /**
