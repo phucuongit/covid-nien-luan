@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         
-        $userQuantity = 2132142;
-        $vaccinationQuantity = 2332142;
-        $result_testQuantity = 2392182;
+        $userQuantity = 124985;
+        $vaccinationQuantity = 154985;
+        $result_testQuantity = 154985;
 
         /* -----------Order is important-----------*/
         $this->call([
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             Vaccine_typeTableSeeder::class,
         ]);
 
-        /* -----------At least 5gb ram-----------*/
+        /* -----------At least 4gb ram-----------*/
         $this->call(UserTableSeeder::class, false, ['count' => $userQuantity]);
         $this->call(VaccinationTableSeeder::class, false, ['count' => $vaccinationQuantity, 'maxUserId' => $userQuantity]);
         $this->call(Result_testTableSeeder::class, false, ['count' => $result_testQuantity, 'maxUserId' => $userQuantity]);
