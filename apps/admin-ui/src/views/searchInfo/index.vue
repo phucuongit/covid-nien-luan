@@ -25,7 +25,7 @@ export default defineComponent({
       return moment(date).format("DD-MM-YYYY")
     },
     formatDate(date: Date) {
-      return moment(date).format("HH:MM, DD-MM-YYYY")
+      return moment(date).format("HH:mm, DD-MM-YYYY")
     }
   }
 })
